@@ -9,7 +9,8 @@
     "dataCleaning": "データクリーニング",
     "dataPreprocessing": "データ前処理",
     "textRepresentation": "テキスト表現",
-    "dataAugmentation": "データ拡張"
+    "dataAugmentation": "データ拡張",
+    "textClassification": "テキスト分類"
   },
   "common": {
     "process": "処理",
@@ -125,7 +126,7 @@
   },
   "textClassification": {
     "title": "テキスト分類",
-    "description": "さまざまな機械学習アルゴリズムを使用してテキストを分類します",
+    "description": "様々な機械学習アルゴリズムを使用してテキストを分類する",
     "naiveBayes": "ナイーブベイズ",
     "logisticRegression": "ロジスティック回帰",
     "svm": "SVM",
@@ -152,7 +153,7 @@
     "falseNegative": "偽陰性",
     "classDistribution": "クラス分布",
     "downloadModel": "モデルをダウンロード",
-    "trainModelToSeeResults": "モデルを訓練して結果を確認",
+    "trainModelToSeeResults": "結果を見るにはモデルを訓練してください",
     "prediction": "予測",
     "enterText": "分類するテキストを入力",
     "enterTextPlaceholder": "分類したいテキストを入力してください...",

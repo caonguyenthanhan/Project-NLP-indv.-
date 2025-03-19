@@ -9,7 +9,8 @@
     "dataCleaning": "Data Cleaning",
     "dataPreprocessing": "Data Preprocessing",
     "textRepresentation": "Text Representation",
-    "dataAugmentation": "Data Augmentation"
+    "dataAugmentation": "Data Augmentation",
+    "textClassification": "Text Classification"
   },
   "common": {
     "process": "Process",

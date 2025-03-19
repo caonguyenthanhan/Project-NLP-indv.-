@@ -16,7 +16,6 @@ export default function ClientPage() {
   const t = useTranslations()
   const nav = useTranslations("nav")
 
-  // Update the steps array to include the new step
   const steps = [
     nav("dataCollection"),
     nav("dataAugmentation"),
@@ -77,7 +76,6 @@ export default function ClientPage() {
           <TextRepresentation />
         </TabsContent>
 
-        {/* Add the new TabsContent for Text Classification */}
         <TabsContent value="classification">
           <TextClassification />
         </TabsContent>
