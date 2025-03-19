@@ -36,7 +36,12 @@
     "scraping": "Scraping...",
     "scrapedData": "Scraped Data",
     "downloadCSV": "Download CSV",
-    "noDataScraped": "No data scraped"
+    "noDataScraped": "No data scraped",
+    "textClassificationDatasets": "Text Classification Datasets",
+    "popularNLPDatasets": "Popular NLP Datasets",
+    "knnClassification": "K-Nearest Neighbors (KNN) Text Classification",
+    "webScrapingWithPython": "Web Scraping with Python",
+    "loadingExploringDatasets": "Loading and Exploring Datasets with Hugging Face"
   },
   "dataCleaning": {
     "title": "Data Cleaning",

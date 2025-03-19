@@ -36,7 +36,12 @@
     "scraping": "Đang cào...",
     "scrapedData": "Dữ liệu đã Cào",
     "downloadCSV": "Tải xuống CSV",
-    "noDataScraped": "Không có dữ liệu được cào"
+    "noDataScraped": "Không có dữ liệu được cào",
+    "textClassificationDatasets": "Bộ dữ liệu Phân loại Văn bản",
+    "popularNLPDatasets": "Bộ dữ liệu NLP Phổ biến",
+    "knnClassification": "Phân loại Văn bản K-Nearest Neighbors (KNN)",
+    "webScrapingWithPython": "Cào Web với Python",
+    "loadingExploringDatasets": "Tải và Khám phá Bộ dữ liệu với Hugging Face"
   },
   "dataCleaning": {
     "title": "Làm sạch Dữ liệu",

@@ -36,7 +36,12 @@
     "scraping": "スクレイピング中...",
     "scrapedData": "スクレイプされたデータ",
     "downloadCSV": "CSVをダウンロード",
-    "noDataScraped": "データがスクレイプされていません"
+    "noDataScraped": "データがスクレイプされていません",
+    "textClassificationDatasets": "テキスト分類データセット",
+    "popularNLPDatasets": "人気のNLPデータセット",
+    "knnClassification": "K近傍法（KNN）テキスト分類",
+    "webScrapingWithPython": "Pythonでのウェブスクレイピング",
+    "loadingExploringDatasets": "Hugging Faceでのデータセットの読み込みと探索"
   },
   "dataCleaning": {
     "title": "データクリーニング",
@@ -52,6 +57,7 @@
     "cleanText": "テキストをクリーニング",
     "cleaning": "クリーニング中...",
     "whatWasRemoved": "削除されたもの："
+
   },
   "textPreprocessing": {
     "title": "テキスト前処理",

@@ -36,7 +36,12 @@
     "scraping": "爬取中...",
     "scrapedData": "已爬取的数据",
     "downloadCSV": "下载CSV",
-    "noDataScraped": "未爬取到数据"
+    "noDataScraped": "未爬取到数据",
+    "textClassificationDatasets": "文本分类数据集",
+    "popularNLPDatasets": "流行的NLP数据集",
+    "knnClassification": "K最近邻(KNN)文本分类",
+    "webScrapingWithPython": "使用Python进行网络爬虫",
+    "loadingExploringDatasets": "使用Hugging Face加载和探索数据集"
   },
   "dataCleaning": {
     "title": "数据清洗",
