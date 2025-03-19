@@ -1,4 +1,3 @@
-//công cụ thu thập dữ liệu từ web.
 "use client"
 
 import { useState } from "react"
@@ -7,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
-import { Loader2, Download } from "lucide-react"
+import { Loader2, Download } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useTranslations } from "next-intl"
 
@@ -451,6 +450,118 @@ export default function DataCollection() {
                     </div>
                   </CardContent>
                 </Card>
+
+                <Card className="mt-6">
+                  <CardHeader>
+                    <CardTitle>Downloadable Datasets</CardTitle>
+                    <CardDescription>Download these datasets to use in subsequent steps</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <Card className="border shadow-sm">
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-base">IMDB Reviews</CardTitle>
+                          <CardDescription className="text-xs">Movie reviews with sentiment labels (positive/negative)</CardDescription>
+                        </CardHeader>
+                        <CardContent className="pt-2">
+                          <p className="text-sm mb-2">50,000 movie reviews for sentiment analysis</p>
+                          <div className="flex justify-between items-center">
+                            <div className="text-xs text-muted-foreground">2.5MB</div>
+                            <Button size="sm" className="flex items-center gap-1">
+                              <Download className="h-3 w-3" />
+                              Download CSV
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="border shadow-sm">
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-base">News Articles</CardTitle>
+                          <CardDescription className="text-xs">AG News dataset with 4 categories</CardDescription>
+                        </CardHeader>
+                        <CardContent className="pt-2">
+                          <p className="text-sm mb-2">120,000 news articles in 4 categories</p>
+                          <div className="flex justify-between items-center">
+                            <div className="text-xs text-muted-foreground">5.8MB</div>
+                            <Button size="sm" className="flex items-center gap-1">
+                              <Download className="h-3 w-3" />
+                              Download CSV
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="border shadow-sm">
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-base">Twitter Sentiment</CardTitle>
+                          <CardDescription className="text-xs">Tweets labeled with sentiment</CardDescription>
+                        </CardHeader>
+                        <CardContent className="pt-2">
+                          <p className="text-sm mb-2">1.6 million tweets with positive/negative labels</p>
+                          <div className="flex justify-between items-center">
+                            <div className="text-xs text-muted-foreground">77MB</div>
+                            <Button size="sm" className="flex items-center gap-1">
+                              <Download className="h-3 w-3" />
+                              Download CSV
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="border shadow-sm">
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-base">SMS Spam</CardTitle>
+                          <CardDescription className="text-xs">SMS messages labeled as spam or ham</CardDescription>
+                        </CardHeader>
+                        <CardContent className="pt-2">
+                          <p className="text-sm mb-2">5,574 SMS messages labeled as spam/ham</p>
+                          <div className="flex justify-between items-center">
+                            <div className="text-xs text-muted-foreground">0.5MB</div>
+                            <Button size="sm" className="flex items-center gap-1">
+                              <Download className="h-3 w-3" />
+                              Download CSV
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="border shadow-sm">
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-base">BBC News</CardTitle>
+                          <CardDescription className="text-xs">News articles from BBC in 5 categories</CardDescription>
+                        </CardHeader>
+                        <CardContent className="pt-2">
+                          <p className="text-sm mb-2">2,225 articles from 5 categories</p>
+                          <div className="flex justify-between items-center">
+                            <div className="text-xs text-muted-foreground">1.8MB</div>
+                            <Button size="sm" className="flex items-center gap-1">
+                              <Download className="h-3 w-3" />
+                              Download CSV
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="border shadow-sm">
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-base">Yelp Reviews</CardTitle>
+                          <CardDescription className="text-xs">Business reviews with star ratings</CardDescription>
+                        </CardHeader>
+                        <CardContent className="pt-2">
+                          <p className="text-sm mb-2">Subset of 50,000 reviews with ratings</p>
+                          <div className="flex justify-between items-center">
+                            <div className="text-xs text-muted-foreground">12MB</div>
+                            <Button size="sm" className="flex items-center gap-1">
+                              <Download className="h-3 w-3" />
+                              Download CSV
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </TabsContent>
 
@@ -659,4 +770,3 @@ plt.show()`}
     </div>
   )
 }
-

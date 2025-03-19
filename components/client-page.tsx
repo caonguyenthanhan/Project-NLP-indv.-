@@ -16,10 +16,10 @@ export default function ClientPage() {
 
   const steps = [
     nav("dataCollection"),
+    nav("dataAugmentation"),
     nav("dataCleaning"),
     nav("dataPreprocessing"),
     nav("textRepresentation"),
-    nav("dataAugmentation"),
   ]
 
   const [currentStep, setCurrentStep] = useState(0)
@@ -27,31 +27,49 @@ export default function ClientPage() {
   const handleTabChange = (value: string) => {
     const stepIndex = {
       collection: 0,
-      cleaning: 1,
-      preprocessing: 2,
-      representation: 3,
-      augmentation: 4,
+      augmentation: 1,
+      cleaning: 2,
+      preprocessing: 3,
+      representation: 4,
     }[value]
+
     setCurrentStep(stepIndex)
   }
 
   return (
     <>
       <StepIndicator currentStep={currentStep} steps={steps} />
+
       <Tabs defaultValue="collection" className="w-full" onValueChange={handleTabChange}>
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="collection">1. {nav("dataCollection")}</TabsTrigger>
-          <TabsTrigger value="cleaning">2. {nav("dataCleaning")}</TabsTrigger>
-          <TabsTrigger value="preprocessing">3. {nav("dataPreprocessing")}</TabsTrigger>
-          <TabsTrigger value="representation">4. {nav("textRepresentation")}</TabsTrigger>
-          <TabsTrigger value="augmentation">5. {nav("dataAugmentation")}</TabsTrigger>
+          <TabsTrigger value="augmentation">2. {nav("dataAugmentation")}</TabsTrigger>
+          <TabsTrigger value="cleaning">3. {nav("dataCleaning")}</TabsTrigger>
+          <TabsTrigger value="preprocessing">4. {nav("dataPreprocessing")}</TabsTrigger>
+          <TabsTrigger value="representation">5. {nav("textRepresentation")}</TabsTrigger>
         </TabsList>
-        <TabsContent value="collection"><DataCollection /></TabsContent>
-        <TabsContent value="cleaning"><DataCleaning /></TabsContent>
-        <TabsContent value="preprocessing"><DataPreprocessing /></TabsContent>
-        <TabsContent value="representation"><TextRepresentation /></TabsContent>
-        <TabsContent value="augmentation"><DataAugmentation /></TabsContent>
+
+        <TabsContent value="collection">
+          <DataCollection />
+        </TabsContent>
+
+        <TabsContent value="augmentation">
+          <DataAugmentation />
+        </TabsContent>
+
+        <TabsContent value="cleaning">
+          <DataCleaning />
+        </TabsContent>
+
+        <TabsContent value="preprocessing">
+          <DataPreprocessing />
+        </TabsContent>
+
+        <TabsContent value="representation">
+          <TextRepresentation />
+        </TabsContent>
       </Tabs>
     </>
   )
 }
+
