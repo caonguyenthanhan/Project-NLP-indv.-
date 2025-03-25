@@ -9,6 +9,8 @@ import { Label } from "@/components/ui/label"
 import { Loader2, Download } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useTranslations } from "next-intl"
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function DataCollection() {
   const t = useTranslations("dataCollection")
@@ -22,12 +24,11 @@ export default function DataCollection() {
 
   const handleScrape = () => {
     setIsLoading(true)
+    const toastId = toast.loading(t("scraping"))
 
     setTimeout(() => {
       try {
-        // Simulate web scraping based on the selected dataset
         if (selectedDataset === "imdb") {
-          // Simulate IMDB movie data
           const mockImdbData = [
             { title: "The Shawshank Redemption", rating: "9.3", year: "1994", director: "Frank Darabont" },
             { title: "The Godfather", rating: "9.2", year: "1972", director: "Francis Ford Coppola" },
@@ -35,74 +36,56 @@ export default function DataCollection() {
             { title: "The Godfather Part II", rating: "9.0", year: "1974", director: "Francis Ford Coppola" },
             { title: "12 Angry Men", rating: "9.0", year: "1957", director: "Sidney Lumet" },
             { title: "Schindler's List", rating: "8.9", year: "1993", director: "Steven Spielberg" },
-            {
-              title: "The Lord of the Rings: The Return of the King",
-              rating: "8.9",
-              year: "2003",
-              director: "Peter Jackson",
-            },
+            { title: "The Lord of the Rings: The Return of the King", rating: "8.9", year: "2003", director: "Peter Jackson" },
             { title: "Pulp Fiction", rating: "8.9", year: "1994", director: "Quentin Tarantino" },
-            {
-              title: "The Lord of the Rings: The Fellowship of the Ring",
-              rating: "8.8",
-              year: "2001",
-              director: "Peter Jackson",
-            },
+            { title: "The Lord of the Rings: The Fellowship of the Ring", rating: "8.8", year: "2001", director: "Peter Jackson" },
             { title: "The Good, the Bad and the Ugly", rating: "8.8", year: "1966", director: "Sergio Leone" },
           ]
           setScrapedData(mockImdbData)
-
-          // Generate CSV content
           const headers = "Title,Rating,Year,Director\n"
           const rows = mockImdbData
             .map((movie) => `"${movie.title}","${movie.rating}","${movie.year}","${movie.director}"`)
             .join("\n")
           setCsvContent(headers + rows)
+          toast.update(toastId, {
+            render: t("scrapeSuccess"),
+            type: "success",
+            isLoading: false,
+            autoClose: 3000,
+          })
         } else if (selectedDataset === "books") {
-          // Simulate books.toscrape.com data
           const mockBooksData = [
             { title: "A Light in the Attic", price: "£51.77", availability: "In stock", rating: "Three" },
             { title: "Tipping the Velvet", price: "£53.74", availability: "In stock", rating: "One" },
             { title: "Soumission", price: "£50.10", availability: "In stock", rating: "One" },
             { title: "Sharp Objects", price: "£47.82", availability: "In stock", rating: "Four" },
-            {
-              title: "Sapiens: A Brief History of Humankind",
-              price: "£54.23",
-              availability: "In stock",
-              rating: "Five",
-            },
+            { title: "Sapiens: A Brief History of Humankind", price: "£54.23", availability: "In stock", rating: "Five" },
             { title: "The Requiem Red", price: "£22.65", availability: "In stock", rating: "One" },
-            {
-              title: "The Dirty Little Secrets of Getting Your Dream Job",
-              price: "£33.34",
-              availability: "In stock",
-              rating: "Four",
-            },
-            {
-              title: "The Coming Woman: A Novel Based on the Life of the Infamous Feminist, Victoria Woodhull",
-              price: "£17.93",
-              availability: "In stock",
-              rating: "Three",
-            },
-            {
-              title: "The Boys in the Boat: Nine Americans and Their Epic Quest for Gold at the 1936 Berlin Olympics",
-              price: "£22.60",
-              availability: "In stock",
-              rating: "Four",
-            },
+            { title: "The Dirty Little Secrets of Getting Your Dream Job", price: "£33.34", availability: "In stock", rating: "Four" },
+            { title: "The Coming Woman: A Novel Based on the Life of the Infamous Feminist, Victoria Woodhull", price: "£17.93", availability: "In stock", rating: "Three" },
+            { title: "The Boys in the Boat: Nine Americans and Their Epic Quest for Gold at the 1936 Berlin Olympics", price: "£22.60", availability: "In stock", rating: "Four" },
             { title: "The Black Maria", price: "£52.15", availability: "In stock", rating: "One" },
           ]
           setScrapedData(mockBooksData)
-
-          // Generate CSV content
           const headers = "Title,Price,Availability,Rating\n"
           const rows = mockBooksData
             .map((book) => `"${book.title}","${book.price}","${book.availability}","${book.rating}"`)
             .join("\n")
           setCsvContent(headers + rows)
+          toast.update(toastId, {
+            render: t("scrapeSuccess"),
+            type: "success",
+            isLoading: false,
+            autoClose: 3000,
+          })
         }
       } catch (error) {
-        console.error("Error scraping data:", error)
+        toast.update(toastId, {
+          render: `Error: ${error.message}`,
+          type: "error",
+          isLoading: false,
+          autoClose: 3000,
+        })
       } finally {
         setIsLoading(false)
       }
@@ -122,8 +105,42 @@ export default function DataCollection() {
     document.body.removeChild(link)
   }
 
+  const downloadDataset = async (datasetName: string) => {
+    const toastId = toast.loading(t("downloadingDataset"))
+    try {
+      const response = await fetch(`http://localhost:8000/get-dataset/${datasetName}`)
+      if (!response.ok) {
+        throw new Error("Failed to download dataset")
+      }
+
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = url
+      link.setAttribute("download", `${datasetName}.csv`)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+
+      toast.update(toastId, {
+        render: t("downloadSuccess"),
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      })
+    } catch (error) {
+      toast.update(toastId, {
+        render: `Error: ${error.message}`,
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      })
+    }
+  }
+
   return (
     <div className="space-y-6">
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
       <Card>
         <CardHeader>
           <CardTitle>{t("title")}</CardTitle>
@@ -234,11 +251,7 @@ export default function DataCollection() {
                         <tbody>
                           <tr>
                             <td className="border px-4 py-2 text-blue-600 hover:underline">
-                              <a
-                                href="https://nlp.stanford.edu/sentiment/index.html"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
+                              <a href="https://nlp.stanford.edu/sentiment/index.html" target="_blank" rel="noopener noreferrer">
                                 SST
                               </a>
                             </td>
@@ -249,11 +262,7 @@ export default function DataCollection() {
                           </tr>
                           <tr className="bg-muted/50">
                             <td className="border px-4 py-2 text-blue-600 hover:underline">
-                              <a
-                                href="https://ai.stanford.edu/~amaas/data/sentiment/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
+                              <a href="https://ai.stanford.edu/~amaas/data/sentiment/" target="_blank" rel="noopener noreferrer">
                                 IMDb Review
                               </a>
                             </td>
@@ -275,11 +284,7 @@ export default function DataCollection() {
                           </tr>
                           <tr className="bg-muted/50">
                             <td className="border px-4 py-2 text-blue-600 hover:underline">
-                              <a
-                                href="https://jmcauley.ucsd.edu/data/amazon/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
+                              <a href="https://jmcauley.ucsd.edu/data/amazon/" target="_blank" rel="noopener noreferrer">
                                 Amazon Review
                               </a>
                             </td>
@@ -301,11 +306,7 @@ export default function DataCollection() {
                           </tr>
                           <tr className="bg-muted/50">
                             <td className="border px-4 py-2 text-blue-600 hover:underline">
-                              <a
-                                href="https://webscope.sandbox.yahoo.com/catalog.php?datatype=l"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
+                              <a href="https://webscope.sandbox.yahoo.com/catalog.php?datatype=l" target="_blank" rel="noopener noreferrer">
                                 Yahoo! Answers
                               </a>
                             </td>
@@ -316,11 +317,7 @@ export default function DataCollection() {
                           </tr>
                           <tr>
                             <td className="border px-4 py-2 text-blue-600 hover:underline">
-                              <a
-                                href="http://groups.di.unipi.it/~gulli/AG_corpus_of_news_articles.html"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
+                              <a href="http://groups.di.unipi.it/~gulli/AG_corpus_of_news_articles.html" target="_blank" rel="noopener noreferrer">
                                 AG's News
                               </a>
                             </td>
@@ -331,11 +328,7 @@ export default function DataCollection() {
                           </tr>
                           <tr className="bg-muted/50">
                             <td className="border px-4 py-2 text-blue-600 hover:underline">
-                              <a
-                                href="https://www.sogou.com/labs/resource/cs.php"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
+                              <a href="https://www.sogou.com/labs/resource/cs.php" target="_blank" rel="noopener noreferrer">
                                 Sogou News
                               </a>
                             </td>
@@ -371,10 +364,7 @@ export default function DataCollection() {
                         <h3 className="font-medium">Text Classification</h3>
                         <ul className="list-disc pl-5 space-y-1">
                           <li>
-                            <a
-                              href="https://www.kaggle.com/datasets/kazanova/sentiment140"
-                              className="text-blue-600 hover:underline"
-                            >
+                            <a href="https://www.kaggle.com/datasets/kazanova/sentiment140" className="text-blue-600 hover:underline">
                               Sentiment140 - Twitter sentiment analysis
                             </a>
                           </li>
@@ -400,10 +390,7 @@ export default function DataCollection() {
                             </a>
                           </li>
                           <li>
-                            <a
-                              href="https://huggingface.co/datasets/natural_questions"
-                              className="text-blue-600 hover:underline"
-                            >
+                            <a href="https://huggingface.co/datasets/natural_questions" className="text-blue-600 hover:underline">
                               Natural Questions - Google's dataset of real queries
                             </a>
                           </li>
@@ -414,18 +401,12 @@ export default function DataCollection() {
                         <h3 className="font-medium">Named Entity Recognition</h3>
                         <ul className="list-disc pl-5 space-y-1">
                           <li>
-                            <a
-                              href="https://huggingface.co/datasets/conll2003"
-                              className="text-blue-600 hover:underline"
-                            >
+                            <a href="https://huggingface.co/datasets/conll2003" className="text-blue-600 hover:underline">
                               CoNLL-2003 - Named entity annotations
                             </a>
                           </li>
                           <li>
-                            <a
-                              href="https://www.kaggle.com/datasets/abhinavwalia95/entity-annotated-corpus"
-                              className="text-blue-600 hover:underline"
-                            >
+                            <a href="https://www.kaggle.com/datasets/abhinavwalia95/entity-annotated-corpus" className="text-blue-600 hover:underline">
                               GMB Corpus - Groningen Meaning Bank corpus
                             </a>
                           </li>
@@ -467,7 +448,7 @@ export default function DataCollection() {
                           <p className="text-sm mb-2">50,000 movie reviews for sentiment analysis</p>
                           <div className="flex justify-between items-center">
                             <div className="text-xs text-muted-foreground">2.5MB</div>
-                            <Button size="sm" className="flex items-center gap-1">
+                            <Button size="sm" className="flex items-center gap-1" onClick={() => downloadDataset("imdb")}>
                               <Download className="h-3 w-3" />
                               Download CSV
                             </Button>
@@ -484,7 +465,7 @@ export default function DataCollection() {
                           <p className="text-sm mb-2">120,000 news articles in 4 categories</p>
                           <div className="flex justify-between items-center">
                             <div className="text-xs text-muted-foreground">5.8MB</div>
-                            <Button size="sm" className="flex items-center gap-1">
+                            <Button size="sm" className="flex items-center gap-1" onClick={() => downloadDataset("ag_news")}>
                               <Download className="h-3 w-3" />
                               Download CSV
                             </Button>
@@ -501,7 +482,7 @@ export default function DataCollection() {
                           <p className="text-sm mb-2">1.6 million tweets with positive/negative labels</p>
                           <div className="flex justify-between items-center">
                             <div className="text-xs text-muted-foreground">77MB</div>
-                            <Button size="sm" className="flex items-center gap-1">
+                            <Button size="sm" className="flex items-center gap-1" onClick={() => downloadDataset("twitter")}>
                               <Download className="h-3 w-3" />
                               Download CSV
                             </Button>
@@ -518,7 +499,7 @@ export default function DataCollection() {
                           <p className="text-sm mb-2">5,574 SMS messages labeled as spam/ham</p>
                           <div className="flex justify-between items-center">
                             <div className="text-xs text-muted-foreground">0.5MB</div>
-                            <Button size="sm" className="flex items-center gap-1">
+                            <Button size="sm" className="flex items-center gap-1" onClick={() => downloadDataset("sms")}>
                               <Download className="h-3 w-3" />
                               Download CSV
                             </Button>
@@ -535,7 +516,7 @@ export default function DataCollection() {
                           <p className="text-sm mb-2">2,225 articles from 5 categories</p>
                           <div className="flex justify-between items-center">
                             <div className="text-xs text-muted-foreground">1.8MB</div>
-                            <Button size="sm" className="flex items-center gap-1">
+                            <Button size="sm" className="flex items-center gap-1" onClick={() => downloadDataset("bbc")}>
                               <Download className="h-3 w-3" />
                               Download CSV
                             </Button>
@@ -552,7 +533,7 @@ export default function DataCollection() {
                           <p className="text-sm mb-2">Subset of 50,000 reviews with ratings</p>
                           <div className="flex justify-between items-center">
                             <div className="text-xs text-muted-foreground">12MB</div>
-                            <Button size="sm" className="flex items-center gap-1">
+                            <Button size="sm" className="flex items-center gap-1" onClick={() => downloadDataset("yelp")}>
                               <Download className="h-3 w-3" />
                               Download CSV
                             </Button>

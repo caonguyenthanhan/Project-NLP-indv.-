@@ -42,7 +42,9 @@
     "popularNLPDatasets": "流行的NLP数据集",
     "knnClassification": "K最近邻(KNN)文本分类",
     "webScrapingWithPython": "使用Python进行网络爬虫",
-    "loadingExploringDatasets": "使用Hugging Face加载和探索数据集"
+    "loadingExploringDatasets": "使用Hugging Face加载和探索数据集",
+    "downloadingDataset": "Đang tải bộ dữ liệu...",
+    "downloadSuccess": "Tải bộ dữ liệu thành công!"
   },
   "dataCleaning": {
     "title": "数据清洗",

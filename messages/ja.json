@@ -42,7 +42,9 @@
     "popularNLPDatasets": "人気のNLPデータセット",
     "knnClassification": "K近傍法（KNN）テキスト分類",
     "webScrapingWithPython": "Pythonでのウェブスクレイピング",
-    "loadingExploringDatasets": "Hugging Faceでのデータセットの読み込みと探索"
+    "loadingExploringDatasets": "Hugging Faceでのデータセットの読み込みと探索",
+    "downloadingDataset": "Đang tải bộ dữ liệu...",
+    "downloadSuccess": "Tải bộ dữ liệu thành công!"
   },
   "dataCleaning": {
     "title": "データクリーニング",

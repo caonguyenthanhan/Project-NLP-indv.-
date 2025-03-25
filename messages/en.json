@@ -42,7 +42,8 @@
     "popularNLPDatasets": "Popular NLP Datasets",
     "knnClassification": "K-Nearest Neighbors (KNN) Text Classification",
     "webScrapingWithPython": "Web Scraping with Python",
-    "loadingExploringDatasets": "Loading and Exploring Datasets with Hugging Face"
+    "downloadingDataset": "Đang tải bộ dữ liệu...",
+    "downloadSuccess": "Tải bộ dữ liệu thành công!"
   },
   "dataCleaning": {
     "title": "Data Cleaning",

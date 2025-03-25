@@ -42,7 +42,9 @@
     "popularNLPDatasets": "Bộ dữ liệu NLP Phổ biến",
     "knnClassification": "Phân loại Văn bản K-Nearest Neighbors (KNN)",
     "webScrapingWithPython": "Cào Web với Python",
-    "loadingExploringDatasets": "Tải và Khám phá Bộ dữ liệu với Hugging Face"
+    "loadingExploringDatasets": "Tải và Khám phá Bộ dữ liệu với Hugging Face",
+    "downloadingDataset": "Đang tải bộ dữ liệu...",
+    "downloadSuccess": "Tải bộ dữ liệu thành công!"
   },
   "dataCleaning": {
     "title": "Làm sạch Dữ liệu",
