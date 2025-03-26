@@ -1,3 +1,4 @@
+// Định nghĩa các thành phần của một dropdown (menu thả xuống) tùy chỉnh.
 "use client"
 
 import * as React from "react"

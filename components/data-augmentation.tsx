@@ -1,24 +1,28 @@
-//công cụ tăng cường dữ liệu văn bản (data augmentation).
 "use client"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Loader2, Download } from "lucide-react"
+import { Loader2, ArrowRight } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import { useWorkflow } from "@/context/workflow-context"
+import { DatasetSelector } from "@/components/dataset-selector"
+import { v4 as uuidv4 } from "uuid"
 
 export default function DataAugmentation() {
   const t = useTranslations("dataAugmentation")
   const common = useTranslations("common")
+  const { currentDataset, addDataset, setCurrentStep } = useWorkflow()
 
-  const [inputText, setInputText] = useState("The quick brown fox jumps over the lazy dog.")
+  const [inputText, setInputText] = useState("")
   const [augmentedTexts, setAugmentedTexts] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [shouldAugment, setShouldAugment] = useState<boolean | null>(null)
 
   // Augmentation parameters
   const [synonymProbability, setSynonymProbability] = useState(0.3)
@@ -26,406 +30,217 @@ export default function DataAugmentation() {
   const [deletionProbability, setDeletionProbability] = useState(0.2)
   const [backTranslationLanguage, setBackTranslationLanguage] = useState("fr")
 
-  const performAugmentation = () => {
+  const performAugmentation = async () => {
+    if (!currentDataset) {
+      toast.error(t("noDataset"))
+      return
+    }
+
     setIsLoading(true)
+    const toastId = toast.loading(t("augmenting"))
 
-    setTimeout(() => {
-      try {
-        // Simulate augmentation techniques
+    try {
+      // Real augmentation using the backend
+      const response = await fetch(`http://localhost:8000/augment-data`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          data: currentDataset.data,
+          synonym_probability: synonymProbability,
+          noise_probability: noiseProbability,
+          deletion_probability: deletionProbability,
+          back_translation_language: backTranslationLanguage,
+        }),
+      })
 
-        // 1. Synonym Replacement
-        const synonymReplacement = simulateSynonymReplacement(inputText, synonymProbability)
-
-        // 2. Word Shuffling
-        const wordShuffling = simulateWordShuffling(inputText)
-
-        // 3. Noise Injection
-        const noiseInjection = simulateNoiseInjection(inputText, noiseProbability)
-
-        // 4. Random Word Deletion
-        const randomDeletion = simulateRandomDeletion(inputText, deletionProbability)
-
-        // 5. Back Translation
-        const backTranslation = simulateBackTranslation(inputText, backTranslationLanguage)
-
-        // 6. Contextual Word Substitution
-        const contextualSubstitution = simulateContextualSubstitution(inputText)
-
-        setAugmentedTexts([
-          synonymReplacement,
-          wordShuffling,
-          noiseInjection,
-          randomDeletion,
-          backTranslation,
-          contextualSubstitution,
-        ])
-      } catch (error) {
-        console.error("Error performing augmentation:", error)
-      } finally {
-        setIsLoading(false)
+      if (!response.ok) {
+        throw new Error(`Failed to augment data: ${response.status}`)
       }
-    }, 1500)
-  }
 
-  const simulateSynonymReplacement = (text: string, probability: number) => {
-    const words = text.split(" ")
-    const result = words
-      .map((word) => {
-        if (Math.random() < probability) {
-          // Simulate synonym replacement with a simple mapping
-          const synonymMap: Record<string, string[]> = {
-            quick: ["fast", "rapid", "swift"],
-            brown: ["tan", "chestnut", "amber"],
-            fox: ["vixen", "reynard", "canid"],
-            jumps: ["leaps", "hops", "springs"],
-            over: ["above", "across", "beyond"],
-            lazy: ["idle", "sluggish", "indolent"],
-            dog: ["canine", "hound", "pooch"],
-          }
+      const data = await response.json()
 
-          const synonyms = synonymMap[word.toLowerCase()] || []
-          if (synonyms.length > 0) {
-            return synonyms[Math.floor(Math.random() * synonyms.length)]
-          }
-        }
-        return word
+      // Add augmented dataset to workflow
+      addDataset({
+        id: uuidv4(),
+        name: `Augmented: ${currentDataset.name}`,
+        type: "augmented",
+        data: data.augmented_data,
+        metadata: {
+          source: `Augmented from ${currentDataset.name}`,
+          createdAt: new Date().toISOString(),
+          size: data.augmented_data.length,
+          originalDataset: currentDataset.id,
+          augmentationParams: {
+            synonymProbability,
+            noiseProbability,
+            deletionProbability,
+            backTranslationLanguage,
+          },
+        },
       })
-      .join(" ")
 
-    return result
-  }
-
-  const simulateWordShuffling = (text: string) => {
-    const words = text.split(" ")
-
-    // Fisher-Yates shuffle algorithm
-    for (let i = words.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      ;[words[i], words[j]] = [words[j], words[i]]
-    }
-
-    return words.join(" ")
-  }
-
-  const simulateNoiseInjection = (text: string, probability: number) => {
-    const chars = text.split("")
-    const result = chars
-      .map((char) => {
-        if (Math.random() < probability && /[a-zA-Z]/.test(char)) {
-          // Replace with a random letter
-          const letters = "abcdefghijklmnopqrstuvwxyz"
-          return letters[Math.floor(Math.random() * letters.length)]
-        }
-        return char
+      toast.update(toastId, {
+        render: t("augmentSuccess"),
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
       })
-      .join("")
 
-    return result
-  }
-
-  const simulateRandomDeletion = (text: string, probability: number) => {
-    const words = text.split(" ")
-    const result = words.filter(() => Math.random() > probability)
-
-    // Ensure at least one word remains
-    if (result.length === 0 && words.length > 0) {
-      return words[Math.floor(Math.random() * words.length)]
-    }
-
-    return result.join(" ")
-  }
-
-  const simulateBackTranslation = (text: string, language: string) => {
-    // Simulate back translation with predefined examples
-    const backTranslations: Record<string, Record<string, string>> = {
-      fr: {
-        "The quick brown fox jumps over the lazy dog.": "The fast brown fox leaps over the idle dog.",
-        "Hello world": "Hello to the world",
-        "I love programming": "I adore coding",
-      },
-      es: {
-        "The quick brown fox jumps over the lazy dog.": "The rapid brown fox jumps above the sleepy dog.",
-        "Hello world": "Hello to the world",
-        "I love programming": "I love to program",
-      },
-      de: {
-        "The quick brown fox jumps over the lazy dog.": "The swift brown fox jumps over the sluggish dog.",
-        "Hello world": "Hello to the world",
-        "I love programming": "I love to code",
-      },
-    }
-
-    return backTranslations[language]?.[text] || `${text} (translated to ${language} and back)`
-  }
-
-  const simulateContextualSubstitution = (text: string) => {
-    // Simulate contextual substitution with predefined examples
-    const substitutions: Record<string, string> = {
-      "The quick brown fox jumps over the lazy dog.": "The swift brown fox leaps over the sleeping dog.",
-      "Hello world": "Greetings universe",
-      "I love programming": "I enjoy coding",
-    }
-
-    return (
-      substitutions[text] ||
-      text.replace(/\b\w{5,}\b/g, (match) => {
-        // Replace some longer words with alternatives
-        const alternatives: Record<string, string> = {
-          quick: "rapid",
-          jumps: "leaps",
-          brown: "tawny",
-          lazy: "sleepy",
-        }
-
-        return alternatives[match.toLowerCase()] || match
+      // Move to next step
+      setTimeout(() => {
+        setCurrentStep(2) // Move to data cleaning step
+      }, 1000)
+    } catch (error) {
+      toast.update(toastId, {
+        render: `Error: ${error instanceof Error ? error.message : "Failed to augment data"}`,
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
       })
-    )
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const downloadAugmentedData = () => {
-    // Create CSV content
-    const csvContent = [
-      "Original Text,Augmented Text,Technique",
-      ...augmentedTexts.map((text, index) => {
-        const technique = [
-          t("synonymReplacement"),
-          t("wordShuffling"),
-          t("noiseInjection"),
-          t("randomWordDeletion"),
-          t("backTranslation"),
-          t("contextualWordSubstitution"),
-        ][index]
+  const skipAugmentation = () => {
+    if (!currentDataset) {
+      toast.error(t("noDataset"))
+      return
+    }
 
-        return `"${inputText}","${text}","${technique}"`
-      }),
-    ].join("\n")
+    toast.info(t("skippingAugmentation"))
 
-    // Create a blob and download link
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement("a")
-    link.href = url
-    link.setAttribute("download", "augmented_data.csv")
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    // Move to next step without augmentation
+    setTimeout(() => {
+      setCurrentStep(2) // Move to data cleaning step
+    }, 1000)
+  }
+
+  const handleAugmentationDecision = (shouldAugmentData: boolean) => {
+    setShouldAugment(shouldAugmentData)
+    if (!shouldAugmentData) {
+      skipAugmentation()
+    }
   }
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("title")}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <Label htmlFor="input-text">{t("inputText")}</Label>
-              <Textarea
-                id="input-text"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder={t("inputText")}
-                className="min-h-[200px]"
-              />
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
 
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <Label htmlFor="synonym-probability">{t("synonymReplacementProbability")}</Label>
-                    <span className="text-sm text-muted-foreground">{synonymProbability.toFixed(2)}</span>
-                  </div>
-                  <Slider
-                    id="synonym-probability"
-                    min={0}
-                    max={1}
-                    step={0.05}
-                    value={[synonymProbability]}
-                    onValueChange={(value) => setSynonymProbability(value[0])}
-                  />
-                </div>
+      <DatasetSelector allowedTypes={["raw"]} />
 
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <Label htmlFor="noise-probability">{t("noiseInjectionProbability")}</Label>
-                    <span className="text-sm text-muted-foreground">{noiseProbability.toFixed(2)}</span>
-                  </div>
-                  <Slider
-                    id="noise-probability"
-                    min={0}
-                    max={0.5}
-                    step={0.05}
-                    value={[noiseProbability]}
-                    onValueChange={(value) => setNoiseProbability(value[0])}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <Label htmlFor="deletion-probability">{t("wordDeletionProbability")}</Label>
-                    <span className="text-sm text-muted-foreground">{deletionProbability.toFixed(2)}</span>
-                  </div>
-                  <Slider
-                    id="deletion-probability"
-                    min={0}
-                    max={0.5}
-                    step={0.05}
-                    value={[deletionProbability]}
-                    onValueChange={(value) => setDeletionProbability(value[0])}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="back-translation-language">{t("backTranslationLanguage")}</Label>
-                  <Select value={backTranslationLanguage} onValueChange={setBackTranslationLanguage}>
-                    <SelectTrigger id="back-translation-language">
-                      <SelectValue placeholder={t("backTranslationLanguage")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="fr">French</SelectItem>
-                      <SelectItem value="es">Spanish</SelectItem>
-                      <SelectItem value="de">German</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+      {shouldAugment === null && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("augmentationDecision")}</CardTitle>
+            <CardDescription>{t("augmentationDecisionDescription")}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col items-center justify-center p-6 space-y-4">
+              <p className="text-center">{t("shouldAugmentData")}</p>
+              <div className="flex gap-4">
+                <Button variant="outline" onClick={() => handleAugmentationDecision(false)} disabled={!currentDataset}>
+                  {t("skipAugmentation")}
+                </Button>
+                <Button onClick={() => handleAugmentationDecision(true)} disabled={!currentDataset}>
+                  {t("performAugmentation")}
+                </Button>
               </div>
-
-              <Button onClick={performAugmentation} disabled={isLoading} className="w-full">
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t("augmenting")}
-                  </>
-                ) : (
-                  t("augmentText")
-                )}
-              </Button>
             </div>
+          </CardContent>
+        </Card>
+      )}
 
+      {shouldAugment && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("title")}</CardTitle>
+            <CardDescription>{t("description")}</CardDescription>
+          </CardHeader>
+          <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label>{t("augmentedResults")}</Label>
-                {augmentedTexts.length > 0 && (
-                  <Button variant="outline" size="sm" onClick={downloadAugmentedData}>
-                    <Download className="h-4 w-4 mr-2" />
-                    {common("download")} CSV
-                  </Button>
-                )}
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <Label htmlFor="synonym-probability">{t("synonymReplacementProbability")}</Label>
+                  <span className="text-sm text-muted-foreground">{synonymProbability.toFixed(2)}</span>
+                </div>
+                <Slider
+                  id="synonym-probability"
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  value={[synonymProbability]}
+                  onValueChange={(value) => setSynonymProbability(value[0])}
+                />
               </div>
 
-              {augmentedTexts.length > 0 ? (
-                <Tabs defaultValue="synonym">
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="synonym">{t("synonymReplacement")}</TabsTrigger>
-                    <TabsTrigger value="shuffle">{t("wordShuffling")}</TabsTrigger>
-                    <TabsTrigger value="noise">{t("noiseInjection")}</TabsTrigger>
-                  </TabsList>
-                  <TabsList className="grid w-full grid-cols-3 mt-1">
-                    <TabsTrigger value="deletion">{t("randomWordDeletion")}</TabsTrigger>
-                    <TabsTrigger value="translation">{t("backTranslation")}</TabsTrigger>
-                    <TabsTrigger value="contextual">{t("contextualWordSubstitution")}</TabsTrigger>
-                  </TabsList>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <Label htmlFor="noise-probability">{t("noiseInjectionProbability")}</Label>
+                  <span className="text-sm text-muted-foreground">{noiseProbability.toFixed(2)}</span>
+                </div>
+                <Slider
+                  id="noise-probability"
+                  min={0}
+                  max={0.5}
+                  step={0.05}
+                  value={[noiseProbability]}
+                  onValueChange={(value) => setNoiseProbability(value[0])}
+                />
+              </div>
 
-                  <TabsContent value="synonym" className="mt-4">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-sm">{t("synonymReplacement")}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm">{augmentedTexts[0]}</p>
-                      </CardContent>
-                    </Card>
-                  </TabsContent>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <Label htmlFor="deletion-probability">{t("wordDeletionProbability")}</Label>
+                  <span className="text-sm text-muted-foreground">{deletionProbability.toFixed(2)}</span>
+                </div>
+                <Slider
+                  id="deletion-probability"
+                  min={0}
+                  max={0.5}
+                  step={0.05}
+                  value={[deletionProbability]}
+                  onValueChange={(value) => setDeletionProbability(value[0])}
+                />
+              </div>
 
-                  <TabsContent value="shuffle" className="mt-4">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-sm">{t("wordShuffling")}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm">{augmentedTexts[1]}</p>
-                      </CardContent>
-                    </Card>
-                  </TabsContent>
-
-                  <TabsContent value="noise" className="mt-4">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-sm">{t("noiseInjection")}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm">{augmentedTexts[2]}</p>
-                      </CardContent>
-                    </Card>
-                  </TabsContent>
-
-                  <TabsContent value="deletion" className="mt-4">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-sm">{t("randomWordDeletion")}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm">{augmentedTexts[3]}</p>
-                      </CardContent>
-                    </Card>
-                  </TabsContent>
-
-                  <TabsContent value="translation" className="mt-4">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-sm">
-                          {t("backTranslation")} ({backTranslationLanguage})
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm">{augmentedTexts[4]}</p>
-                      </CardContent>
-                    </Card>
-                  </TabsContent>
-
-                  <TabsContent value="contextual" className="mt-4">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-sm">{t("contextualWordSubstitution")}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm">{augmentedTexts[5]}</p>
-                      </CardContent>
-                    </Card>
-                  </TabsContent>
-                </Tabs>
+              <div className="space-y-2">
+                <Label htmlFor="back-translation-language">{t("backTranslationLanguage")}</Label>
+                <Select value={backTranslationLanguage} onValueChange={setBackTranslationLanguage}>
+                  <SelectTrigger id="back-translation-language">
+                    <SelectValue placeholder={t("backTranslationLanguage")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="fr">French</SelectItem>
+                    <SelectItem value="es">Spanish</SelectItem>
+                    <SelectItem value="de">German</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button variant="outline" onClick={() => setShouldAugment(null)}>
+              {common("back")}
+            </Button>
+            <Button onClick={performAugmentation} disabled={isLoading || !currentDataset}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {t("augmenting")}
+                </>
               ) : (
-                <div className="p-8 text-center text-muted-foreground border rounded-md">{t("augmentedResults")}</div>
+                <>
+                  {t("augmentAndContinue")}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </>
               )}
-
-              {augmentedTexts.length > 0 && (
-                <div className="space-y-2 mt-4">
-                  <Label>{t("allAugmentations")}</Label>
-                  <div className="space-y-2 max-h-[300px] overflow-y-auto p-2 border rounded-md">
-                    {augmentedTexts.map((text, index) => {
-                      const techniques = [
-                        t("synonymReplacement"),
-                        t("wordShuffling"),
-                        t("noiseInjection"),
-                        t("randomWordDeletion"),
-                        t("backTranslation"),
-                        t("contextualWordSubstitution"),
-                      ]
-
-                      return (
-                        <div key={index} className="p-2 border-b last:border-0">
-                          <div className="text-xs font-medium text-muted-foreground mb-1">{techniques[index]}</div>
-                          <div className="text-sm">{text}</div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+            </Button>
+          </CardFooter>
+        </Card>
+      )}
     </div>
   )
 }

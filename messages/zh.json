@@ -23,7 +23,13 @@
     "warning": "警告",
     "noData": "无可用数据",
     "loading": "加载中...",
-    "stepOf": "第{current}步，共{total}步"
+    "stepOf": "第{current}步，共{total}步",
+    "cancel": "Cancel",
+    "save": "Save",
+    "upload": "Upload",
+    "next": "Next",
+    "back": "Back",
+    "saveAndContinue": "Save & Continue"
   },
   "dataCollection": {
     "title": "数据收集",
@@ -44,7 +50,18 @@
     "webScrapingWithPython": "使用Python进行网络爬虫",
     "loadingExploringDatasets": "使用Hugging Face加载和探索数据集",
     "downloadingDataset": "正在下载数据集...",
-    "downloadSuccess": "数据集下载成功！"
+    "downloadSuccess": "数据集下载成功！",
+    "uploadData": "Upload Data",
+    "uploadDescription": "Upload your own CSV file with text data for classification",
+    "dragAndDrop": "Drag and drop your CSV file here, or click to browse",
+    "csvFormat": "CSV must have 'text' and 'label' columns",
+    "selectFile": "Select File",
+    "dataPrivacy": "Your data is processed locally and never leaves your computer",
+    "noScrapedData": "No data scraped yet",
+    "uploadSuccess": "File uploaded successfully",
+    "scrapeSuccess": "Data scraped successfully",
+    "dataSaved": "Data saved successfully",
+    "noDataToSave": "No data to save"
   },
   "dataCleaning": {
     "title": "数据清洗",
@@ -59,7 +76,11 @@
     "removeSymbols": "删除符号",
     "cleanText": "清洗文本",
     "cleaning": "清洗中...",
-    "whatWasRemoved": "已删除内容："
+    "whatWasRemoved": "已删除内容：",
+    "cleanAndContinue": "Clean & Continue",
+    "cleanSuccess": "Data cleaned successfully",
+    "noDataset": "No dataset selected",
+    "datasetPreview": "Dataset Preview"
   },
   "textPreprocessing": {
     "title": "文本预处理",
@@ -80,7 +101,13 @@
     "steps": "步骤",
     "tokenization": "分词",
     "noEntitiesFound": "未检测到实体",
-    "processingSteps": "处理步骤"
+    "processingSteps": "处理步骤",
+    "description": "Preprocess your text data to prepare it for machine learning algorithms.",
+    "processing": "Processing...",
+    "preprocessAndContinue": "Preprocess & Continue",
+    "preprocessSuccess": "Data preprocessed successfully",
+    "noDataset": "No dataset selected",
+    "datasetPreview": "Dataset Preview"
   },
   "textRepresentation": {
     "title": "文本表示",
@@ -103,7 +130,26 @@
     "processEmbeddings": "处理嵌入",
     "similarityScore": "相似度得分",
     "visualization": "可视化",
-    "noEmbeddings": "未生成嵌入"
+    "noEmbeddings": "未生成嵌入",
+    "description": "Convert text data into numerical features that can be used by machine learning algorithms.",
+    "methodDescription": "Method Description",
+    "oneHotDescription": "Represents each word as a binary vector where each dimension corresponds to a word in the vocabulary.",
+    "bowDescription": "Counts the frequency of each word in a document, ignoring word order.",
+    "nGramDescription": "Captures sequences of n consecutive words to preserve some context.",
+    "tfidfDescription": "Weights words based on their frequency in a document and rarity across all documents.",
+    "word2vecDescription": "Creates dense vector representations of words based on their context.",
+    "gloveDescription": "Global Vectors for Word Representation - captures global statistics of word co-occurrences.",
+    "fasttextDescription": "Similar to Word2Vec but works with character n-grams, handling out-of-vocabulary words better.",
+    "doc2vecDescription": "Extends Word2Vec to create vector representations for entire documents.",
+    "sentenceDescription": "Creates embeddings for entire sentences that capture semantic meaning.",
+    "processToSee": "Process data to see {method} representation",
+    "processToSeeVisualization": "Process data to see visualization",
+    "addItemsToSeeRepresentations": "Add items to see their vector representations",
+    "addItemToVisualization": "Add Item to Visualization",
+    "datasetPreview": "Dataset Preview",
+    "representAndContinue": "Represent & Continue",
+    "representSuccess": "Data represented successfully",
+    "noDataset": "No dataset selected"
   },
   "dataAugmentation": {
     "title": "数据增强",
@@ -123,7 +169,17 @@
     "augmenting": "增强中...",
     "allAugmentations": "所有增强",
     "noResults": "未生成增强结果",
-    "downloadResults": "下载增强结果"
+    "downloadResults": "下载增强结果",
+    "description": "Increase the size and diversity of your dataset by applying text augmentation techniques.",
+    "augmentationDecision": "Data Augmentation Decision",
+    "augmentationDecisionDescription": "Decide whether to augment your dataset or proceed with the original data.",
+    "shouldAugmentData": "Would you like to augment your dataset to improve model performance?",
+    "skipAugmentation": "Skip Augmentation",
+    "performAugmentation": "Perform Augmentation",
+    "skippingAugmentation": "Skipping augmentation step",
+    "augmentAndContinue": "Augment & Continue",
+    "augmentSuccess": "Data augmented successfully",
+    "noDataset": "No dataset selected"
   },
   "textClassification": {
     "title": "文本分类",
@@ -188,6 +244,15 @@
     "modelPerformance": "模型性能",
     "importance": "重要性",
     "saveModel": "保存模型",
-    "loadModel": "加载模型"
+    "loadModel": "加载模型",
+    "noDataset": "No dataset selected"
+  },
+  "workflow": {
+    "currentDataset": "Current Dataset",
+    "datasetInfo": "Working with: {name}",
+    "noDataset": "No dataset selected",
+    "selectDataset": "Select a dataset",
+    "datasetSize": "Size: {size} records",
+    "datasetSource": "Source: {source}"
   }
 }

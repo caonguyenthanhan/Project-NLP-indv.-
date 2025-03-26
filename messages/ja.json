@@ -23,7 +23,13 @@
     "warning": "警告",
     "noData": "データがありません",
     "loading": "ロード中...",
-    "stepOf": "ステップ{current}/{total}"
+    "stepOf": "ステップ{current}/{total}",
+    "cancel": "Cancel",
+    "save": "Save",
+    "upload": "Upload",
+    "next": "Next",
+    "back": "Back",
+    "saveAndContinue": "Save & Continue"
   },
   "dataCollection": {
     "title": "データ収集",
@@ -44,7 +50,18 @@
     "webScrapingWithPython": "Pythonでのウェブスクレイピング",
     "loadingExploringDatasets": "Hugging Faceでのデータセットの読み込みと探索",
     "downloadingDataset": "データセットをダウンロード中...",
-    "downloadSuccess": "データセットのダウンロードに成功しました！"
+    "downloadSuccess": "データセットのダウンロードに成功しました！",
+    "uploadData": "Upload Data",
+    "uploadDescription": "Upload your own CSV file with text data for classification",
+    "dragAndDrop": "Drag and drop your CSV file here, or click to browse",
+    "csvFormat": "CSV must have 'text' and 'label' columns",
+    "selectFile": "Select File",
+    "dataPrivacy": "Your data is processed locally and never leaves your computer",
+    "noScrapedData": "No data scraped yet",
+    "uploadSuccess": "File uploaded successfully",
+    "scrapeSuccess": "Data scraped successfully",
+    "dataSaved": "Data saved successfully",
+    "noDataToSave": "No data to save"
   },
   "dataCleaning": {
     "title": "データクリーニング",
@@ -59,7 +76,11 @@
     "removeSymbols": "記号を削除",
     "cleanText": "テキストをクリーニング",
     "cleaning": "クリーニング中...",
-    "whatWasRemoved": "削除されたもの："
+    "whatWasRemoved": "削除されたもの：",
+    "cleanAndContinue": "Clean & Continue",
+    "cleanSuccess": "Data cleaned successfully",
+    "noDataset": "No dataset selected",
+    "datasetPreview": "Dataset Preview"
   },
   "textPreprocessing": {
     "title": "テキスト前処理",
@@ -80,7 +101,13 @@
     "steps": "ステップ",
     "tokenization": "トークン化",
     "noEntitiesFound": "エンティティが見つかりませんでした",
-    "processingSteps": "処理ステップ"
+    "processingSteps": "処理ステップ",
+    "description": "Preprocess your text data to prepare it for machine learning algorithms.",
+    "processing": "Processing...",
+    "preprocessAndContinue": "Preprocess & Continue",
+    "preprocessSuccess": "Data preprocessed successfully",
+    "noDataset": "No dataset selected",
+    "datasetPreview": "Dataset Preview"
   },
   "textRepresentation": {
     "title": "テキスト表現",
@@ -103,7 +130,26 @@
     "processEmbeddings": "埋め込みを処理",
     "similarityScore": "類似度スコア",
     "visualization": "可視化",
-    "noEmbeddings": "埋め込みが生成されていません"
+    "noEmbeddings": "埋め込みが生成されていません",
+    "description": "Convert text data into numerical features that can be used by machine learning algorithms.",
+    "methodDescription": "Method Description",
+    "oneHotDescription": "Represents each word as a binary vector where each dimension corresponds to a word in the vocabulary.",
+    "bowDescription": "Counts the frequency of each word in a document, ignoring word order.",
+    "nGramDescription": "Captures sequences of n consecutive words to preserve some context.",
+    "tfidfDescription": "Weights words based on their frequency in a document and rarity across all documents.",
+    "word2vecDescription": "Creates dense vector representations of words based on their context.",
+    "gloveDescription": "Global Vectors for Word Representation - captures global statistics of word co-occurrences.",
+    "fasttextDescription": "Similar to Word2Vec but works with character n-grams, handling out-of-vocabulary words better.",
+    "doc2vecDescription": "Extends Word2Vec to create vector representations for entire documents.",
+    "sentenceDescription": "Creates embeddings for entire sentences that capture semantic meaning.",
+    "processToSee": "Process data to see {method} representation",
+    "processToSeeVisualization": "Process data to see visualization",
+    "addItemsToSeeRepresentations": "Add items to see their vector representations",
+    "addItemToVisualization": "Add Item to Visualization",
+    "datasetPreview": "Dataset Preview",
+    "representAndContinue": "Represent & Continue",
+    "representSuccess": "Data represented successfully",
+    "noDataset": "No dataset selected"
   },
   "dataAugmentation": {
     "title": "データ拡張",
@@ -123,7 +169,17 @@
     "augmenting": "拡張中...",
     "allAugmentations": "すべての拡張",
     "noResults": "拡張結果が生成されていません",
-    "downloadResults": "拡張結果をダウンロード"
+    "downloadResults": "拡張結果をダウンロード",
+    "description": "Increase the size and diversity of your dataset by applying text augmentation techniques.",
+    "augmentationDecision": "Data Augmentation Decision",
+    "augmentationDecisionDescription": "Decide whether to augment your dataset or proceed with the original data.",
+    "shouldAugmentData": "Would you like to augment your dataset to improve model performance?",
+    "skipAugmentation": "Skip Augmentation",
+    "performAugmentation": "Perform Augmentation",
+    "skippingAugmentation": "Skipping augmentation step",
+    "augmentAndContinue": "Augment & Continue",
+    "augmentSuccess": "Data augmented successfully",
+    "noDataset": "No dataset selected"
   },
   "textClassification": {
     "title": "テキスト分類",
@@ -188,6 +244,15 @@
     "modelPerformance": "モデル性能",
     "importance": "重要度",
     "saveModel": "モデルを保存",
-    "loadModel": "モデルをロード"
+    "loadModel": "モデルをロード",
+    "noDataset": "No dataset selected"
+  },
+  "workflow": {
+    "currentDataset": "Current Dataset",
+    "datasetInfo": "Working with: {name}",
+    "noDataset": "No dataset selected",
+    "selectDataset": "Select a dataset",
+    "datasetSize": "Size: {size} records",
+    "datasetSource": "Source: {source}"
   }
 }

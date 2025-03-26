@@ -1,24 +1,23 @@
-//công cụ làm sạch dữ liệu văn bản.
 "use client"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Loader2 } from "lucide-react"
+import { Loader2, ArrowRight } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import { useWorkflow } from "@/context/workflow-context"
+import { DatasetSelector } from "@/components/dataset-selector"
+import { v4 as uuidv4 } from "uuid"
 
 export default function DataCleaning() {
   const t = useTranslations("dataCleaning")
   const common = useTranslations("common")
+  const { currentDataset, addDataset, setCurrentStep } = useWorkflow()
 
-  const [inputText, setInputText] = useState(
-    "Hello, World! This is an example text with numbers like 12345 and symbols like @#$%. There are   extra   spaces   too.",
-  )
-  const [cleanedText, setCleanedText] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
   const [options, setOptions] = useState({
@@ -32,210 +31,171 @@ export default function DataCleaning() {
     setOptions((prev) => ({ ...prev, [option]: value }))
   }
 
-  const cleanText = () => {
+  const cleanData = async () => {
+    if (!currentDataset) {
+      toast.error(t("noDataset"))
+      return
+    }
+
     setIsLoading(true)
+    const toastId = toast.loading(t("cleaning"))
 
-    setTimeout(() => {
-      try {
-        let text = inputText
+    try {
+      // Real data cleaning using the backend
+      const response = await fetch(`http://localhost:8000/clean-data`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          data: currentDataset.data,
+          options: options,
+        }),
+      })
 
-        if (options.removePunctuation) {
-          text = text.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, "")
-        }
-
-        if (options.removeNumbers) {
-          text = text.replace(/\d+/g, "")
-        }
-
-        if (options.removeExtraSpaces) {
-          text = text.replace(/\s+/g, " ").trim()
-        }
-
-        if (options.removeSymbols) {
-          text = text.replace(/[^\w\s]/g, "")
-        }
-
-        setCleanedText(text)
-      } catch (error) {
-        console.error("Error cleaning text:", error)
-      } finally {
-        setIsLoading(false)
+      if (!response.ok) {
+        throw new Error(`Failed to clean data: ${response.status}`)
       }
-    }, 500)
+
+      const data = await response.json()
+
+      // Add cleaned dataset to workflow
+      addDataset({
+        id: uuidv4(),
+        name: `Cleaned: ${currentDataset.name}`,
+        type: "cleaned",
+        data: data.cleaned_data,
+        metadata: {
+          source: `Cleaned from ${currentDataset.name}`,
+          createdAt: new Date().toISOString(),
+          size: data.cleaned_data.length,
+          originalDataset: currentDataset.id,
+          cleaningOptions: options,
+        },
+      })
+
+      toast.update(toastId, {
+        render: t("cleanSuccess"),
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      })
+
+      // Move to next step
+      setTimeout(() => {
+        setCurrentStep(3) // Move to preprocessing step
+      }, 1000)
+    } catch (error) {
+      toast.update(toastId, {
+        render: `Error: ${error instanceof Error ? error.message : "Failed to clean data"}`,
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <div className="space-y-6">
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
+
+      <DatasetSelector allowedTypes={["raw", "augmented"]} />
+
       <Card>
         <CardHeader>
           <CardTitle>{t("title")}</CardTitle>
           <CardDescription>{t("description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="cleaning">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="cleaning">{t("cleaningTools")}</TabsTrigger>
-              <TabsTrigger value="examples">{t("examples")}</TabsTrigger>
-            </TabsList>
+          <div className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="remove-punctuation"
+                  checked={options.removePunctuation}
+                  onCheckedChange={(checked) => handleOptionChange("removePunctuation", checked as boolean)}
+                />
+                <Label htmlFor="remove-punctuation">{t("removePunctuation")}</Label>
+              </div>
 
-            <TabsContent value="cleaning" className="space-y-6 mt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <Label htmlFor="input-text">{t("inputText")}</Label>
-                  <Textarea
-                    id="input-text"
-                    value={inputText}
-                    onChange={(e) => setInputText(e.target.value)}
-                    placeholder={t("inputText")}
-                    className="min-h-[200px]"
-                  />
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="remove-numbers"
+                  checked={options.removeNumbers}
+                  onCheckedChange={(checked) => handleOptionChange("removeNumbers", checked as boolean)}
+                />
+                <Label htmlFor="remove-numbers">{t("removeNumbers")}</Label>
+              </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="remove-punctuation"
-                        checked={options.removePunctuation}
-                        onCheckedChange={(checked) => handleOptionChange("removePunctuation", checked as boolean)}
-                      />
-                      <Label htmlFor="remove-punctuation">{t("removePunctuation")}</Label>
-                    </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="remove-extra-spaces"
+                  checked={options.removeExtraSpaces}
+                  onCheckedChange={(checked) => handleOptionChange("removeExtraSpaces", checked as boolean)}
+                />
+                <Label htmlFor="remove-extra-spaces">{t("removeExtraSpaces")}</Label>
+              </div>
 
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="remove-numbers"
-                        checked={options.removeNumbers}
-                        onCheckedChange={(checked) => handleOptionChange("removeNumbers", checked as boolean)}
-                      />
-                      <Label htmlFor="remove-numbers">{t("removeNumbers")}</Label>
-                    </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="remove-symbols"
+                  checked={options.removeSymbols}
+                  onCheckedChange={(checked) => handleOptionChange("removeSymbols", checked as boolean)}
+                />
+                <Label htmlFor="remove-symbols">{t("removeSymbols")}</Label>
+              </div>
+            </div>
 
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="remove-extra-spaces"
-                        checked={options.removeExtraSpaces}
-                        onCheckedChange={(checked) => handleOptionChange("removeExtraSpaces", checked as boolean)}
-                      />
-                      <Label htmlFor="remove-extra-spaces">{t("removeExtraSpaces")}</Label>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="remove-symbols"
-                        checked={options.removeSymbols}
-                        onCheckedChange={(checked) => handleOptionChange("removeSymbols", checked as boolean)}
-                      />
-                      <Label htmlFor="remove-symbols">{t("removeSymbols")}</Label>
-                    </div>
-                  </div>
-
-                  <Button onClick={cleanText} disabled={isLoading} className="w-full">
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        {t("cleaning")}
-                      </>
-                    ) : (
-                      t("cleanText")
-                    )}
-                  </Button>
-                </div>
-
-                <div className="space-y-4">
-                  <Label>{t("cleanedText")}</Label>
-                  <div className="p-4 border rounded-md bg-muted min-h-[200px] whitespace-pre-wrap">
-                    {cleanedText || t("cleanedText")}
-                  </div>
-
-                  <div className="space-y-2">
-                    <h3 className="text-sm font-medium">{t("whatWasRemoved")}:</h3>
-                    <ul className="list-disc pl-5 space-y-1 text-sm">
-                      {options.removePunctuation && cleanedText && <li>{t("removePunctuation")}</li>}
-                      {options.removeNumbers && cleanedText && <li>{t("removeNumbers")}</li>}
-                      {options.removeExtraSpaces && cleanedText && <li>{t("removeExtraSpaces")}</li>}
-                      {options.removeSymbols && cleanedText && <li>{t("removeSymbols")}</li>}
-                    </ul>
-                  </div>
+            {currentDataset && (
+              <div className="border rounded-md p-4 bg-muted/50">
+                <h3 className="font-medium mb-2">{t("datasetPreview")}</h3>
+                <div className="max-h-[200px] overflow-y-auto">
+                  <table className="min-w-full">
+                    <thead className="bg-muted sticky top-0">
+                      <tr>
+                        {Object.keys(currentDataset.data[0]).map((key) => (
+                          <th key={key} className="px-4 py-2 text-left font-medium">
+                            {key}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentDataset.data.slice(0, 5).map((item, index) => (
+                        <tr key={index} className={index % 2 === 0 ? "bg-muted/50" : ""}>
+                          {Object.values(item).map((value, i) => (
+                            <td key={i} className="px-4 py-2 border-t">
+                              {typeof value === "string"
+                                ? value.substring(0, 50) + (value.length > 50 ? "..." : "")
+                                : String(value)}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            </TabsContent>
-
-            <TabsContent value="examples" className="space-y-6 mt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-base">{t("removePunctuation")}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <div className="p-2 border rounded-md bg-muted">
-                        <p className="text-sm font-medium">Before:</p>
-                        <p className="text-sm">Hello, world! How are you today?</p>
-                      </div>
-                      <div className="p-2 border rounded-md bg-muted">
-                        <p className="text-sm font-medium">After:</p>
-                        <p className="text-sm">Hello world How are you today</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-base">{t("removeNumbers")}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <div className="p-2 border rounded-md bg-muted">
-                        <p className="text-sm font-medium">Before:</p>
-                        <p className="text-sm">There are 42 apples and 17 oranges.</p>
-                      </div>
-                      <div className="p-2 border rounded-md bg-muted">
-                        <p className="text-sm font-medium">After:</p>
-                        <p className="text-sm">There are apples and oranges.</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-base">{t("removeExtraSpaces")}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <div className="p-2 border rounded-md bg-muted">
-                        <p className="text-sm font-medium">Before:</p>
-                        <p className="text-sm">This text has too many spaces.</p>
-                      </div>
-                      <div className="p-2 border rounded-md bg-muted">
-                        <p className="text-sm font-medium">After:</p>
-                        <p className="text-sm">This text has too many spaces.</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-base">{t("removeSymbols")}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <div className="p-2 border rounded-md bg-muted">
-                        <p className="text-sm font-medium">Before:</p>
-                        <p className="text-sm">Email: user@example.com #hashtag $price</p>
-                      </div>
-                      <div className="p-2 border rounded-md bg-muted">
-                        <p className="text-sm font-medium">After:</p>
-                        <p className="text-sm">Email userexamplecom hashtag price</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-          </Tabs>
+            )}
+          </div>
         </CardContent>
+        <CardFooter className="flex justify-end">
+          <Button onClick={cleanData} disabled={isLoading || !currentDataset}>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {t("cleaning")}
+              </>
+            ) : (
+              <>
+                {t("cleanAndContinue")}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </>
+            )}
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   )

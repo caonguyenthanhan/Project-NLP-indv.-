@@ -1,4 +1,6 @@
 "use client"
+
+import { useState } from "react"
 import { useTranslations } from "next-intl"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { StepIndicator } from "@/components/step-indicator"
@@ -7,13 +9,12 @@ import DataCleaning from "@/components/data-cleaning"
 import DataPreprocessing from "@/components/text-preprocessing"
 import TextRepresentation from "@/components/text-representation"
 import DataAugmentation from "@/components/data-augmentation"
+// First, import the TextClassification component
 import TextClassification from "@/components/text-classification"
-import { WorkflowProvider, useWorkflow } from "@/context/workflow-context"
 
-function ClientPageContent() {
+export default function ClientPage() {
   const t = useTranslations()
   const nav = useTranslations("nav")
-  const { currentStep, setCurrentStep } = useWorkflow()
 
   const steps = [
     nav("dataCollection"),
@@ -24,6 +25,9 @@ function ClientPageContent() {
     nav("textClassification"),
   ]
 
+  const [currentStep, setCurrentStep] = useState(0)
+
+  // Update the handleTabChange function to include the new step
   const handleTabChange = (value: string) => {
     const stepIndex = {
       collection: 0,
@@ -37,35 +41,19 @@ function ClientPageContent() {
     setCurrentStep(stepIndex)
   }
 
-  const getTabValue = () => {
-    const values = ["collection", "augmentation", "cleaning", "preprocessing", "representation", "classification"]
-    return values[currentStep]
-  }
-
   return (
     <>
       <StepIndicator currentStep={currentStep} steps={steps} />
 
-      <Tabs value={getTabValue()} className="w-full" onValueChange={handleTabChange}>
+      <Tabs defaultValue="collection" className="w-full" onValueChange={handleTabChange}>
+        {/* Update the TabsList to include the new tab */}
         <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="collection" className="text-xs md:text-sm">
-            1. {nav("dataCollection")}
-          </TabsTrigger>
-          <TabsTrigger value="augmentation" className="text-xs md:text-sm">
-            2. {nav("dataAugmentation")}
-          </TabsTrigger>
-          <TabsTrigger value="cleaning" className="text-xs md:text-sm">
-            3. {nav("dataCleaning")}
-          </TabsTrigger>
-          <TabsTrigger value="preprocessing" className="text-xs md:text-sm">
-            4. {nav("dataPreprocessing")}
-          </TabsTrigger>
-          <TabsTrigger value="representation" className="text-xs md:text-sm">
-            5. {nav("textRepresentation")}
-          </TabsTrigger>
-          <TabsTrigger value="classification" className="text-xs md:text-sm">
-            6. {nav("textClassification")}
-          </TabsTrigger>
+          <TabsTrigger value="collection">1. {nav("dataCollection")}</TabsTrigger>
+          <TabsTrigger value="augmentation">2. {nav("dataAugmentation")}</TabsTrigger>
+          <TabsTrigger value="cleaning">3. {nav("dataCleaning")}</TabsTrigger>
+          <TabsTrigger value="preprocessing">4. {nav("dataPreprocessing")}</TabsTrigger>
+          <TabsTrigger value="representation">5. {nav("textRepresentation")}</TabsTrigger>
+          <TabsTrigger value="classification">6. {nav("textClassification")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="collection">
@@ -93,14 +81,6 @@ function ClientPageContent() {
         </TabsContent>
       </Tabs>
     </>
-  )
-}
-
-export default function ClientPage() {
-  return (
-    <WorkflowProvider>
-      <ClientPageContent />
-    </WorkflowProvider>
   )
 }
 

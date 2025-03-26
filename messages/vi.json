@@ -23,7 +23,13 @@
     "warning": "Cảnh báo",
     "noData": "Không có dữ liệu",
     "loading": "Đang tải...",
-    "stepOf": "Bước {current} trong {total}"
+    "stepOf": "Bước {current} trong {total}",
+    "cancel": "Cancel",
+    "save": "Save",
+    "upload": "Upload",
+    "next": "Next",
+    "back": "Back",
+    "saveAndContinue": "Save & Continue"
   },
   "dataCollection": {
     "title": "Thu thập Dữ liệu",
@@ -44,7 +50,18 @@
     "webScrapingWithPython": "Cào Web với Python",
     "loadingExploringDatasets": "Tải và Khám phá Bộ dữ liệu với Hugging Face",
     "downloadingDataset": "Đang tải bộ dữ liệu...",
-    "downloadSuccess": "Tải bộ dữ liệu thành công!"
+    "downloadSuccess": "Tải bộ dữ liệu thành công!",
+    "uploadData": "Upload Data",
+    "uploadDescription": "Upload your own CSV file with text data for classification",
+    "dragAndDrop": "Drag and drop your CSV file here, or click to browse",
+    "csvFormat": "CSV must have 'text' and 'label' columns",
+    "selectFile": "Select File",
+    "dataPrivacy": "Your data is processed locally and never leaves your computer",
+    "noScrapedData": "No data scraped yet",
+    "uploadSuccess": "File uploaded successfully",
+    "scrapeSuccess": "Data scraped successfully",
+    "dataSaved": "Data saved successfully",
+    "noDataToSave": "No data to save"
   },
   "dataCleaning": {
     "title": "Làm sạch Dữ liệu",
@@ -59,7 +76,11 @@
     "removeSymbols": "Loại bỏ Ký hiệu",
     "cleanText": "Làm sạch Văn bản",
     "cleaning": "Đang làm sạch...",
-    "whatWasRemoved": "Những gì đã bị loại bỏ:"
+    "whatWasRemoved": "Những gì đã bị loại bỏ:",
+    "cleanAndContinue": "Clean & Continue",
+    "cleanSuccess": "Data cleaned successfully",
+    "noDataset": "No dataset selected",
+    "datasetPreview": "Dataset Preview"
   },
   "textPreprocessing": {
     "title": "Tiền xử lý Văn bản",
@@ -80,7 +101,13 @@
     "steps": "Các bước",
     "tokenization": "Phân đoạn từ",
     "noEntitiesFound": "Không tìm thấy thực thể",
-    "processingSteps": "Các bước xử lý"
+    "processingSteps": "Các bước xử lý",
+    "description": "Preprocess your text data to prepare it for machine learning algorithms.",
+    "processing": "Processing...",
+    "preprocessAndContinue": "Preprocess & Continue",
+    "preprocessSuccess": "Data preprocessed successfully",
+    "noDataset": "No dataset selected",
+    "datasetPreview": "Dataset Preview"
   },
   "textRepresentation": {
     "title": "Biểu diễn Văn bản",
@@ -103,7 +130,26 @@
     "processEmbeddings": "Xử lý Embeddings",
     "similarityScore": "Điểm tương đồng",
     "visualization": "Trực quan hóa",
-    "noEmbeddings": "Không tạo được embeddings"
+    "noEmbeddings": "Không tạo được embeddings",
+    "description": "Convert text data into numerical features that can be used by machine learning algorithms.",
+    "methodDescription": "Method Description",
+    "oneHotDescription": "Represents each word as a binary vector where each dimension corresponds to a word in the vocabulary.",
+    "bowDescription": "Counts the frequency of each word in a document, ignoring word order.",
+    "nGramDescription": "Captures sequences of n consecutive words to preserve some context.",
+    "tfidfDescription": "Weights words based on their frequency in a document and rarity across all documents.",
+    "word2vecDescription": "Creates dense vector representations of words based on their context.",
+    "gloveDescription": "Global Vectors for Word Representation - captures global statistics of word co-occurrences.",
+    "fasttextDescription": "Similar to Word2Vec but works with character n-grams, handling out-of-vocabulary words better.",
+    "doc2vecDescription": "Extends Word2Vec to create vector representations for entire documents.",
+    "sentenceDescription": "Creates embeddings for entire sentences that capture semantic meaning.",
+    "processToSee": "Process data to see {method} representation",
+    "processToSeeVisualization": "Process data to see visualization",
+    "addItemsToSeeRepresentations": "Add items to see their vector representations",
+    "addItemToVisualization": "Add Item to Visualization",
+    "datasetPreview": "Dataset Preview",
+    "representAndContinue": "Represent & Continue",
+    "representSuccess": "Data represented successfully",
+    "noDataset": "No dataset selected"
   },
   "dataAugmentation": {
     "title": "Tăng cường Dữ liệu",
@@ -123,7 +169,17 @@
     "augmenting": "Đang tăng cường...",
     "allAugmentations": "Tất cả Tăng cường",
     "noResults": "Không tạo được kết quả tăng cường",
-    "downloadResults": "Tải xuống Kết quả Tăng cường"
+    "downloadResults": "Tải xuống Kết quả Tăng cường",
+    "description": "Increase the size and diversity of your dataset by applying text augmentation techniques.",
+    "augmentationDecision": "Data Augmentation Decision",
+    "augmentationDecisionDescription": "Decide whether to augment your dataset or proceed with the original data.",
+    "shouldAugmentData": "Would you like to augment your dataset to improve model performance?",
+    "skipAugmentation": "Skip Augmentation",
+    "performAugmentation": "Perform Augmentation",
+    "skippingAugmentation": "Skipping augmentation step",
+    "augmentAndContinue": "Augment & Continue",
+    "augmentSuccess": "Data augmented successfully",
+    "noDataset": "No dataset selected"
   },
   "textClassification": {
     "title": "Phân loại Văn bản",
@@ -188,6 +244,15 @@
     "modelPerformance": "Hiệu suất Mô hình",
     "importance": "Tầm quan trọng",
     "saveModel": "Lưu Mô hình",
-    "loadModel": "Tải Mô hình"
+    "loadModel": "Tải Mô hình",
+    "noDataset": "No dataset selected"
+  },
+  "workflow": {
+    "currentDataset": "Current Dataset",
+    "datasetInfo": "Working with: {name}",
+    "noDataset": "No dataset selected",
+    "selectDataset": "Select a dataset",
+    "datasetSize": "Size: {size} records",
+    "datasetSource": "Source: {source}"
   }
 }

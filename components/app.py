@@ -5,7 +5,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.manifold import TSNE
@@ -21,6 +21,27 @@ import io
 import json
 import traceback
 import sys
+import re
+import random
+import string
+from bs4 import BeautifulSoup
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+import gensim
+from gensim.models import Word2Vec
+
+# Download NLTK resources
+try:
+    nltk.download('punkt', quiet=True)
+    nltk.download('punkt_tab', quiet=True)  # Thêm dòng này
+    nltk.download('stopwords', quiet=True)
+    nltk.download('wordnet', quiet=True)
+except Exception as e:
+    print(f"Error downloading NLTK resources: {e}")
+
+
 
 # Configure detailed logging
 logging.basicConfig(
@@ -289,6 +310,7 @@ async def train_model(file: UploadFile = File(None), algorithm: str = "naive-bay
         logs.append(f"Error during training: {str(e)}")
         raise HTTPException(status_code=500, detail={"message": f"Error during training: {str(e)}", "logs": logs})
 
+
 @app.post("/predict")
 async def predict(request: Request):
     global model, vectorizer
@@ -378,3 +400,799 @@ async def load_model():
         logger.error(traceback.format_exc())
         logs.append(f"Error loading model: {str(e)}")
         raise HTTPException(status_code=500, detail={"message": f"Error loading model: {str(e)}", "logs": logs})
+
+# New endpoints for the complete workflow
+
+@app.post("/scrape-url")
+async def scrape_url(request: Request):
+    logger.info("Received POST request to scrape URL")
+    logs = ["Processing web scraping request"]
+    
+    try:
+        body = await request.json()
+        url = body.get("url", "")
+        dataset_type = body.get("dataset_type", "")
+        
+        if not url:
+            logger.error("No URL provided")
+            logs.append("No URL provided")
+            raise HTTPException(status_code=400, detail={"message": "URL is required", "logs": logs})
+        
+        logger.info(f"Scraping URL: {url}, dataset type: {dataset_type}")
+        logs.append(f"Scraping URL: {url}")
+        
+        try:
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+            response = requests.get(url, headers=headers, timeout=10)
+            response.raise_for_status()
+        except requests.RequestException as e:
+            logger.error(f"Error fetching URL: {str(e)}")
+            logs.append(f"Error fetching URL: {str(e)}")
+            raise HTTPException(status_code=500, detail={"message": f"Error fetching URL: {str(e)}", "logs": logs})
+        
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        # Extract data based on dataset type
+        data = []
+        if dataset_type == "imdb":
+            # Extract movie data
+            movie_containers = soup.select('.lister-item-content')
+            for container in movie_containers[:10]:  # Limit to 10 items
+                title_elem = container.select_one('.lister-item-header a')
+                year_elem = container.select_one('.lister-item-year')
+                rating_elem = container.select_one('.ratings-imdb-rating strong')
+                
+                title = title_elem.text if title_elem else "Unknown"
+                year = year_elem.text.strip('()') if year_elem else "Unknown"
+                rating = rating_elem.text if rating_elem else "0.0"
+                
+                data.append({
+                    "title": title,
+                    "year": year,
+                    "rating": rating,
+                    "text": f"{title} ({year}) - Rating: {rating}",
+                    "label": "positive" if float(rating.replace(',', '.')) >= 7.0 else "negative"
+                })
+        elif dataset_type == "books":
+            # Extract book data
+            book_containers = soup.select('article.product_pod')
+            for container in book_containers[:10]:  # Limit to 10 items
+                title_elem = container.select_one('h3 a')
+                price_elem = container.select_one('.price_color')
+                availability_elem = container.select_one('.availability')
+                rating_elem = container.select_one('p.star-rating')
+                
+                title = title_elem.get('title') if title_elem else "Unknown"
+                price = price_elem.text if price_elem else "Unknown"
+                availability = availability_elem.text.strip() if availability_elem else "Unknown"
+                rating = rating_elem.get('class')[1] if rating_elem and len(rating_elem.get('class')) > 1 else "Unknown"
+                
+                data.append({
+                    "title": title,
+                    "price": price,
+                    "availability": availability,
+                    "rating": rating,
+                    "text": f"{title} - Price: {price}, Availability: {availability}",
+                    "label": "positive" if rating in ["Four", "Five"] else "negative"
+                })
+        else:
+            # Generic scraping - extract paragraphs
+            paragraphs = soup.select('p')
+            for i, p in enumerate(paragraphs[:10]):  # Limit to 10 items
+                text = p.text.strip()
+                if len(text) > 20:  # Only include substantial paragraphs
+                    data.append({
+                        "id": i + 1,
+                        "text": text,
+                        "label": "positive" if i % 2 == 0 else "negative"  # Arbitrary label for demo
+                    })
+        
+        if not data:
+            logger.warning("No data extracted from URL")
+            logs.append("No data extracted from URL")
+            # Create some mock data if nothing was extracted
+            data = [
+                {"id": 1, "text": "Sample text 1 from " + url, "label": "positive"},
+                {"id": 2, "text": "Sample text 2 from " + url, "label": "negative"},
+                {"id": 3, "text": "Sample text 3 from " + url, "label": "positive"}
+            ]
+        
+        # Create CSV content
+        df = pd.DataFrame(data)
+        csv_buffer = io.StringIO()
+        df.to_csv(csv_buffer, index=False)
+        csv_content = csv_buffer.getvalue()
+        
+        logger.info(f"Successfully scraped {len(data)} items from URL")
+        logs.append(f"Successfully scraped {len(data)} items")
+        
+        return {
+            "message": "URL scraped successfully",
+            "data": data,
+            "csv_content": csv_content,
+            "logs": logs
+        }
+    except Exception as e:
+        logger.error(f"Error during web scraping: {str(e)}")
+        logger.error(traceback.format_exc())
+        logs.append(f"Error during web scraping: {str(e)}")
+        raise HTTPException(status_code=500, detail={"message": f"Error during web scraping: {str(e)}", "logs": logs})
+
+@app.post("/augment-data")
+async def augment_data(request: Request):
+    logger.info("Received POST request to augment data")
+    logs = ["Processing data augmentation request"]
+    
+    try:
+        body = await request.json()
+        data = body.get("data", [])
+        synonym_probability = body.get("synonym_probability", 0.3)
+        noise_probability = body.get("noise_probability", 0.1)
+        deletion_probability = body.get("deletion_probability", 0.2)
+        back_translation_language = body.get("back_translation_language", "fr")
+        
+        if not data:
+            logger.error("No data provided for augmentation")
+            logs.append("No data provided for augmentation")
+            raise HTTPException(status_code=400, detail={"message": "Data is required", "logs": logs})
+        
+        logger.info(f"Augmenting {len(data)} data points")
+        logs.append(f"Augmenting {len(data)} data points")
+        
+        # Create a simple synonym dictionary for demonstration
+        synonym_dict = {
+            "good": ["great", "excellent", "wonderful", "fantastic"],
+            "bad": ["poor", "terrible", "awful", "horrible"],
+            "happy": ["joyful", "delighted", "pleased", "content"],
+            "sad": ["unhappy", "depressed", "miserable", "gloomy"],
+            "big": ["large", "huge", "enormous", "gigantic"],
+            "small": ["tiny", "little", "miniature", "compact"],
+            "beautiful": ["pretty", "gorgeous", "attractive", "lovely"],
+            "ugly": ["unattractive", "hideous", "unsightly", "plain"],
+            "fast": ["quick", "rapid", "swift", "speedy"],
+            "slow": ["sluggish", "unhurried", "leisurely", "gradual"]
+        }
+        
+        augmented_data = []
+        
+        for item in data:
+            original_text = item.get("text", "")
+            if not original_text:
+                continue
+                
+            label = item.get("label", "")
+            
+            # Keep the original data
+            augmented_data.append(item)
+            
+            # 1. Synonym replacement
+            if synonym_probability > 0:
+                words = original_text.split()
+                new_words = words.copy()
+                
+                for i, word in enumerate(words):
+                    word_lower = word.lower().strip(string.punctuation)
+                    if word_lower in synonym_dict and random.random() < synonym_probability:
+                        synonyms = synonym_dict[word_lower]
+                        new_words[i] = random.choice(synonyms)
+                
+                augmented_text = " ".join(new_words)
+                augmented_data.append({
+                    **item,
+                    "text": augmented_text,
+                    "augmentation_type": "synonym_replacement"
+                })
+            
+            # 2. Random word deletion
+            if deletion_probability > 0:
+                words = original_text.split()
+                if len(words) > 3:  # Only delete if we have enough words
+                    new_words = [word for word in words if random.random() > deletion_probability]
+                    if not new_words:  # Ensure we have at least one word
+                        new_words = [random.choice(words)]
+                    
+                    augmented_text = " ".join(new_words)
+                    augmented_data.append({
+                        **item,
+                        "text": augmented_text,
+                        "augmentation_type": "random_deletion"
+                    })
+            
+            # 3. Random word swapping
+            words = original_text.split()
+            if len(words) > 3:
+                new_words = words.copy()
+                for _ in range(max(1, int(len(words) * 0.1))):
+                    idx1, idx2 = random.sample(range(len(new_words)), 2)
+                    new_words[idx1], new_words[idx2] = new_words[idx2], new_words[idx1]
+                
+                augmented_text = " ".join(new_words)
+                augmented_data.append({
+                    **item,
+                    "text": augmented_text,
+                    "augmentation_type": "word_swapping"
+                })
+            
+            # 4. Random noise injection
+            if noise_probability > 0:
+                chars = list(original_text)
+                for i in range(len(chars)):
+                    if random.random() < noise_probability:
+                        if random.random() < 0.5:  # Replace with random character
+                            chars[i] = random.choice(string.ascii_letters + string.digits + string.punctuation + " ")
+                        else:  # Insert random character
+                            chars.insert(i, random.choice(string.ascii_letters + string.digits))
+                
+                augmented_text = "".join(chars)
+                augmented_data.append({
+                    **item,
+                    "text": augmented_text,
+                    "augmentation_type": "noise_injection"
+                })
+            
+            # 5. Simulated back translation
+            back_translations = {
+                "fr": {
+                    "hello": "hi there",
+                    "good morning": "morning greetings",
+                    "how are you": "how are you doing",
+                    "thank you": "thanks a lot",
+                    "goodbye": "see you later"
+                },
+                "es": {
+                    "hello": "greetings",
+                    "good morning": "have a nice day",
+                    "how are you": "how is everything",
+                    "thank you": "many thanks",
+                    "goodbye": "until next time"
+                },
+                "de": {
+                    "hello": "welcome",
+                    "good morning": "good day",
+                    "how are you": "how is it going",
+                    "thank you": "appreciate it",
+                    "goodbye": "farewell"
+                }
+            }
+            
+            # Simple back translation simulation
+            words = original_text.split()
+            new_words = []
+            for word in words:
+                word_lower = word.lower()
+                if word_lower in back_translations.get(back_translation_language, {}):
+                    new_words.append(back_translations[back_translation_language][word_lower])
+                else:
+                    new_words.append(word)
+            
+            if new_words != words:
+                augmented_text = " ".join(new_words)
+                augmented_data.append({
+                    **item,
+                    "text": augmented_text,
+                    "augmentation_type": "back_translation"
+                })
+        
+        logger.info(f"Successfully augmented data to {len(augmented_data)} items")
+        logs.append(f"Successfully augmented data to {len(augmented_data)} items")
+        
+        return {
+            "message": "Data augmented successfully",
+            "augmented_data": augmented_data,
+            "logs": logs
+        }
+    except Exception as e:
+        logger.error(f"Error during data augmentation: {str(e)}")
+        logger.error(traceback.format_exc())
+        logs.append(f"Error during data augmentation: {str(e)}")
+        raise HTTPException(status_code=500, detail={"message": f"Error during data augmentation: {str(e)}", "logs": logs})
+
+@app.post("/clean-data")
+async def clean_data(request: Request):
+    logger.info("Received POST request to clean data")
+    logs = ["Processing data cleaning request"]
+    
+    try:
+        body = await request.json()
+        data = body.get("data", [])
+        options = body.get("options", {})
+        
+        if not data:
+            logger.error("No data provided for cleaning")
+            logs.append("No data provided for cleaning")
+            raise HTTPException(status_code=400, detail={"message": "Data is required", "logs": logs})
+        
+        logger.info(f"Cleaning {len(data)} data points with options: {options}")
+        logs.append(f"Cleaning {len(data)} data points")
+        
+        cleaned_data = []
+        
+        for item in data:
+            text = item.get("text", "")
+            if not text:
+                cleaned_data.append(item)
+                continue
+            
+            # Apply cleaning operations based on options
+            if options.get("removePunctuation", False):
+                text = re.sub(r'[^\w\s]', '', text)
+            
+            if options.get("removeNumbers", False):
+                text = re.sub(r'\d+', '', text)
+            
+            if options.get("removeExtraSpaces", False):
+                text = re.sub(r'\s+', ' ', text).strip()
+            
+            if options.get("removeSymbols", False):
+                text = re.sub(r'[^\w\s]', '', text)
+            
+            cleaned_data.append({
+                **item,
+                "text": text,
+                "original_text": item.get("text", "")
+            })
+        
+        logger.info(f"Successfully cleaned {len(cleaned_data)} items")
+        logs.append(f"Successfully cleaned {len(cleaned_data)} items")
+        
+        return {
+            "message": "Data cleaned successfully",
+            "cleaned_data": cleaned_data,
+            "logs": logs
+        }
+    except Exception as e:
+        logger.error(f"Error during data cleaning: {str(e)}")
+        logger.error(traceback.format_exc())
+        logs.append(f"Error during data cleaning: {str(e)}")
+        raise HTTPException(status_code=500, detail={"message": f"Error during data cleaning: {str(e)}", "logs": logs})
+
+@app.post("/preprocess-data")
+async def preprocess_data(request: Request):
+    logger.info("Received POST request to preprocess data")
+    logs = ["Processing data preprocessing request"]
+    
+    try:
+        body = await request.json()
+        data = body.get("data", [])
+        options = body.get("options", {})
+        
+        if not data:
+            logger.error("No data provided for preprocessing")
+            logs.append("No data provided for preprocessing")
+            raise HTTPException(status_code=400, detail={"message": "Data is required", "logs": logs})
+        
+        logger.info(f"Preprocessing {len(data)} data points with options: {options}")
+        logs.append(f"Preprocessing {len(data)} data points")
+        
+        # Initialize NLTK components
+        stop_words = set(stopwords.words('english')) if options.get("removeStopwords", False) else set()
+        stemmer = PorterStemmer() if options.get("stem", False) else None
+        lemmatizer = WordNetLemmatizer() if options.get("lemmatize", False) else None
+        
+        # Contractions mapping for expansion
+        contractions = {
+            "I'm": "I am",
+            "I'd": "I would",
+            "I'll": "I will",
+            "I've": "I have",
+            "you're": "you are",
+            "you'd": "you would",
+            "you'll": "you will",
+            "you've": "you have",
+            "he's": "he is",
+            "he'd": "he would",
+            "he'll": "he will",
+            "she's": "she is",
+            "she'd": "she would",
+            "she'll": "she will",
+            "it's": "it is",
+            "it'd": "it would",
+            "it'll": "it will",
+            "we're": "we are",
+            "we'd": "we would",
+            "we'll": "we will",
+            "we've": "we have",
+            "they're": "they are",
+            "they'd": "they would",
+            "they'll": "they will",
+            "they've": "they have",
+            "that's": "that is",
+            "that'd": "that would",
+            "that'll": "that will",
+            "who's": "who is",
+            "who'd": "who would",
+            "who'll": "who will",
+            "what's": "what is",
+            "what'd": "what would",
+            "what'll": "what will",
+            "where's": "where is",
+            "where'd": "where would",
+            "where'll": "where will",
+            "when's": "when is",
+            "when'd": "when would",
+            "when'll": "when will",
+            "why's": "why is",
+            "why'd": "why would",
+            "why'll": "why will",
+            "how's": "how is",
+            "how'd": "how would",
+            "how'll": "how will",
+            "isn't": "is not",
+            "aren't": "are not",
+            "wasn't": "was not",
+            "weren't": "were not",
+            "haven't": "have not",
+            "hasn't": "has not",
+            "hadn't": "had not",
+            "don't": "do not",
+            "doesn't": "does not",
+            "didn't": "did not",
+            "can't": "cannot",
+            "couldn't": "could not",
+            "shouldn't": "should not",
+            "won't": "will not",
+            "wouldn't": "would not"
+        }
+        
+        # Simple spelling correction dictionary
+        spelling_corrections = {
+            "teh": "the",
+            "recieve": "receive",
+            "beleive": "believe",
+            "freind": "friend",
+            "wierd": "weird",
+            "acheive": "achieve",
+            "accomodate": "accommodate",
+            "accross": "across",
+            "agressive": "aggressive",
+            "apparant": "apparent",
+            "appearence": "appearance",
+            "arguement": "argument",
+            "assasination": "assassination",
+            "basicly": "basically",
+            "begining": "beginning",
+            "belive": "believe",
+            "buisness": "business",
+            "calender": "calendar",
+            "camoflage": "camouflage",
+            "catagory": "category",
+            "cemetary": "cemetery",
+            "changable": "changeable",
+            "cheif": "chief",
+            "collegue": "colleague",
+            "comming": "coming",
+            "commitee": "committee",
+            "completly": "completely",
+            "concious": "conscious",
+            "curiousity": "curiosity",
+            "definately": "definitely",
+            "desparate": "desperate",
+            "dissapoint": "disappoint",
+            "embarass": "embarrass",
+            "enviroment": "environment",
+            "existance": "existence",
+            "familar": "familiar",
+            "finaly": "finally",
+            "foriegn": "foreign",
+            "goverment": "government",
+            "gaurd": "guard",
+            "happend": "happened",
+            "harrass": "harass",
+            "honourary": "honorary",
+            "humourous": "humorous",
+            "independant": "independent",
+            "intresting": "interesting",
+            "knowlege": "knowledge",
+            "liason": "liaison",
+            "libary": "library",
+            "lisence": "license",
+            "maintainance": "maintenance",
+            "millenium": "millennium",
+            "miniscule": "minuscule",
+            "mischevious": "mischievous",
+            "mispell": "misspell",
+            "neccessary": "necessary",
+            "noticable": "noticeable",
+            "occassion": "occasion",
+            "occurance": "occurrence",
+            "occured": "occurred",
+            "paralel": "parallel",
+            "parliment": "parliament",
+            "persistant": "persistent",
+            "posession": "possession",
+            "prefered": "preferred",
+            "propoganda": "propaganda",
+            "publically": "publicly",
+            "realy": "really",
+            "recieve": "receive",
+            "refered": "referred",
+            "relevent": "relevant",
+            "religous": "religious",
+            "remeber": "remember",
+            "resistence": "resistance",
+            "responsability": "responsibility",
+            "rythm": "rhythm",
+            "seperate": "separate",
+            "seige": "siege",
+            "succesful": "successful",
+            "supercede": "supersede",
+            "supress": "suppress",
+            "surpise": "surprise",
+            "tendancy": "tendency",
+            "therefor": "therefore",
+            "threshhold": "threshold",
+            "tommorow": "tomorrow",
+            "tounge": "tongue",
+            "truely": "truly",
+            "unforseen": "unforeseen",
+            "unfortunatly": "unfortunately",
+            "untill": "until",
+            "wierd": "weird"
+        }
+        
+        preprocessed_data = []
+        
+        for item in data:
+            text = item.get("text", "")
+            if not text:
+                preprocessed_data.append(item)
+                continue
+            
+            # Store original text
+            original_text = text
+            
+            # Apply preprocessing operations based on options
+            if options.get("expandContractions", False):
+                for contraction, expansion in contractions.items():
+                    text = re.sub(r'\b' + contraction + r'\b', expansion, text, flags=re.IGNORECASE)
+            
+            if options.get("correctSpelling", False):
+                words = text.split()
+                corrected_words = []
+                for word in words:
+                    word_lower = word.lower()
+                    if word_lower in spelling_corrections:
+                        corrected_words.append(spelling_corrections[word_lower])
+                    else:
+                        corrected_words.append(word)
+                text = " ".join(corrected_words)
+            
+            if options.get("lowercase", False):
+                text = text.lower()
+            
+            if options.get("removePunctuation", False):
+                text = re.sub(r'[^\w\s]', '', text)
+            
+            if options.get("removeWhitespace", False):
+                text = re.sub(r'\s+', ' ', text).strip()
+            
+            # Tokenize for more advanced operations
+            tokens = word_tokenize(text)
+            
+            if options.get("removeStopwords", False):
+                tokens = [token for token in tokens if token.lower() not in stop_words]
+            
+            if options.get("stem", False) and stemmer:
+                tokens = [stemmer.stem(token) for token in tokens]
+            
+            if options.get("lemmatize", False) and lemmatizer:
+                tokens = [lemmatizer.lemmatize(token) for token in tokens]
+            
+            # Reconstruct text from tokens
+            processed_text = " ".join(tokens)
+            
+            # Named Entity Recognition (simplified)
+            entities = []
+            if options.get("detectEntities", False):
+                # Simple pattern-based NER
+                entity_patterns = [
+                    (r'\b[A-Z][a-z]+ [A-Z][a-z]+\b', 'PERSON'),
+                    (r'\b[A-Z][a-z]+ (Inc|Corp|LLC|Ltd)\b', 'ORGANIZATION'),
+                    (r'\b[A-Z][a-z]+, [A-Z]{2}\b', 'LOCATION'),
+                    (r'\b\d{1,2}/\d{1,2}/\d{2,4}\b', 'DATE'),
+                    (r'\b\d{1,2}:\d{2}\b', 'TIME'),
+                    (r'\b\$\d+(\.\d{2})?\b', 'MONEY'),
+                    (r'\b\d+%\b', 'PERCENT')
+                ]
+                
+                for pattern, label in entity_patterns:
+                    for match in re.finditer(pattern, original_text):
+                        entities.append({
+                            'text': match.group(),
+                            'label': label,
+                            'start': match.start(),
+                            'end': match.end()
+                        })
+            
+            preprocessed_data.append({
+                **item,
+                "text": processed_text,
+                "original_text": original_text,
+                "entities": entities
+            })
+        
+        logger.info(f"Successfully preprocessed {len(preprocessed_data)} items")
+        logs.append(f"Successfully preprocessed {len(preprocessed_data)} items")
+        
+        return {
+            "message": "Data preprocessed successfully",
+            "preprocessed_data": preprocessed_data,
+            "logs": logs
+        }
+    except Exception as e:
+        logger.error(f"Error during data preprocessing: {str(e)}")
+        logger.error(traceback.format_exc())
+        logs.append(f"Error during data preprocessing: {str(e)}")
+        raise HTTPException(status_code=500, detail={"message": f"Error during data preprocessing: {str(e)}", "logs": logs})
+
+@app.post("/represent-data")
+async def represent_data(request: Request):
+    logger.info("Received POST request to represent data")
+    logs = ["Processing data representation request"]
+    
+    try:
+        body = await request.json()
+        data = body.get("data", [])
+        method = body.get("method", "tfidf")
+        
+        if not data:
+            logger.error("No data provided for representation")
+            logs.append("No data provided for representation")
+            raise HTTPException(status_code=400, detail={"message": "Data is required", "logs": logs})
+        
+        logger.info(f"Representing {len(data)} data points with method: {method}")
+        logs.append(f"Representing {len(data)} data points with method: {method}")
+        
+        # Extract text and labels
+        texts = [item.get("text", "") for item in data]
+        labels = [item.get("label", "") for item in data]
+        
+        represented_data = []
+        features = []
+        
+        # Apply representation method
+        if method == "one-hot":
+            # One-hot encoding (simplified)
+            # Create vocabulary
+            all_words = set()
+            for text in texts:
+                all_words.update(text.split())
+            vocabulary = sorted(list(all_words))
+            features = vocabulary
+            
+            # Create one-hot vectors
+            for i, text in enumerate(texts):
+                words = set(text.split())
+                vector = [1 if word in words else 0 for word in vocabulary]
+                
+                represented_data.append({
+                    **data[i],
+                    "vector": vector,
+                    "representation_method": "one-hot"
+                })
+        
+        elif method == "bow":
+            # Bag of Words
+            vectorizer = CountVectorizer()
+            X = vectorizer.fit_transform(texts)
+            feature_names = vectorizer.get_feature_names_out()
+            features = feature_names.tolist()
+            
+            for i, text in enumerate(texts):
+                vector = X[i].toarray()[0].tolist()
+                represented_data.append({
+                    **data[i],
+                    "vector": vector,
+                    "representation_method": "bow"
+                })
+        
+        elif method == "tfidf":
+            # TF-IDF
+            vectorizer = TfidfVectorizer()
+            X = vectorizer.fit_transform(texts)
+            feature_names = vectorizer.get_feature_names_out()
+            features = feature_names.tolist()
+            
+            for i, text in enumerate(texts):
+                vector = X[i].toarray()[0].tolist()
+                represented_data.append({
+                    **data[i],
+                    "vector": vector,
+                    "representation_method": "tfidf"
+                })
+        
+        elif method == "ngram":
+            # N-grams (bigrams)
+            vectorizer = CountVectorizer(ngram_range=(2, 2))
+            X = vectorizer.fit_transform(texts)
+            feature_names = vectorizer.get_feature_names_out()
+            features = feature_names.tolist()
+            
+            for i, text in enumerate(texts):
+                vector = X[i].toarray()[0].tolist()
+                represented_data.append({
+                    **data[i],
+                    "vector": vector,
+                    "representation_method": "ngram"
+                })
+        
+        elif method in ["word2vec", "glove", "fasttext", "doc2vec", "sentence"]:
+            # Word embeddings (simplified simulation)
+            # In a real implementation, you would use pre-trained models
+            
+            # Create a simple Word2Vec model for demonstration
+            tokenized_texts = [text.split() for text in texts]
+            
+            # Train a simple model
+            embedding_size = 3  # Small for demonstration
+            model = Word2Vec(sentences=tokenized_texts, vector_size=embedding_size, window=5, min_count=1, workers=4)
+            
+            if method in ["word2vec", "glove", "fasttext"]:
+                # Word-level embeddings
+                word_vectors = {}
+                for word in model.wv.index_to_key:
+                    word_vectors[word] = model.wv[word].tolist()
+                
+                for i, text in enumerate(texts):
+                    words = text.split()
+                    if not words:
+                        vector = [0] * embedding_size
+                    else:
+                        # Average word vectors
+                        vectors = [model.wv[word] for word in words if word in model.wv]
+                        if vectors:
+                            vector = np.mean(vectors, axis=0).tolist()
+                        else:
+                            vector = [0] * embedding_size
+                    
+                    represented_data.append({
+                        **data[i],
+                        "vector": vector,
+                        "representation_method": method
+                    })
+            else:
+                # Document-level embeddings (doc2vec or sentence)
+                for i, text in enumerate(texts):
+                    # Simulate document vector
+                    words = text.split()
+                    if not words:
+                        vector = [0] * embedding_size
+                    else:
+                        # Use word vectors and add some noise for variety
+                        vectors = [model.wv[word] for word in words if word in model.wv]
+                        if vectors:
+                            vector = np.mean(vectors, axis=0)
+                            # Add some noise to differentiate from word vectors
+                            noise = np.random.normal(0, 0.1, embedding_size)
+                            vector = (vector + noise).tolist()
+                        else:
+                            vector = [0] * embedding_size
+                    
+                    represented_data.append({
+                        **data[i],
+                        "vector": vector,
+                        "representation_method": method
+                    })
+        
+        else:
+            logger.error(f"Unsupported representation method: {method}")
+            logs.append(f"Unsupported representation method: {method}")
+            raise HTTPException(status_code=400, detail={"message": f"Unsupported representation method: {method}", "logs": logs})
+        
+        logger.info(f"Successfully represented {len(represented_data)} items")
+        logs.append(f"Successfully represented {len(represented_data)} items")
+        
+        return {
+            "message": "Data represented successfully",
+            "represented_data": represented_data,
+            "features": features,
+            "logs": logs
+        }
+    except Exception as e:
+        logger.error(f"Error during data representation: {str(e)}")
+        logger.error(traceback.format_exc())
+        logs.append(f"Error during data representation: {str(e)}")
+        raise HTTPException(status_code=500, detail={"message": f"Error during data representation: {str(e)}", "logs": logs})
+
