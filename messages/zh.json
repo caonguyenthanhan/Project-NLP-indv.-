@@ -43,8 +43,8 @@
     "knnClassification": "K最近邻(KNN)文本分类",
     "webScrapingWithPython": "使用Python进行网络爬虫",
     "loadingExploringDatasets": "使用Hugging Face加载和探索数据集",
-    "downloadingDataset": "Đang tải bộ dữ liệu...",
-    "downloadSuccess": "Tải bộ dữ liệu thành công!"
+    "downloadingDataset": "正在下载数据集...",
+    "downloadSuccess": "数据集下载成功！"
   },
   "dataCleaning": {
     "title": "数据清洗",
@@ -163,6 +163,31 @@
     "confidence": "置信度",
     "batchPrediction": "批量预测",
     "uploadTestFile": "上传测试文件",
-    "runBatchPrediction": "运行批量预测"
+    "runBatchPrediction": "运行批量预测",
+    "logistic": "逻辑回归",
+    "alpha": "Alpha（平滑）",
+    "fitPrior": "拟合优先",
+    "predictPlaceholder": "输入要分类的文本...",
+    "predictButton": "分类文本",
+    "comingSoon": "即将推出...",
+    "noFileSelected": "请先选择一个文件",
+    "noTextInput": "请输入要分类的文本",
+    "trainingModel": "正在训练模型...",
+    "trainSuccess": "模型训练成功",
+    "predictSuccess": "文本分类成功",
+    "loadingDataset": "正在加载数据集",
+    "datasetLoaded": "数据集加载成功",
+    "selectedFile": "已选择的文件",
+    "datasetStatistics": "数据集统计",
+    "totalSamples": "总样本数",
+    "averageTextLength": "平均文本长度",
+    "numberOfClasses": "类别数量",
+    "characters": "字符",
+    "samples": "样本",
+    "predictionHistory": "预测历史",
+    "modelPerformance": "模型性能",
+    "importance": "重要性",
+    "saveModel": "保存模型",
+    "loadModel": "加载模型"
   }
 }

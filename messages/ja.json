@@ -43,8 +43,8 @@
     "knnClassification": "K近傍法（KNN）テキスト分類",
     "webScrapingWithPython": "Pythonでのウェブスクレイピング",
     "loadingExploringDatasets": "Hugging Faceでのデータセットの読み込みと探索",
-    "downloadingDataset": "Đang tải bộ dữ liệu...",
-    "downloadSuccess": "Tải bộ dữ liệu thành công!"
+    "downloadingDataset": "データセットをダウンロード中...",
+    "downloadSuccess": "データセットのダウンロードに成功しました！"
   },
   "dataCleaning": {
     "title": "データクリーニング",
@@ -60,7 +60,6 @@
     "cleanText": "テキストをクリーニング",
     "cleaning": "クリーニング中...",
     "whatWasRemoved": "削除されたもの："
-
   },
   "textPreprocessing": {
     "title": "テキスト前処理",
@@ -164,6 +163,31 @@
     "confidence": "信頼度",
     "batchPrediction": "バッチ予測",
     "uploadTestFile": "テストファイルをアップロード",
-    "runBatchPrediction": "バッチ予測を実行"
+    "runBatchPrediction": "バッチ予測を実行",
+    "logistic": "ロジスティック回帰",
+    "alpha": "アルファ（平滑化）",
+    "fitPrior": "事前適合",
+    "predictPlaceholder": "分類するテキストを入力してください...",
+    "predictButton": "テキストを分類",
+    "comingSoon": "近日公開...",
+    "noFileSelected": "まずファイルを選択してください",
+    "noTextInput": "分類するテキストを入力してください",
+    "trainingModel": "モデルを訓練中...",
+    "trainSuccess": "モデルの訓練に成功しました",
+    "predictSuccess": "テキストの分類に成功しました",
+    "loadingDataset": "データセットをロード中",
+    "datasetLoaded": "データセットのロードに成功しました",
+    "selectedFile": "選択されたファイル",
+    "datasetStatistics": "データセット統計",
+    "totalSamples": "総サンプル数",
+    "averageTextLength": "平均テキスト長",
+    "numberOfClasses": "クラスの数",
+    "characters": "文字",
+    "samples": "サンプル",
+    "predictionHistory": "予測履歴",
+    "modelPerformance": "モデル性能",
+    "importance": "重要度",
+    "saveModel": "モデルを保存",
+    "loadModel": "モデルをロード"
   }
 }
