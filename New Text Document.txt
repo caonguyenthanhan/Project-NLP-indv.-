@@ -1,5 +1,14 @@
 sửa logic cho tôi như sau: 
-bước 1: Thu thập dữ liệu, sửa lại người dùng có thể nhập 1 đoạn văn bản, 1 link đến 1 web ( để cào dữ liệu về)
+bước 1: Thu thập dữ liệu, sửa lại người dùng có thể nhập 1 đoạn văn bản, 1 link đến 1 web ( để cào dữ liệu về), bỏ qua tải các dữ liệu công khai, chỉ giới thiệu các bộ công khai làm gì:
+IMDB Reviews	positive/negative (tích cực/tiêu cực)	Phân tích tình cảm (Sentiment Analysis)
+News Articles	4 chủ đề	Phân loại văn bản (Text Classification)
+Twitter Sentiment	positive/negative (tích cực/tiêu cực)	Phân tích tình cảm (Sentiment Analysis)
+SMS Spam	spam/ham	Phát hiện spam (Spam Detection)
+BBC News	5 chủ đề	Phân loại văn bản (Text Classification)
+Yelp Reviews	Xếp hạng sao (1-5 sao)	Phân tích tình cảm chi tiết, Dự đoán xếp hạng
+so sánh độ chính xác của các mô hình
+
+
 bước 2: Tăng cường dữ liệu, sau khi người dùng đã qua bước 1 sé có 1 tệp dữ liệu (data), hiện lên đánh giá về độ lớn của dữ liệu, cho phép người dùng tăng cường hoặc không ( 2 nút, tăng cường và tiếp theo). nếu tăng cường thì ra dữ liệu rồi gộp với dữ liệu hiện có
 bước3: Làm sạch dữ liệu, đưa dữ liệu vào làm sạch
 bước 4: Tiền xử lý dữ liệu cho dữ liệu đó
