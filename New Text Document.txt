@@ -12,7 +12,7 @@ so sánh độ chính xác của các mô hình
 bước 2: Tăng cường dữ liệu, sau khi người dùng đã qua bước 1 sé có 1 tệp dữ liệu (data), hiện lên đánh giá về độ lớn của dữ liệu, cho phép người dùng tăng cường hoặc không ( 2 nút, tăng cường và tiếp theo). nếu tăng cường thì ra dữ liệu rồi gộp với dữ liệu hiện có
 bước3: Làm sạch dữ liệu, đưa dữ liệu vào làm sạch
 bước 4: Tiền xử lý dữ liệu cho dữ liệu đó
-bước 5: Biểu diễn văn bản, biểu diễn dữ liệu này dưới dạng các vector chuẩn bị làm đầu vào cho mô hình dự đoán
+bước 5: Biểu diễn văn bản, biểu diễn dữ liệu này dưới dạng các vector chuẩn bị làm đầu vào cho mô hình dự đoán, biểu diễn ra được các vectoer, hiện lên các vector để nguowofi dùng xem
 bước 6: hiển thị phần so sách mức độ chính xác của các mô hình, cho người dùng chọn nhiệm vụ,  các mô hình sẽ được sever gọi lên từ ./model tùy theo nhiệm vụ mà người dùng chọn (Phân tích tình cảm, Phân loại văn bản, ...)
 kết luận là dữ liệu này thuộc nhãn gì (tùy vào bài toán làm gì).
 

@@ -1,4 +1,9 @@
 {
+  "app": {
+    "title": "NLP Toolkit",
+    "description": "A comprehensive toolkit for Natural Language Processing techniques",
+    "footer": "© {year} NLP Course - All Rights Reserved"
+  },
   "nav": {
     "dataCollection": "Data Collection",
     "dataAugmentation": "Data Augmentation",
@@ -142,6 +147,10 @@
     "fasttext": "FastText",
     "doc2vec": "Doc2Vec",
     "sentence": "Sentence Embeddings",
+    "method": "Method",
+    "vectorSize": "Vector Size",
+    "sampleFeatures": "Sample Features",
+    "represent": "Represent",
     "methodDescription": "Method Description",
     "oneHotDescription": "Represents each word as a binary vector where each dimension corresponds to a word in the vocabulary.",
     "bowDescription": "Counts the frequency of each word in a document, ignoring word order.",
@@ -164,36 +173,18 @@
   },
   "textClassification": {
     "title": "Text Classification",
-    "description": "Train a machine learning model to classify text into predefined categories.",
-    "naiveBayes": "Naive Bayes",
-    "logistic": "Logistic Regression",
-    "svm": "Support Vector Machine",
-    "knn": "K-Nearest Neighbors",
-    "parameters": "Model Parameters",
-    "fitPrior": "Fit Class Prior Probabilities",
-    "trainModel": "Train Model",
-    "trainingModel": "Training Model...",
-    "trainSuccess": "Model trained successfully",
-    "predict": "Predict Text",
-    "predictPlaceholder": "Enter text to classify...",
-    "predictButton": "Predict",
-    "predicting": "Predicting...",
-    "predictSuccess": "Prediction completed",
-    "prediction": "Prediction Result",
-    "predictionHistory": "Prediction History",
-    "modelPerformance": "Model Performance",
-    "accuracy": "Accuracy",
-    "importance": "Importance",
-    "samples": "Samples",
-    "characters": "characters",
-    "saveModel": "Save Model",
-    "loadModel": "Load Model",
-    "noDataset": "No dataset selected",
-    "noTextInput": "Please enter text to predict",
-    "datasetStatistics": "Dataset Statistics",
-    "totalSamples": "Total Samples",
-    "averageTextLength": "Average Text Length",
-    "numberOfClasses": "Number of Classes"
+    "description": "Compare the performance of different machine learning models to classify text into predefined categories.",
+    "selectTask": "Select Task",
+    "compare": "Compare Models",
+    "comparing": "Comparing...",
+    "success": "Models compared successfully",
+    "noDataOrTask": "No dataset or task selected",
+    "results": "Results",
+    "prediction": "Prediction",
+    "datasetSize": "Dataset Size"
+  },
+  "datasetSelector": {
+    "selectDataset": "Select a dataset",
+    "noDatasetsAvailable": "No datasets available"
   }
 }
-

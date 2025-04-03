@@ -1,6 +1,8 @@
+// context/workflow-context.js
 "use client"
 
 import { createContext, useContext, useState } from "react"
+import { v4 as uuidv4 } from "uuid"
 
 const WorkflowContext = createContext()
 
@@ -9,9 +11,15 @@ export function WorkflowProvider({ children }) {
   const [currentStep, setCurrentStep] = useState(0)
 
   const addDataset = (dataset) => {
-    setDatasets([dataset])
-    console.log("Datasets updated:", [dataset]) // Debug
+    // Đảm bảo dataset có id hợp lệ
+    const newDataset = {
+      ...dataset,
+      id: dataset.id || uuidv4(), // Nếu không có id, tạo mới
+    }
+    setDatasets([newDataset])
+    console.log("Datasets updated:", [newDataset])
   }
+
   const currentDataset = datasets[0]
 
   return (
