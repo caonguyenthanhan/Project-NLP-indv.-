@@ -38,3 +38,6 @@ next-env.d.ts
 
 components/backup/
 components/venv/
+
+*.dll
+*.lib
