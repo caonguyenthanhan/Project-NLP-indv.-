@@ -2,46 +2,37 @@
 "use client"
 
 import { useTranslations } from "next-intl"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { useWorkflow } from "@/context/workflow-context"
+import { Button } from "./ui/button"
+import { Dataset } from "@/types/dataset"
 
-export default function DatasetSelector({ value, onValueChange, allowedTypes }) {
+export default function DatasetSelector() {
   const t = useTranslations("datasetSelector")
-  const { datasets } = useWorkflow()
+  const { datasets, currentDataset, setCurrentDataset } = useWorkflow()
 
-  // Lọc các dataset có id hợp lệ và thuộc allowedTypes (nếu có)
-  const validDatasets = datasets.filter(
-    (dataset) =>
-      dataset &&
-      dataset.id &&
-      dataset.id.trim() !== "" &&
-      (!allowedTypes || allowedTypes.includes(dataset.type))
-  )
+  if (!datasets) {
+    return (
+      <div className="text-center py-4">
+        <p>{t("noDatasetsAvailable")}</p>
+      </div>
+    )
+  }
 
   return (
-    <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder={t("selectDataset")} />
-      </SelectTrigger>
-      <SelectContent>
-        {validDatasets.length > 0 ? (
-          validDatasets.map((dataset) => (
-            <SelectItem key={dataset.id} value={dataset.id}>
-              {dataset.name || "Unnamed Dataset"}
-            </SelectItem>
-          ))
-        ) : (
-          <SelectItem value="no-data" disabled>
-            {t("noDatasetsAvailable")}
-          </SelectItem>
-        )}
-      </SelectContent>
-    </Select>
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold">{t("selectDataset")}</h3>
+      <div className="grid grid-cols-1 gap-2">
+        {datasets.map((dataset: Dataset) => (
+          <Button
+            key={dataset.id}
+            variant={currentDataset?.id === dataset.id ? "default" : "outline"}
+            onClick={() => setCurrentDataset(dataset)}
+            className="w-full justify-start"
+          >
+            {dataset.name}
+          </Button>
+        ))}
+      </div>
+    </div>
   )
 }

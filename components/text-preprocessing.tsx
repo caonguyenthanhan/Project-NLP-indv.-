@@ -4,51 +4,106 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import { useWorkflow } from "@/context/workflow-context"
-import DatasetSelector from "./dataset-selector" // Thêm import này
+import { v4 as uuidv4 } from "uuid"
 
 export default function TextPreprocessing() {
   const t = useTranslations("textPreprocessing")
-  const { currentDataset, addDataset, setCurrentStep } = useWorkflow()
-  const [options, setOptions] = useState({
-    lowercase: true,
-    removeStopwords: true,
-    lemmatize: true,
-  })
+  const { currentDataset, setCurrentDataset, setCurrentStep, datasets, setDatasets } = useWorkflow()
   const [isLoading, setIsLoading] = useState(false)
-
-  const handleOptionChange = (option) => {
-    setOptions((prev) => ({ ...prev, [option]: !prev[option] }))
-  }
 
   const preprocessData = async () => {
     if (!currentDataset) {
       toast.error(t("noData"))
       return
     }
+
+    if (!currentDataset.data || !Array.isArray(currentDataset.data)) {
+      toast.error("Invalid dataset format")
+      return
+    }
+
     setIsLoading(true)
     const toastId = toast.loading(t("processing"))
     try {
+      // Normalize data to ensure we have objects with text property
+      const normalizedData = currentDataset.data
+        .filter((item: any) => item !== null && item !== undefined)
+        .map((item: any) => {
+          if (typeof item === "string") {
+            return { text: item }
+          } else if (Array.isArray(item) && item.length > 0) {
+            return { text: item[0] }
+          } else if (typeof item === "object" && item !== null) {
+            return { text: String(item.text || "") }
+          }
+          return null
+        })
+        .filter((item: any) => item !== null && item.text)
+
+      if (normalizedData.length === 0) {
+        toast.error("No valid text data found in dataset")
+        return
+      }
+
       const response = await fetch("http://localhost:8000/preprocess-data", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: currentDataset.data, options }),
+        body: JSON.stringify({ 
+          data: normalizedData,
+          options: {
+            lowercase: true,
+            remove_stopwords: true,
+            remove_punctuation: true,
+            remove_numbers: true,
+            remove_extra_spaces: true,
+            lemmatize: true
+          }
+        }),
       })
-      if (!response.ok) throw new Error(`Preprocessing failed: ${response.status}`)
-      const { preprocessed_data } = await response.json()
-      const newDataset = {
-        ...currentDataset,
-        data: preprocessed_data,
-        metadata: { ...currentDataset.metadata, preprocessed: true },
+
+      if (!response.ok) {
+        throw new Error(`Preprocessing failed: ${response.status}`)
       }
-      addDataset(newDataset)
-      setCurrentStep(4)
-      toast.update(toastId, { render: t("success"), type: "success", isLoading: false, autoClose: 3000 })
+
+      const result = await response.json()
+      if (!result.processed_data || !Array.isArray(result.processed_data)) {
+        throw new Error("Invalid response format from server")
+      }
+      
+      const newDataset = {
+        id: uuidv4(),
+        name: `Preprocessed: ${currentDataset.name}`,
+        type: "preprocessed",
+        data: result.processed_data,
+        metadata: { 
+          ...currentDataset.metadata, 
+          size: result.processed_data.length,
+          source: "Text Preprocessing",
+          createdAt: new Date().toISOString()
+        },
+      }
+
+      setDatasets([...datasets, newDataset])
+      setCurrentDataset(newDataset)
+      
+      // Hiển thị thông báo thành công và chuyển bước
+      toast.update(toastId, { 
+        render: t("success"), 
+        type: "success", 
+        isLoading: false, 
+        autoClose: 1000,
+        onClose: () => {
+          setCurrentStep(4) // Chuyển sang bước Representation
+        }
+      })
     } catch (error) {
-      toast.update(toastId, { render: `Error: ${error.message}`, type: "error", isLoading: false, autoClose: 3000 })
+      console.error("Error in preprocessData:", error)
+      toast.update(toastId, { render: t("error"), type: "error", isLoading: false, autoClose: 3000 })
     } finally {
       setIsLoading(false)
     }
@@ -59,15 +114,12 @@ export default function TextPreprocessing() {
       toast.error(t("noData"))
       return
     }
-    setCurrentStep(4)
+    setCurrentStep(3)
   }
 
   return (
     <div className="space-y-6">
-      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
-
-      <DatasetSelector allowedTypes={["raw", "augmented", "cleaned"]} />
-
+      <ToastContainer />
       <Card>
         <CardHeader>
           <CardTitle>{t("title")}</CardTitle>
@@ -75,44 +127,29 @@ export default function TextPreprocessing() {
         </CardHeader>
         <CardContent>
           {currentDataset ? (
-            <>
-              <p>{t("datasetSize")}: {currentDataset.metadata.size} samples</p>
-              <div className="mt-4 space-y-2">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="lowercase"
-                    checked={options.lowercase}
-                    onCheckedChange={() => handleOptionChange("lowercase")}
-                  />
-                  <label htmlFor="lowercase">{t("lowercase")}</label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="removeStopwords"
-                    checked={options.removeStopwords}
-                    onCheckedChange={() => handleOptionChange("removeStopwords")}
-                  />
-                  <label htmlFor="removeStopwords">{t("removeStopwords")}</label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="lemmatize"
-                    checked={options.lemmatize}
-                    onCheckedChange={() => handleOptionChange("lemmatize")}
-                  />
-                  <label htmlFor="lemmatize">{t("lemmatize")}</label>
-                </div>
-              </div>
-            </>
+            <div>
+              <p>{t("datasetSize", { size: currentDataset.metadata?.size || 0 })}</p>
+              <p className="text-sm text-muted-foreground mt-2">{t("preprocessDescription")}</p>
+            </div>
           ) : (
             <p className="text-red-500">{t("noData")}</p>
           )}
         </CardContent>
         <CardFooter className="flex justify-end space-x-2">
-          <Button onClick={preprocessData} disabled={isLoading || !currentDataset}>
-            {isLoading ? "Processing..." : t("preprocess")}
+          <Button 
+            onClick={preprocessData} 
+            disabled={isLoading || !currentDataset}
+            title={t("enterToPreprocess")}
+          >
+            {isLoading ? <Loader2 className="animate-spin" /> : t("preprocess")}
           </Button>
-          <Button onClick={skipPreprocessing} variant="outline">{t("next")}</Button>
+          <Button 
+            onClick={skipPreprocessing} 
+            variant="outline"
+            title={t("backspaceToSkip")}
+          >
+            {t("next")}
+          </Button>
         </CardFooter>
       </Card>
     </div>

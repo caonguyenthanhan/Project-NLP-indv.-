@@ -132,3 +132,111 @@ yarn dev
 pnpm dev
 # or
 bun dev
+```
+
+## Hướng dẫn sử dụng
+
+### 1. Thu thập dữ liệu (Data Collection)
+- Nhập văn bản trực tiếp hoặc URL để thu thập dữ liệu
+- Hỗ trợ scraping dữ liệu từ các trang web
+- Xem và quản lý dữ liệu đã thu thập
+
+### 2. Tăng cường dữ liệu (Data Augmentation)
+- Tạo thêm dữ liệu từ dữ liệu hiện có
+- Áp dụng các kỹ thuật như thay thế từ đồng nghĩa, dịch ngược
+- Cân bằng tập dữ liệu
+
+### 3. Làm sạch dữ liệu (Data Cleaning)
+- Loại bỏ nhiễu và dữ liệu không mong muốn
+- Chuẩn hóa văn bản
+- Kiểm tra và sửa lỗi chính tả
+
+### 4. Tiền xử lý (Preprocessing)
+- Tách từ và câu
+- Loại bỏ stopwords
+- Chuẩn hóa chữ hoa/thường
+- Lemmatization/Stemming
+
+### 5. Biểu diễn văn bản (Text Representation)
+- Chuyển đổi văn bản thành vector số học
+- Hỗ trợ nhiều phương pháp: Bag of Words, TF-IDF, Word2Vec, v.v.
+- Trực quan hóa kết quả biểu diễn
+
+### 6. Phân loại văn bản (Text Classification)
+- Huấn luyện mô hình trên dữ liệu đã xử lý
+- Hỗ trợ nhiều thuật toán: Naive Bayes, Logistic Regression, v.v.
+- Đánh giá và so sánh hiệu suất các mô hình
+- Dự đoán nhãn cho văn bản mới
+
+### Lưu ý quan trọng
+- Đảm bảo đã cài đặt đầy đủ dependencies trước khi sử dụng
+- Kiểm tra kết nối internet khi sử dụng chức năng scraping
+- Lưu ý dung lượng và định dạng file khi tải lên
+- Theo dõi thông báo lỗi và cảnh báo trong quá trình sử dụng
+
+# NLP Toolkit
+
+Bộ công cụ xử lý ngôn ngữ tự nhiên với các chức năng:
+- Thu thập dữ liệu (Data Collection)
+- Tăng cường dữ liệu (Data Augmentation)
+- Làm sạch dữ liệu (Data Cleaning)
+- Tiền xử lý (Preprocessing)
+- Biểu diễn văn bản (Text Representation)
+- Phân loại văn bản (Text Classification)
+
+## Yêu cầu hệ thống
+
+- Node.js (>= 14.0.0)
+- Python (>= 3.8)
+- npm (>= 6.0.0)
+
+## Cài đặt
+
+1. Clone repository:
+```bash
+git clone <repository-url>
+cd <project-folder>
+```
+
+2. Cài đặt tất cả dependencies (Node.js và Python):
+```bash
+npm run setup
+```
+
+Lệnh này sẽ:
+- Cài đặt các package Node.js
+- Cài đặt các thư viện Python cần thiết
+- Tải NLTK data
+- Chuẩn bị môi trường để chạy ứng dụng
+
+## Chạy ứng dụng
+
+Sau khi cài đặt hoàn tất, chạy ứng dụng:
+```bash
+npm run dev:all
+```
+
+Truy cập:
+- Frontend: http://localhost:3000
+- Backend: http://localhost:8000
+
+## Cấu trúc thư mục
+
+```
+.
+├── components/          # React components
+├── server/             # Python FastAPI backend
+│   ├── models/         # Trained models
+│   ├── app.py         # Server entry point
+│   └── ...
+└── ...
+```
+
+## Scripts có sẵn
+
+- `npm run dev`: Chạy frontend development server
+- `npm run server`: Chạy backend server
+- `npm run dev:all`: Chạy cả frontend và backend
+- `npm run setup`: Cài đặt tất cả dependencies
+- `npm run install-py-deps`: Cài đặt Python dependencies
+- `npm run download-nltk`: Tải NLTK data

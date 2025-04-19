@@ -1,73 +1,60 @@
-// import { NextIntlClientProvider } from 'next-intl';
-// import { notFound } from 'next/navigation';
-// import LanguageSwitcher from '@/components/language-switcher';
+import { Inter } from "next/font/google";
+import { notFound } from "next/navigation";
+import { NextIntlClientProvider } from "next-intl";
+import { ThemeProvider } from "@/components/theme-provider";
+import Header from "@/components/header";
+import { WorkflowProvider } from "@/context/workflow-context";
+import { ToasterProvider } from "@/components/providers/toaster-provider";
 
-// export default async function LocaleLayout({
-//   children,
-//   params: { locale },
-// }: {
-//   children: React.ReactNode;
-//   params: { locale: string };
-// }) {
-//   let messages;
-//   try {
-//     messages = (await import(`../../messages/${locale}.json`)).default;
-//   } catch (error) {
-//     notFound(); // Được phép gọi trong segment layout
-//   }
+const inter = Inter({ 
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter"
+});
 
-//   return (
-//     <NextIntlClientProvider locale={locale} messages={messages}>
-//       <header className="border-b">
-//         <div className="container mx-auto py-4 flex justify-between items-center">
-//           <h1 className="text-2xl font-bold">NLP Toolkit</h1>
-//           <LanguageSwitcher initialLocale={locale} />
-//         </div>
-//       </header>
-//       <main>{children}</main>
-//       <footer className="border-t mt-12">
-//         <div className="container mx-auto py-4 text-center text-sm text-muted-foreground">
-//           © {new Date().getFullYear()} NLP Course - All rights reserved
-//         </div>
-//       </footer>
-//     </NextIntlClientProvider>
-//   );
-// }
+export function generateStaticParams() {
+  return [{ locale: "en" }, { locale: "vi" }];
+}
 
-import { NextIntlClientProvider } from 'next-intl';
-import { notFound } from 'next/navigation';
-import LanguageSwitcher from '@/components/language-switcher';
+async function getMessages(locale: string) {
+  try {
+    return (await import(`@/messages/${locale}.json`)).default;
+  } catch (error) {
+    notFound();
+  }
+}
 
 export default async function LocaleLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>; // Định nghĩa params là Promise
+  params: { locale: string };
 }) {
-  const { locale } = await params; // Await để lấy locale
-
-  let messages;
-  try {
-    messages = (await import(`../../messages/${locale}.json`)).default;
-  } catch (error) {
-    notFound();
-  }
+  const { locale } = params;
+  const messages = await getMessages(locale);
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      <header className="border-b">
-        <div className="container mx-auto py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">NLP Toolkit</h1>
-          <LanguageSwitcher initialLocale={locale} />
-        </div>
-      </header>
-      <main>{children}</main>
-      <footer className="border-t mt-12">
-        <div className="container mx-auto py-4 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} NLP Course - All rights reserved
-        </div>
-      </footer>
-    </NextIntlClientProvider>
+    <div className="min-h-screen bg-background font-sans antialiased text-sm md:text-base">
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <NextIntlClientProvider 
+          locale={locale}
+          messages={messages}
+        >
+          <WorkflowProvider>
+            <Header />
+            <main className="container py-6">
+              {children}
+            </main>
+            <ToasterProvider />
+          </WorkflowProvider>
+        </NextIntlClientProvider>
+      </ThemeProvider>
+    </div>
   );
 }

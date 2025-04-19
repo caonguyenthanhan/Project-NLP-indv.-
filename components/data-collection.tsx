@@ -14,23 +14,47 @@ import { v4 as uuidv4 } from "uuid"
 
 export default function DataCollection() {
   const t = useTranslations("dataCollection")
-  const { addDataset, setCurrentStep, currentDataset } = useWorkflow() // Thêm currentDataset để debug
+  const { setCurrentDataset, setCurrentStep, currentDataset, datasets, setDatasets } = useWorkflow()
   const [textInput, setTextInput] = useState("")
   const [urlInput, setUrlInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
   const datasetsInfo = [
-    { name: "IMDB Reviews", labels: "positive/negative", task: "Sentiment Analysis" },
-    { name: "News Articles", labels: "4 topics", task: "Text Classification" },
-    { name: "Twitter Sentiment", labels: "positive/negative", task: "Sentiment Analysis" },
-    { name: "SMS Spam", labels: "spam/ham", task: "Spam Detection" },
-    { name: "BBC News", labels: "5 topics", task: "Text Classification" },
-    { name: "Yelp Reviews", labels: "1-5 stars", task: "Sentiment Analysis, Rating Prediction" },
+    { 
+      name: t("publicDatasets.sentimentAnalysis"),
+      labels: "positive/negative",
+      task: t("publicDatasets.sentimentAnalysis")
+    },
+    { 
+      name: t("publicDatasets.textClassification"),
+      labels: "4 topics",
+      task: t("publicDatasets.textClassification")
+    },
+    { 
+      name: t("publicDatasets.spamDetection"),
+      labels: "spam/ham",
+      task: t("publicDatasets.spamDetection")
+    },
+    { 
+      name: t("publicDatasets.languageIdentification"),
+      labels: "languages",
+      task: t("publicDatasets.languageIdentification")
+    },
+    { 
+      name: t("publicDatasets.intentClassification"),
+      labels: "intents",
+      task: t("publicDatasets.intentClassification")
+    },
+    { 
+      name: t("publicDatasets.namedEntityRecognition"),
+      labels: "entities",
+      task: t("publicDatasets.namedEntityRecognition")
+    }
   ]
 
   const collectText = async () => {
     if (!textInput) {
-      toast.error(t("noText"))
+      toast.error(t("noData"))
       return
     }
     setIsLoading(true)
@@ -43,8 +67,8 @@ export default function DataCollection() {
         data: [{ text: textInput }],
         metadata: { source: "User input", createdAt: new Date().toISOString(), size: 1 },
       }
-      addDataset(dataset)
-      console.log("Dataset saved:", dataset) // Debug
+      setDatasets([...datasets, dataset])
+      setCurrentDataset(dataset)
       toast.update(toastId, { render: t("success"), type: "success", isLoading: false, autoClose: 3000 })
       setCurrentStep(1)
     } catch (error) {
@@ -57,7 +81,7 @@ export default function DataCollection() {
 
   const collectUrl = async () => {
     if (!urlInput) {
-      toast.error(t("noUrl"))
+      toast.error(t("noData"))
       return
     }
     setIsLoading(true)
@@ -78,15 +102,21 @@ export default function DataCollection() {
         data: data.map(text => ({ text })),
         metadata: { source: urlInput, createdAt: new Date().toISOString(), size: data.length },
       }
-      addDataset(dataset)
-      console.log("Dataset saved:", dataset) // Debug
+      setDatasets([...datasets, dataset])
+      setCurrentDataset(dataset)
       toast.update(toastId, { render: t("success"), type: "success", isLoading: false, autoClose: 3000 })
       setCurrentStep(1)
     } catch (error) {
       console.error("Error in collectUrl:", error)
-      toast.update(toastId, { render: `Error: ${error.message}`, type: "error", isLoading: false, autoClose: 3000 })
+      toast.update(toastId, { render: t("error"), type: "error", isLoading: false, autoClose: 3000 })
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleUrlKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !isLoading) {
+      collectUrl();
     }
   }
 
@@ -111,14 +141,19 @@ export default function DataCollection() {
               </Button>
             </TabsContent>
             <TabsContent value="url" className="mt-4">
-              <Input value={urlInput} onChange={e => setUrlInput(e.target.value)} placeholder={t("enterUrl")} />
+              <Input 
+                value={urlInput} 
+                onChange={e => setUrlInput(e.target.value)} 
+                onKeyPress={handleUrlKeyPress}
+                placeholder={t("enterUrl")} 
+              />
               <Button onClick={collectUrl} disabled={isLoading} className="mt-4">
                 {isLoading ? <Loader2 className="animate-spin" /> : t("scrape")}
               </Button>
             </TabsContent>
           </Tabs>
           <div className="mt-6">
-            <h3 className="font-medium">{t("publicDatasets")}</h3>
+            <h3 className="font-medium">{t("publicDatasets.title")}</h3>
             <table className="w-full text-sm mt-2">
               <thead>
                 <tr className="bg-muted"><th>Name</th><th>Labels</th><th>Task</th></tr>
