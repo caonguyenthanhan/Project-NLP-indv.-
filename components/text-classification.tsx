@@ -10,19 +10,37 @@ import { Progress } from "@/components/ui/progress"
 import { useTranslations } from "next-intl"
 import { ToastContainer, toast } from "react-toastify"
 import { useWorkflow } from "@/context/workflow-context"
-import DatasetSelector from "./dataset-selector"
-import { AlertCircle, BarChart } from "lucide-react"
+import { AlertCircle, BarChart, RefreshCw } from "lucide-react"
 import ModelComparisonChart from "./model-comparison-chart"
+import Image from "next/image"
 
 export default function TextClassification() {
   const t = useTranslations("textClassification")
-  const { currentDataset } = useWorkflow()
+  const { currentDataset, setCurrentDataset, setCurrentStep, datasets, setDatasets } = useWorkflow()
   const [task, setTask] = useState("")
   const [modelType, setModelType] = useState("svm")
   const [results, setResults] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
   const [showComparisonChart, setShowComparisonChart] = useState(false)
+  const [modelImagePath, setModelImagePath] = useState(null)
+  const [isRetraining, setIsRetraining] = useState(false)
+
+  // Load model comparison image path
+  useEffect(() => {
+    const loadImagePath = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/model-comparison-image")
+        if (response.ok) {
+          const data = await response.json()
+          setModelImagePath(data.imagePath)
+        }
+      } catch (error) {
+        console.error("Error loading model comparison image path:", error)
+      }
+    }
+    loadImagePath()
+  }, [])
 
   // Reset results when dataset or task changes
   useEffect(() => {
@@ -45,6 +63,40 @@ export default function TextClassification() {
     { id: "svm", name: "SVM (Support Vector Machine)" },
   ]
 
+  const handleRetrain = async () => {
+    setIsRetraining(true)
+    const toastId = toast.loading(t("retraining"))
+    try {
+      const response = await fetch("http://localhost:8000/retrain-models", {
+        method: "POST",
+      })
+
+      if (!response.ok) {
+        throw new Error("Retraining failed")
+      }
+
+      const data = await response.json()
+      toast.update(toastId, {
+        render: data.message,
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      })
+
+      // Update image path after retraining
+      setModelImagePath(data.imagePath)
+    } catch (error) {
+      toast.update(toastId, {
+        render: error.message,
+        type: "error",
+        isLoading: false,
+        autoClose: 5000,
+      })
+    } finally {
+      setIsRetraining(false)
+    }
+  }
+
   const compareModels = async () => {
     if (!currentDataset || !task) {
       toast.error(t("noDataOrTask"))
@@ -61,7 +113,6 @@ export default function TextClassification() {
           data: currentDataset.data,
           task,
           modelType,
-          // Send additional info that might help with debugging
           datasetInfo: {
             type: currentDataset.type,
             size: currentDataset.metadata.size,
@@ -110,10 +161,20 @@ export default function TextClassification() {
     <div className="space-y-6">
       <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
 
-      <DatasetSelector allowedTypes={["raw", "augmented", "cleaned", "preprocessed", "represented"]} />
-
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">{t("title")}</h2>
+        <div className="flex items-center gap-4">
+          <h2 className="text-xl font-bold">{t("title")}</h2>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRetrain}
+            disabled={isRetraining}
+            className="flex items-center gap-2"
+          >
+            <RefreshCw className={`h-4 w-4 ${isRetraining ? "animate-spin" : ""}`} />
+            {isRetraining ? t("retraining") : t("retrain")}
+          </Button>
+        </div>
         <Button
           variant="outline"
           size="sm"
@@ -125,7 +186,16 @@ export default function TextClassification() {
         </Button>
       </div>
 
-      {showComparisonChart && <ModelComparisonChart />}
+      {showComparisonChart && modelImagePath && (
+        <div className="w-full h-[400px] relative mb-4">
+          <Image
+            src={`http://localhost:8000${modelImagePath.startsWith('/') ? modelImagePath : `/${modelImagePath}`}`}
+            alt="Model Comparison Chart"
+            fill
+            style={{ objectFit: 'contain' }}
+          />
+        </div>
+      )}
 
       <Card>
         <CardHeader>
@@ -136,7 +206,7 @@ export default function TextClassification() {
           {currentDataset ? (
             <>
               <p>
-                {t("datasetSize")}: {currentDataset.metadata.size} samples
+                {t("datasetSize", { size: currentDataset.metadata?.size || 0 })}
               </p>
 
               <div className="mt-4">
@@ -180,22 +250,6 @@ export default function TextClassification() {
 
               {results && (
                 <div className="mt-6 space-y-4">
-                  <h3 className="font-medium">{t("results")}</h3>
-
-                  {results.accuracies && (
-                    <div className="space-y-3">
-                      {Object.entries(results.accuracies).map(([model, accuracy]) => (
-                        <div key={model}>
-                          <div className="flex justify-between mb-1">
-                            <span>{model.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}</span>
-                            <span>{Math.round(accuracy * 100)}%</span>
-                          </div>
-                          <Progress value={accuracy * 100} />
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
                   {results.prediction && (
                     <div className="mt-4 p-4 bg-muted/30 rounded-md">
                       <h4 className="font-medium">{t("prediction")}</h4>
