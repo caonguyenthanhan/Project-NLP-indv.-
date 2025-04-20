@@ -113,4 +113,9 @@ translationapp-457311-6ddc3e83277a.json
 server/config.json
 
 # Auto-generated translations
-messages/auto-translations/
+messages/*.json
+!messages/en.json
+!messages/vi.json
+!messages/chat-box.json
+!messages/nlp-filtering.json
+!messages/text-classification.json
