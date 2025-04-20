@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
-    const { messages } = await req.json();
+    const { messages, chat_name } = await req.json();
     
     const apiKey = process.env.AIMLAPI_KEY;
     if (!apiKey) {
@@ -34,6 +34,34 @@ export async function POST(req: Request) {
 
     const data = await response.json();
     const aiResponse = data.choices[0].message.content;
+
+    // Save the conversation to history
+    const lastUserMessage = messages[messages.length - 1];
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    
+    await fetch(`${baseUrl}/api/chat/history`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chat_name: chat_name || 'Default Chat',
+        role: 'user',
+        content: lastUserMessage.content
+      })
+    });
+
+    await fetch(`${baseUrl}/api/chat/history`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chat_name: chat_name || 'Default Chat',
+        role: 'assistant',
+        content: aiResponse
+      })
+    });
 
     return NextResponse.json({
       message: aiResponse,

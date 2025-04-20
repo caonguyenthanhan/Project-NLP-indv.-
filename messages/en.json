@@ -332,11 +332,23 @@
   "chatBox": {
     "title": "Smart Chat Box",
     "description": "Chat with an AI assistant",
-    "startConversation": "Start the conversation by sending a message",
-    "inputPlaceholder": "Type your message...",
+    "welcomeMessage": "Welcome to the new chat!",
+    "startConversation": "Start a conversation",
+    "inputPlaceholder": "Type your message here...",
     "sendButton": "Send",
     "fetchError": "Could not connect to AI assistant",
-    "errorMessage": "Sorry, an error occurred while processing your request."
+    "errorMessage": "Sorry, an error occurred while processing your request.",
+    "newChat": "New Chat",
+    "deleteChat": "Delete Chat",
+    "save": "Save",
+    "cancel": "Cancel",
+    "enterNewName": "Enter new name",
+    "messages": {
+      "user": "You",
+      "assistant": "AI",
+      "system": "System",
+      "loading": "Thinking..."
+    }
   },
   "nlpFiltering": {
     "title": "NLP Filtering",

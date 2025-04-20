@@ -283,25 +283,22 @@
   "chatBox": {
     "title": "Hộp thoại thông minh",
     "description": "Trò chuyện với trợ lý AI",
-    "startConversation": "Bắt đầu cuộc trò chuyện bằng cách gửi tin nhắn",
+    "welcomeMessage": "Chào mừng đến với cuộc trò chuyện mới!",
+    "startConversation": "Bắt đầu cuộc trò chuyện",
     "inputPlaceholder": "Nhập tin nhắn của bạn...",
     "sendButton": "Gửi",
     "fetchError": "Không thể kết nối với trợ lý AI",
     "errorMessage": "Xin lỗi, đã có lỗi xảy ra khi xử lý yêu cầu của bạn.",
+    "newChat": "Tạo cuộc trò chuyện mới",
+    "deleteChat": "Xóa cuộc trò chuyện",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "enterNewName": "Nhập tên mới",
     "messages": {
       "user": "Bạn",
       "assistant": "Trợ lý",
       "system": "Hệ thống",
-      "error": "Lỗi",
-      "loading": "Đang tải..."
-    },
-    "actions": {
-      "regenerate": "Tạo lại phản hồi",
-      "stop": "Dừng tạo",
-      "save": "Lưu chat",
-      "load": "Tải chat",
-      "export": "Xuất chat",
-      "import": "Nhập chat"
+      "loading": "Đang suy nghĩ..."
     }
   },
   "nlpFiltering": {
