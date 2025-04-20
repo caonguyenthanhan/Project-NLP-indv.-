@@ -298,7 +298,7 @@
       "title": "Features",
       "textClassification": {
         "title": "Text Classification",
-        "description": "Classify text into predefined categories using advanced machine learning models"
+        "description": "Classify text into predefined categories using machine learning"
       },
       "nlpFiltering": {
         "title": "NLP Filtering",
@@ -306,7 +306,7 @@
       },
       "chatBox": {
         "title": "Chat Box",
-        "description": "Interactive chat interface for testing NLP models"
+        "description": "Interactive chat interface for natural language processing"
       },
       "tryNow": "Try Now"
     },
@@ -327,6 +327,88 @@
       "title": "Ready to get started?",
       "description": "Try our text classification demo to see the toolkit in action.",
       "button": "Get Started"
+    }
+  },
+  "chatBox": {
+    "title": "Chat Box",
+    "description": "Interactive chat interface for natural language processing",
+    "sendMessage": "Send Message",
+    "enterMessage": "Enter your message...",
+    "clearChat": "Clear Chat",
+    "copyResponse": "Copy Response",
+    "chatHistory": "Chat History",
+    "newChat": "New Chat",
+    "processing": "Processing...",
+    "error": "Error occurred",
+    "success": "Message sent successfully",
+    "settings": {
+      "title": "Chat Settings",
+      "model": "Model",
+      "temperature": "Temperature",
+      "maxTokens": "Max Tokens",
+      "topP": "Top P",
+      "frequencyPenalty": "Frequency Penalty",
+      "presencePenalty": "Presence Penalty"
+    },
+    "messages": {
+      "user": "You",
+      "assistant": "Assistant",
+      "system": "System",
+      "error": "Error",
+      "loading": "Loading..."
+    },
+    "actions": {
+      "regenerate": "Regenerate Response",
+      "stop": "Stop Generation",
+      "save": "Save Chat",
+      "load": "Load Chat",
+      "export": "Export Chat",
+      "import": "Import Chat"
+    },
+    "workflow": {
+      "currentChat": "Current Chat",
+      "chatInfo": "Chat with {model}",
+      "noChat": "No active chat",
+      "startNewChat": "Start New Chat"
+    }
+  },
+  "nlpFiltering": {
+    "title": "NLP Filtering",
+    "description": "Filter and process text using natural language processing techniques",
+    "filterText": "Filter Text",
+    "filterDescription": "Enter text to filter",
+    "filterOptions": "Filter Options",
+    "applyFilters": "Apply Filters",
+    "inputText": "Input Text",
+    "filteredText": "Filtered Text",
+    "processing": "Processing...",
+    "success": "Filtering successful!",
+    "error": "Error during filtering",
+    "noData": "No text to filter",
+    "filters": {
+      "removePunctuation": "Remove Punctuation",
+      "removeNumbers": "Remove Numbers",
+      "removeExtraSpaces": "Remove Extra Spaces",
+      "removeSymbols": "Remove Symbols",
+      "removeStopwords": "Remove Stopwords",
+      "lowercase": "Convert to Lowercase",
+      "stem": "Stem Words",
+      "lemmatize": "Lemmatize Words",
+      "expandContractions": "Expand Contractions",
+      "correctSpelling": "Correct Spelling"
+    },
+    "results": {
+      "title": "Filtering Results",
+      "originalText": "Original Text",
+      "processedText": "Processed Text",
+      "whatWasRemoved": "What was removed",
+      "downloadResults": "Download Results"
+    },
+    "workflow": {
+      "currentText": "Current Text",
+      "textInfo": "Processing: {length} characters",
+      "noText": "No text selected",
+      "selectText": "Select text to filter"
     }
   }
 }

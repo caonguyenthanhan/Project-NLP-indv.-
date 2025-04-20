@@ -1,14 +1,14 @@
 {
   "app": {
-    "title": "NLP Toolkit",
-    "description": "Bộ công cụ toàn diện cho kỹ thuật Xử lý Ngôn ngữ Tự nhiên",
-    "footer": "© {year} NLP Course - All Rights Reserved"
+    "title": "Bộ công cụ NLP",
+    "description": "Bộ công cụ toàn diện cho Xử lý Ngôn ngữ Tự nhiên",
+    "footer": "© {year} Khóa học NLP - Đã đăng ký bản quyền"
   },
   "Header": {
-    "title": "NLP Toolkit",
+    "title": "Bộ công cụ NLP",
     "navigation": {
       "textClassification": "Phân loại văn bản",
-      "nlpFiltering": "Lọc văn bản",
+      "nlpFiltering": "Lọc NLP",
       "chatBox": "Hộp thoại"
     }
   },
@@ -18,7 +18,7 @@
     "dataCleaning": "Làm sạch dữ liệu",
     "dataPreprocessing": "Tiền xử lý",
     "textRepresentation": "Biểu diễn văn bản",
-    "textClassification": "Phân loại văn bản"
+    "textClassification": "Phân loại"
   },
   "common": {
     "add": "Thêm",
@@ -36,17 +36,16 @@
     "error": "Đã xảy ra lỗi",
     "success": "Thành công",
     "changeLanguage": "Thay đổi ngôn ngữ",
+    "switchingToPreTranslated": "Đang chuyển sang {language}",
     "switchingLanguage": "Đang chuyển từ {from} sang {to}",
-    "translatingContent": "Đang dịch nội dung từ {from} sang {to}...",
-    "translationComplete": "Đã dịch xong từ {from} sang {to}",
-    "languageSwitchError": "Lỗi khi chuyển ngôn ngữ",
-    "switchingToPreTranslated": "Chuyển sang {language}"
+    "translationComplete": "Đã hoàn thành dịch từ {from} sang {to}",
+    "languageSwitchError": "Lỗi khi chuyển đổi ngôn ngữ"
   },
   "workflow": {
-    "currentDataset": "Bộ dữ liệu hiện tại",
+    "currentDataset": "Tập dữ liệu hiện tại",
     "datasetInfo": "Đang làm việc với: {name}",
-    "noDataset": "Chưa chọn bộ dữ liệu",
-    "selectDataset": "Chọn bộ dữ liệu",
+    "noDataset": "Chưa chọn tập dữ liệu",
+    "selectDataset": "Chọn tập dữ liệu",
     "datasetSize": "Kích thước: {size} mẫu",
     "datasetSource": "Nguồn: {source}"
   },
@@ -279,6 +278,88 @@
       "title": "Sẵn sàng bắt đầu?",
       "description": "Hãy thử demo phân loại văn bản để xem bộ công cụ hoạt động.",
       "button": "Bắt đầu"
+    }
+  },
+  "chatBox": {
+    "title": "Hộp thoại",
+    "description": "Giao diện tương tác chat cho xử lý ngôn ngữ tự nhiên",
+    "sendMessage": "Gửi tin nhắn",
+    "enterMessage": "Nhập tin nhắn của bạn...",
+    "clearChat": "Xóa chat",
+    "copyResponse": "Sao chép phản hồi",
+    "chatHistory": "Lịch sử chat",
+    "newChat": "Chat mới",
+    "processing": "Đang xử lý...",
+    "error": "Đã xảy ra lỗi",
+    "success": "Gửi tin nhắn thành công",
+    "settings": {
+      "title": "Cài đặt chat",
+      "model": "Mô hình",
+      "temperature": "Nhiệt độ",
+      "maxTokens": "Số token tối đa",
+      "topP": "Top P",
+      "frequencyPenalty": "Phạt tần suất",
+      "presencePenalty": "Phạt hiện diện"
+    },
+    "messages": {
+      "user": "Bạn",
+      "assistant": "Trợ lý",
+      "system": "Hệ thống",
+      "error": "Lỗi",
+      "loading": "Đang tải..."
+    },
+    "actions": {
+      "regenerate": "Tạo lại phản hồi",
+      "stop": "Dừng tạo",
+      "save": "Lưu chat",
+      "load": "Tải chat",
+      "export": "Xuất chat",
+      "import": "Nhập chat"
+    },
+    "workflow": {
+      "currentChat": "Chat hiện tại",
+      "chatInfo": "Chat với {model}",
+      "noChat": "Không có chat đang hoạt động",
+      "startNewChat": "Bắt đầu chat mới"
+    }
+  },
+  "nlpFiltering": {
+    "title": "Lọc NLP",
+    "description": "Lọc và xử lý văn bản bằng kỹ thuật xử lý ngôn ngữ tự nhiên",
+    "filterText": "Lọc văn bản",
+    "filterDescription": "Nhập văn bản cần lọc",
+    "filterOptions": "Tùy chọn lọc",
+    "applyFilters": "Áp dụng bộ lọc",
+    "inputText": "Văn bản đầu vào",
+    "filteredText": "Văn bản đã lọc",
+    "processing": "Đang xử lý...",
+    "success": "Lọc thành công!",
+    "error": "Lỗi trong quá trình lọc",
+    "noData": "Không có văn bản để lọc",
+    "filters": {
+      "removePunctuation": "Xóa dấu câu",
+      "removeNumbers": "Xóa số",
+      "removeExtraSpaces": "Xóa khoảng trắng thừa",
+      "removeSymbols": "Xóa ký tự đặc biệt",
+      "removeStopwords": "Xóa từ dừng",
+      "lowercase": "Chuyển thành chữ thường",
+      "stem": "Tách từ gốc",
+      "lemmatize": "Chuẩn hóa từ",
+      "expandContractions": "Mở rộng từ viết tắt",
+      "correctSpelling": "Sửa lỗi chính tả"
+    },
+    "results": {
+      "title": "Kết quả lọc",
+      "originalText": "Văn bản gốc",
+      "processedText": "Văn bản đã xử lý",
+      "whatWasRemoved": "Đã xóa những gì",
+      "downloadResults": "Tải kết quả"
+    },
+    "workflow": {
+      "currentText": "Văn bản hiện tại",
+      "textInfo": "Đang xử lý: {length} ký tự",
+      "noText": "Chưa chọn văn bản",
+      "selectText": "Chọn văn bản để lọc"
     }
   }
 }

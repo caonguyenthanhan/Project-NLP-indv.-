@@ -1,3 +1,5 @@
+"use client"
+
 import { useTranslations } from "next-intl"
 
 export default function NLPFiltering() {
@@ -5,9 +7,9 @@ export default function NLPFiltering() {
 
   return (
     <div className="container mx-auto py-8">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">{t("title")}</h1>
-        <p className="text-xl text-muted-foreground">{t("description")}</p>
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold mb-2">{t("title")}</h1>
+        <p className="text-muted-foreground">{t("description")}</p>
       </div>
     </div>
   )

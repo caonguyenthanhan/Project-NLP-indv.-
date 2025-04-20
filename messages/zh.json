@@ -4,6 +4,48 @@
     "description": "全面的自然语言处理工具包",
     "footer": "© {year} NLP 课程 - 版权所有"
   },
+  "HomePage": {
+    "hero": {
+      "title": "NLP工具包",
+      "description": "全面的自然语言处理工具包",
+      "tryDemo": "试用演示",
+      "viewGithub": "在GitHub上查看"
+    },
+    "features": {
+      "title": "功能",
+      "textClassification": {
+        "title": "文本分类",
+        "description": "使用机器学习将文本分类到预定义类别"
+      },
+      "nlpFiltering": {
+        "title": "NLP过滤",
+        "description": "使用自然语言处理技术过滤和处理文本"
+      },
+      "chatBox": {
+        "title": "聊天框",
+        "description": "用于自然语言处理的交互式聊天界面"
+      },
+      "tryNow": "立即试用"
+    },
+    "about": {
+      "title": "关于",
+      "whatIs": {
+        "title": "什么是NLP工具包？",
+        "description": "NLP工具包是一套强大的自然语言处理工具，旨在帮助您理解和分析文本数据。采用现代技术和最佳实践构建。"
+      },
+      "benefits": {
+        "title": "优势",
+        "point1": "易于使用的界面",
+        "point2": "多语言支持",
+        "point3": "实时处理"
+      }
+    },
+    "cta": {
+      "title": "准备开始了吗？",
+      "description": "试用我们的文本分类演示，了解工具包的实际应用。",
+      "button": "开始使用"
+    }
+  },
   "Header": {
     "title": "NLP工具包",
     "navigation": {
@@ -74,7 +116,7 @@
     "uploadData": "上传数据",
     "uploadDescription": "上传您自己的包含文本数据的 CSV 文件以进行分类",
     "dragAndDrop": "将您的 CSV 文件拖放到此处，或单击浏览",
-    "csvFormat": "CSV 必须有“文本”和“标签”列",
+    "csvFormat": "CSV 必须有'文本'和'标签'列",
     "selectFile": "选择文件",
     "dataPrivacy": "您的数据在本地处理，永远不会离开您的计算机",
     "selectDataset": "选择数据集",

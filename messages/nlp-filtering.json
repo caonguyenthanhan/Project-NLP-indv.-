@@ -1,8 +1,39 @@
 {
-  "title": "Lọc văn bản",
-  "description": "Lọc và xử lý văn bản",
-  "filterText": "Lọc văn bản",
-  "filterDescription": "Nhập văn bản cần lọc",
-  "filterOptions": "Tùy chọn lọc",
-  "applyFilters": "Áp dụng bộ lọc"
+  "title": "NLP Filtering",
+  "description": "Filter and process text using natural language processing techniques",
+  "filterText": "Filter Text",
+  "filterDescription": "Enter text to filter",
+  "filterOptions": "Filter Options",
+  "applyFilters": "Apply Filters",
+  "inputText": "Input Text",
+  "filteredText": "Filtered Text",
+  "processing": "Processing...",
+  "success": "Filtering successful!",
+  "error": "Error during filtering",
+  "noData": "No text to filter",
+  "filters": {
+    "removePunctuation": "Remove Punctuation",
+    "removeNumbers": "Remove Numbers",
+    "removeExtraSpaces": "Remove Extra Spaces",
+    "removeSymbols": "Remove Symbols",
+    "removeStopwords": "Remove Stopwords",
+    "lowercase": "Convert to Lowercase",
+    "stem": "Stem Words",
+    "lemmatize": "Lemmatize Words",
+    "expandContractions": "Expand Contractions",
+    "correctSpelling": "Correct Spelling"
+  },
+  "results": {
+    "title": "Filtering Results",
+    "originalText": "Original Text",
+    "processedText": "Processed Text",
+    "whatWasRemoved": "What was removed",
+    "downloadResults": "Download Results"
+  },
+  "workflow": {
+    "currentText": "Current Text",
+    "textInfo": "Processing: {length} characters",
+    "noText": "No text selected",
+    "selectText": "Select text to filter"
+  }
 } 
