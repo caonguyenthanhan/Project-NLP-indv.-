@@ -29,6 +29,7 @@ import json
 from googletrans import Translator
 from google.cloud import translate_v2 as translate
 from translation_server import translate_messages as perform_translation
+from datetime import datetime
 
 # Get the absolute path of the server directory
 SERVER_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -592,6 +593,90 @@ async def switch_language(request: LanguageSwitchRequest):
         
     except Exception as e:
         logger.error(f"Error switching language: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+class ChatRequest(BaseModel):
+    messages: List[ChatMessage]
+
+@app.post("/api/chat")
+async def chat_endpoint(request: ChatRequest):
+    try:
+        # Lấy tin nhắn cuối cùng từ người dùng
+        last_user_message = request.messages[-1].content
+        
+        # Gọi API của AIMLAPI
+        api_key = os.getenv("AIMLAPI_KEY")
+        if not api_key:
+            raise HTTPException(status_code=500, detail="AIMLAPI key is not configured")
+
+        response = requests.post(
+            "https://api.aimlapi.com/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": "gpt-3.5-turbo",
+                "messages": [{"role": msg.role, "content": msg.content} for msg in request.messages],
+                "temperature": 0.7,
+                "max_tokens": 1000
+            }
+        )
+
+        if not response.ok:
+            error_data = response.text
+            logger.error(f"AIMLAPI Error Response: {error_data}")
+            raise HTTPException(status_code=response.status_code, detail="Failed to get response from AI")
+
+        data = response.json()
+        ai_response = data["choices"][0]["message"]["content"]
+
+        # Lưu lịch sử chat vào file CSV
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        csv_line = f'"{last_user_message.replace(""", """)}","{ai_response.replace(""", """)}","{now}"\n'
+        
+        # Đảm bảo thư mục data tồn tại
+        data_dir = os.path.join(SERVER_DIR, "data")
+        if not os.path.exists(data_dir):
+            os.makedirs(data_dir)
+        
+        # Ghi vào file CSV
+        with open(os.path.join(data_dir, "chat_history.csv"), "a", encoding="utf-8") as f:
+            f.write(csv_line)
+
+        return {"message": ai_response, "role": "assistant"}
+
+    except Exception as e:
+        logger.error(f"Error in chat endpoint: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/chat/history")
+async def get_chat_history():
+    try:
+        data_dir = os.path.join(SERVER_DIR, "data")
+        history_file = os.path.join(data_dir, "chat_history.csv")
+        
+        if not os.path.exists(history_file):
+            return {"history": []}
+        
+        history = []
+        with open(history_file, "r", encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    user_msg, ai_msg, timestamp = line.strip().split(",")
+                    history.append({
+                        "user_message": user_msg.strip('"'),
+                        "ai_message": ai_msg.strip('"'),
+                        "timestamp": timestamp.strip('"')
+                    })
+        
+        return {"history": history}
+    except Exception as e:
+        logger.error(f"Error getting chat history: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":

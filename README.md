@@ -1,153 +1,114 @@
-# NLP Toolkit 🚀
+# Bộ Công Cụ Xử Lý Ngôn Ngữ Tự Nhiên (NLP)
 
-Bộ công cụ xử lý ngôn ngữ tự nhiên toàn diện với giao diện người dùng hiện đại và hỗ trợ đa ngôn ngữ.
+Một bộ công cụ toàn diện cho xử lý ngôn ngữ tự nhiên, được xây dựng với Next.js và tích hợp nhiều tính năng NLP hiện đại.
 
-## ✨ Tính năng
+## Tính Năng
 
-- 📝 **Phân loại văn bản** - Phân loại văn bản vào các nhóm khác nhau
-- 🔍 **Lọc NLP** - Lọc và xử lý văn bản theo nhiều tiêu chí
-- 💬 **Hộp thoại** - Tương tác với mô hình NLP qua giao diện chat
-- 🌐 **Đa ngôn ngữ** - Hỗ trợ hơn 40 ngôn ngữ với dịch tự động
-- 🎨 **Giao diện tùy biến** - 6 theme độc đáo lấy cảm hứng từ văn hóa Việt Nam
+- Phân loại văn bản thông minh
+- Lọc và xử lý văn bản bằng kỹ thuật NLP
+- Hộp thoại AI tích hợp AIMLAPI
+- Hỗ trợ đa ngôn ngữ
+- Giao diện hiện đại và thân thiện với người dùng
 
-## 🚀 Bắt đầu
+## Yêu Cầu Trước Khi Cài Đặt
 
-### Yêu cầu hệ thống
+- Node.js phiên bản 18 trở lên
+- Tài khoản AIMLAPI và khóa API
+- Tài khoản Google Cloud (cho dịch vụ dịch thuật)
 
-- Node.js 18.x trở lên
-- Python 3.8 trở lên
-- Google Cloud Translation API credentials
+## Cài Đặt
 
-### Cài đặt
-
-1. Clone repository:
+1. Clone kho mã nguồn:
 ```bash
-git clone https://github.com/your-username/nlp-toolkit.git
-cd nlp-toolkit
+git clone <your-repository-url>
+cd proj-nlp
 ```
 
-2. Cài đặt dependencies:
+2. Cài đặt các thư viện phụ thuộc:
 ```bash
-# Frontend dependencies
 npm install
-
-# Backend dependencies
-pip install -r requirements.txt
 ```
 
-3. Thiết lập môi trường:
-- Tạo file `.env.local` từ `.env.example`
-- Thêm Google Cloud Translation API credentials
+3. Tạo file `.env.local` trong thư mục gốc và thêm các khóa API cần thiết:
+```
+# Google Cloud Translation API Configuration
+GOOGLE_CLOUD_PROJECT_ID=your_project_id
+GOOGLE_CLOUD_PRIVATE_KEY_ID=your_private_key_id
+GOOGLE_CLOUD_PRIVATE_KEY=your_private_key
+GOOGLE_CLOUD_CLIENT_EMAIL=your_client_email
+GOOGLE_CLOUD_CLIENT_ID=your_client_id
+GOOGLE_CLOUD_AUTH_URI=https://accounts.google.com/o/oauth2/auth
+GOOGLE_CLOUD_TOKEN_URI=https://oauth2.googleapis.com/token
+GOOGLE_CLOUD_AUTH_PROVIDER_X509_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
+GOOGLE_CLOUD_CLIENT_X509_CERT_URL=your_client_x509_cert_url
 
-4. Khởi chạy ứng dụng:
+# Next.js Configuration
+NEXT_PUBLIC_API_URL=http://localhost:8000
+
+# AIMLAPI Configuration
+AIMLAPI_KEY=your_aimlapi_key
+```
+
+## Các Tính Năng Chính
+
+### 1. Phân Loại Văn Bản
+- Phân loại văn bản thành các danh mục định sẵn
+- Hỗ trợ nhiều mô hình học máy
+- Giao diện trực quan để xem kết quả
+
+### 2. Lọc NLP
+- Lọc và xử lý văn bản bằng các kỹ thuật NLP
+- Hỗ trợ nhiều phương pháp xử lý khác nhau
+- Xem trước kết quả trực tiếp
+
+### 3. Hộp Thoại AI
+- Tích hợp AIMLAPI cho hội thoại thông minh
+- Lưu lịch sử trò chuyện
+- Giao diện chat thời gian thực
+
+## Chạy Ứng Dụng
+
+1. Khởi động máy chủ phát triển:
 ```bash
-# Development
 npm run dev
-
-# Production
-npm run build
-npm start
 ```
 
-## 🌐 Đa ngôn ngữ
+2. Mở [http://localhost:3000](http://localhost:3000) trong trình duyệt của bạn
 
-### Ngôn ngữ được hỗ trợ sẵn
-- 🇻🇳 Tiếng Việt
-- 🇬🇧 English
-
-### Dịch tự động
-- Hỗ trợ hơn 40 ngôn ngữ thông qua Google Cloud Translation API
-- Tự động lưu các bản dịch để tái sử dụng
-- Không yêu cầu dịch lại cho các ngôn ngữ đã có
-
-## 🎨 Themes
-
-### Theme có sẵn
-1. **Thống Nhất** - Beige & Red
-2. **Độc Lập** - Smoky White & Dark Gray
-3. **Hạnh Phúc** - Dark Red & Light Yellow
-4. **Tuyên Ngôn** - Turquoise & Beige
-5. **Tôi Yêu Việt Nam** - Dark Green & White
-6. **Tự Do** - Dark Blue & Orange
-
-## 📁 Cấu trúc dự án
+## Cấu Trúc Dự Án
 
 ```
-/app
-  /[locale]     # Routes theo ngôn ngữ
-  /api          # API endpoints
-/components     # React components
-/messages       # Translation files
-/styles         # CSS files
-/public         # Static files
-/lib           # Shared utilities
+proj-nlp/
+├── app/
+│   ├── [locale]/
+│   │   ├── chat-box/
+│   │   ├── nlp-filtering/
+│   │   └── text-classification/
+│   ├── api/
+│   │   └── chat/
+│   │       └── route.ts
+│   └── layout.tsx
+├── components/
+├── messages/
+│   ├── en.json
+│   └── vi.json
+├── public/
+├── .env.local
+└── package.json
 ```
 
-## 🔧 Configuration
+## Đóng Góp
 
-### Environment Variables
+1. Fork kho mã nguồn
+2. Tạo nhánh chức năng mới (`git checkout -b feature/amazing-feature`)
+3. Commit thay đổi của bạn (`git commit -m 'Add some amazing feature'`)
+4. Push lên nhánh đó (`git push origin feature/amazing-feature`)
+5. Mở Pull Request
 
-```env
-GOOGLE_CLOUD_PROJECT_ID=your-project-id
-GOOGLE_CLOUD_PRIVATE_KEY=your-private-key
-GOOGLE_CLOUD_CLIENT_EMAIL=your-client-email
-NEXT_PUBLIC_API_URL=http://localhost:3000
-```
+## Giấy Phép
 
-## 🛠️ Development
+Dự án này được phát hành theo giấy phép MIT - xem file LICENSE để biết chi tiết.
 
-### Scripts
+## Lời Cảm Ơn
 
-```bash
-# Development
-npm run dev
-
-# Build
-npm run build
-
-# Production
-npm start
-
-# Type checking
-npm run type-check
-
-# Linting
-npm run lint
-```
-
-### Adding New Features
-
-1. Tạo branch mới cho tính năng
-2. Phát triển và test tính năng
-3. Cập nhật documentation và translations
-4. Tạo pull request
-
-## 📚 Documentation
-
-- [Logic Documentation](./logic.txt)
-- [API Documentation](./api-docs.md)
-- [Contributing Guidelines](./CONTRIBUTING.md)
-
-## 🤝 Contributing
-
-Đóng góp luôn được chào đón! Xem [Contributing Guidelines](./CONTRIBUTING.md) để biết thêm chi tiết.
-
-## 📄 License
-
-MIT License - Xem [LICENSE](./LICENSE) để biết thêm chi tiết.
-
-## 👥 Authors
-
-- Your Name - Initial work
-
-## 🙏 Acknowledgments
-
-- Next.js Team
-- Vercel
-- Google Cloud Translation API
-- Shadcn UI
-- TailwindCSS
-
-## 📞 Support
-
-Nếu bạn gặp vấn đề, vui lòng tạo issue trong repository.
+Cảm ơn tất cả những người đã đóng góp cho dự án này.

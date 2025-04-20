@@ -330,47 +330,13 @@
     }
   },
   "chatBox": {
-    "title": "Chat Box",
-    "description": "Interactive chat interface for natural language processing",
-    "sendMessage": "Send Message",
-    "enterMessage": "Enter your message...",
-    "clearChat": "Clear Chat",
-    "copyResponse": "Copy Response",
-    "chatHistory": "Chat History",
-    "newChat": "New Chat",
-    "processing": "Processing...",
-    "error": "Error occurred",
-    "success": "Message sent successfully",
-    "settings": {
-      "title": "Chat Settings",
-      "model": "Model",
-      "temperature": "Temperature",
-      "maxTokens": "Max Tokens",
-      "topP": "Top P",
-      "frequencyPenalty": "Frequency Penalty",
-      "presencePenalty": "Presence Penalty"
-    },
-    "messages": {
-      "user": "You",
-      "assistant": "Assistant",
-      "system": "System",
-      "error": "Error",
-      "loading": "Loading..."
-    },
-    "actions": {
-      "regenerate": "Regenerate Response",
-      "stop": "Stop Generation",
-      "save": "Save Chat",
-      "load": "Load Chat",
-      "export": "Export Chat",
-      "import": "Import Chat"
-    },
-    "workflow": {
-      "currentChat": "Current Chat",
-      "chatInfo": "Chat with {model}",
-      "noChat": "No active chat",
-      "startNewChat": "Start New Chat"
-    }
+    "title": "Smart Chat Box",
+    "description": "Chat with an AI assistant",
+    "startConversation": "Start the conversation by sending a message",
+    "inputPlaceholder": "Type your message...",
+    "sendButton": "Send",
+    "fetchError": "Could not connect to AI assistant",
+    "errorMessage": "Sorry, an error occurred while processing your request."
   },
   "nlpFiltering": {
     "title": "NLP Filtering",

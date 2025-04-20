@@ -281,26 +281,13 @@
     }
   },
   "chatBox": {
-    "title": "Hộp thoại",
-    "description": "Giao diện tương tác chat cho xử lý ngôn ngữ tự nhiên",
-    "sendMessage": "Gửi tin nhắn",
-    "enterMessage": "Nhập tin nhắn của bạn...",
-    "clearChat": "Xóa chat",
-    "copyResponse": "Sao chép phản hồi",
-    "chatHistory": "Lịch sử chat",
-    "newChat": "Chat mới",
-    "processing": "Đang xử lý...",
-    "error": "Đã xảy ra lỗi",
-    "success": "Gửi tin nhắn thành công",
-    "settings": {
-      "title": "Cài đặt chat",
-      "model": "Mô hình",
-      "temperature": "Nhiệt độ",
-      "maxTokens": "Số token tối đa",
-      "topP": "Top P",
-      "frequencyPenalty": "Phạt tần suất",
-      "presencePenalty": "Phạt hiện diện"
-    },
+    "title": "Hộp thoại thông minh",
+    "description": "Trò chuyện với trợ lý AI",
+    "startConversation": "Bắt đầu cuộc trò chuyện bằng cách gửi tin nhắn",
+    "inputPlaceholder": "Nhập tin nhắn của bạn...",
+    "sendButton": "Gửi",
+    "fetchError": "Không thể kết nối với trợ lý AI",
+    "errorMessage": "Xin lỗi, đã có lỗi xảy ra khi xử lý yêu cầu của bạn.",
     "messages": {
       "user": "Bạn",
       "assistant": "Trợ lý",
@@ -315,12 +302,6 @@
       "load": "Tải chat",
       "export": "Xuất chat",
       "import": "Nhập chat"
-    },
-    "workflow": {
-      "currentChat": "Chat hiện tại",
-      "chatInfo": "Chat với {model}",
-      "noChat": "Không có chat đang hoạt động",
-      "startNewChat": "Bắt đầu chat mới"
     }
   },
   "nlpFiltering": {

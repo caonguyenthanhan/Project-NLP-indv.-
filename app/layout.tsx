@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "sonner";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -22,8 +22,14 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning className={inter.variable}>
       <body className="min-h-screen bg-background font-sans antialiased text-sm md:text-base">
-        {children}
-        <Toaster position="top-center" />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

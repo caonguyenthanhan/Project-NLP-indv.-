@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState, useRef, useEffect } from "react"
-import { useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
@@ -14,7 +13,6 @@ interface Message {
 }
 
 export default function ChatBox() {
-  const t = useTranslations("chatBox")
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -49,7 +47,7 @@ export default function ChatBox() {
       })
 
       if (!response.ok) {
-        throw new Error(t("fetchError"))
+        throw new Error("Failed to fetch response")
       }
 
       const data = await response.json()
@@ -58,7 +56,7 @@ export default function ChatBox() {
       console.error("Error:", error)
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: t("errorMessage") },
+        { role: "assistant", content: "Xin lỗi, đã có lỗi xảy ra khi xử lý yêu cầu của bạn." },
       ])
     } finally {
       setIsLoading(false)
@@ -66,17 +64,14 @@ export default function ChatBox() {
   }
 
   return (
-    <div className="container mx-auto py-8 max-w-4xl">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-2">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("description")}</p>
-      </div>
+    <div className="container mx-auto p-4 max-w-4xl">
+      <h1 className="text-2xl font-bold text-center mb-6">Chat Box</h1>
       
       <Card className="p-4">
         <ScrollArea className="h-[60vh] rounded-md border p-4">
           {messages.length === 0 ? (
             <div className="flex h-full items-center justify-center text-muted-foreground">
-              {t("startConversation")}
+              Bắt đầu cuộc trò chuyện bằng cách gửi tin nhắn
             </div>
           ) : (
             messages.map((msg, index) => (
@@ -117,7 +112,7 @@ export default function ChatBox() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={t("inputPlaceholder")}
+            placeholder="Nhập tin nhắn..."
             disabled={isLoading}
             className="flex-1"
           />
@@ -125,7 +120,7 @@ export default function ChatBox() {
             type="submit"
             disabled={isLoading || input.trim() === ""}
           >
-            {t("sendButton")}
+            Gửi
           </Button>
         </form>
       </Card>
