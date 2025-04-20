@@ -1,0 +1,343 @@
+{
+  "app": {
+    "title": "Tool NLP xịn sò",
+    "description": "Bộ tool siêu chất cho xử lý ngôn ngữ tự nhiên",
+    "footer": "© {year} Khóa học NLP - Bản quyền chuẩn chỉnh"
+  },
+  "Header": {
+    "title": "Tool NLP xịn sò",
+    "navigation": {
+      "textClassification": "Phân loại text",
+      "nlpFiltering": "Lọc NLP",
+      "chatBox": "Box chat"
+    }
+  },
+  "nav": {
+    "dataCollection": "Gom data",
+    "dataAugmentation": "Boost data",
+    "dataCleaning": "Dọn data",
+    "dataPreprocessing": "Chuẩn bị data",
+    "textRepresentation": "Biểu diễn text",
+    "textClassification": "Phân loại"
+  },
+  "common": {
+    "add": "Add",
+    "cancel": "Drop",
+    "save": "Save",
+    "download": "Down",
+    "upload": "Up",
+    "next": "Next",
+    "back": "Back",
+    "process": "Process",
+    "processing": "Processing...",
+    "saveAndContinue": "Save & Next",
+    "skip": "Skip",
+    "loading": "Loading...",
+    "error": "Lỗi",
+    "success": "Chốt kèo",
+    "changeLanguage": "Switch ngôn ngữ",
+    "switchingToPreTranslated": "Đang switch qua {language}",
+    "switchingLanguage": "Đang switch từ {from} sang {to}",
+    "translationComplete": "Đã switch từ {from} sang {to}!",
+    "languageSwitchError": "Lỗi lúc switch ngôn ngữ"
+  },
+  "workflow": {
+    "currentDataset": "Dataset hiện tại",
+    "datasetInfo": "Đang process với: {name}",
+    "noDataset": "Chưa chọn dataset",
+    "selectDataset": "Chọn dataset",
+    "datasetSize": "Size: {size} mẫu",
+    "datasetSource": "Nguồn: {source}"
+  },
+  "dataCollection": {
+    "title": "Gom data",
+    "description": "Nhập text hay URL để gom data nha",
+    "inputText": "Nhập text",
+    "inputUrl": "Nhập URL",
+    "enterText": "Nhập text của bạn vô đây...",
+    "enterUrl": "Nhập URL để gom...",
+    "collect": "Gom",
+    "scrape": "Gom từ web",
+    "scraping": "Đang gom từ web...",
+    "processing": "Đang gom data...",
+    "success": "Gom data xong!",
+    "error": "Lỗi lúc gom data",
+    "noData": "Làm ơn nhập text hay URL nha",
+    "publicDatasets": {
+      "title": "Bộ data public",
+      "sentimentAnalysis": "Phân tích vibe",
+      "textClassification": "Phân loại text",
+      "spamDetection": "Săn spam",
+      "languageIdentification": "Nhận diện ngôn ngữ",
+      "intentClassification": "Phân loại ý đồ",
+      "namedEntityRecognition": "Nhận diện thực thể có tên"
+    }
+  },
+  "dataAugmentation": {
+    "title": "Boost data",
+    "description": "Tạo thêm data từ data có sẵn",
+    "augment": "Boost",
+    "processing": "Đang boost data...",
+    "success": "Boost data oke la!",
+    "error": "Lỗi lúc boost data",
+    "noData": "No data để boost",
+    "datasetSize": "Size dataset: {size} mẫu",
+    "augmentationDecisionDescription": "Muốn boost dataset để lên level mô hình không?",
+    "enterToAugment": "Bấm Enter để boost",
+    "backspaceToSkip": "Bấm Backspace để skip",
+    "next": "Next"
+  },
+  "dataCleaning": {
+    "title": "Dọn data",
+    "description": "Clear mấy ký tự thừa và làm text sạch sẽ",
+    "cleaningTools": "Tool dọn dẹp",
+    "examples": "Ví dụ",
+    "inputText": "Nhập text",
+    "cleanedText": "Text đã dọn",
+    "cleanText": "Dọn text",
+    "cleaning": "Đang dọn...",
+    "cleanAndContinue": "Dọn & Next",
+    "cleanSuccess": "Dọn data xong!",
+    "noDataset": "Chưa chọn dataset",
+    "datasetPreview": "Preview dataset",
+    "removePunctuation": "Clear dấu câu",
+    "removeNumbers": "Clear số",
+    "removeExtraSpaces": "Clear khoảng trắng thừa",
+    "removeSymbols": "Clear ký hiệu",
+    "whatWasRemoved": "Đã clear cái gì",
+    "clean": "Dọn",
+    "enterToClean": "Bấm Enter để dọn",
+    "backspaceToSkip": "Bấm Backspace để skip",
+    "success": "Dọn data chốt kèo",
+    "error": "Lỗi rồi",
+    "noData": "Chưa chọn data",
+    "datasetSize": "Size dataset: {size} mẫu",
+    "next": "Next",
+    "processing": "Đang dọn..."
+  },
+  "textPreprocessing": {
+    "title": "Chuẩn bị text",
+    "description": "Làm text sạch sẽ và sẵn sàng phân tích",
+    "inputText": "Nhập text",
+    "processedText": "Text đã process",
+    "processText": "Process text",
+    "processing": "Đang chuẩn bị...",
+    "preprocessAndContinue": "Chuẩn bị & Next",
+    "preprocessSuccess": "Chuẩn bị data xong!",
+    "noDataset": "Chưa chọn dataset",
+    "datasetSize": "Size dataset: {size} mẫu",
+    "datasetPreview": "Preview dataset",
+    "removeStopwords": "Clear từ dừng",
+    "removePunctuation": "Clear dấu câu",
+    "removeWhitespace": "Clear khoảng trắng",
+    "lowercase": "Chuyển chữ thường",
+    "stem": "Tách gốc từ",
+    "lemmatize": "Chuẩn hóa từ",
+    "expandContractions": "Mở rộng từ tắt",
+    "correctSpelling": "Fix lỗi chính tả",
+    "detectEntities": "Săn thực thể",
+    "tokens": "Từ",
+    "entities": "Thực thể",
+    "steps": "Các step process",
+    "preprocess": "Chuẩn bị",
+    "enterToPreprocess": "Bấm Enter để chuẩn bị",
+    "backspaceToSkip": "Bấm Backspace để skip",
+    "success": "Chuẩn bị chốt kèo!",
+    "error": "Lỗi lúc chuẩn bị",
+    "noData": "No data để chuẩn bị",
+    "next": "Next",
+    "preprocessDescription": "Chuẩn bị text bằng cách làm sạch, clear từ dừng và ký tự thừa."
+  },
+  "textRepresentation": {
+    "title": "Biểu diễn text",
+    "description": "Chuyển text thành vector số để phân tích",
+    "selectMethodPlaceholder": "Chọn method biểu diễn",
+    "selectMethod": "Chọn method",
+    "basicMethods": "Method cơ bản",
+    "advancedMethods": "Method xịn",
+    "methods": {
+      "tfidf": "TF-IDF",
+      "bow": "Bag of Words",
+      "count": "Word Count",
+      "word2vec": "Word2Vec",
+      "bert": "BERT",
+      "doc2vec": "Doc2Vec",
+      "use": "Universal Sentence Encoder",
+      "fasttext": "FastText"
+    },
+    "represent": "Biểu diễn",
+    "processing": "Đang biểu diễn text...",
+    "success": "Biểu diễn oke la!",
+    "error": "Lỗi lúc biểu diễn text",
+    "noData": "No data để biểu diễn",
+    "vectorInfo": "Info vector",
+    "dimensions": "Số chiều",
+    "samples": "Số mẫu",
+    "avgMagnitude": "Độ lớn trung bình",
+    "sparsity": "Độ thưa",
+    "modelInfo": "Info mô hình",
+    "modelName": "Tên mô hình",
+    "modelType": "Loại mô hình",
+    "vectorsReady": "Vector sẵn sàng",
+    "clickShowVectors": "Click để xem vector",
+    "datasetSize": "Size dataset: {size} mẫu",
+    "representationDecision": "Quyết định biểu diễn",
+    "representationDecisionDescription": "Muốn biểu diễn data thành vector không?",
+    "performRepresentation": "Làm biểu diễn",
+    "skipRepresentation": "Skip biểu diễn",
+    "results": "Kết quả",
+    "showVectors": "Xem vector",
+    "hideVectors": "Ẩn vector",
+    "vectorRepresentation": "Biểu diễn vector",
+    "next": "Next",
+    "selectSample": "Chọn mẫu",
+    "originalText": "Text gốc"
+  },
+  "textClassification": {
+    "title": "Phân loại text",
+    "description": "Phân text vô các nhóm khác nhau",
+    "classifyText": "Phân loại text",
+    "classifyDescription": "Chọn task và mô hình để phân loại text",
+    "selectTask": "Chọn task",
+    "selectModel": "Chọn mô hình",
+    "classify": "Phân loại",
+    "processing": "Đang phân loại...",
+    "comparing": "Đang so sánh...",
+    "success": "Phân loại chốt kèo!",
+    "error": "Lỗi lúc phân loại",
+    "noData": "No data để phân loại",
+    "datasetSize": "Size dataset: {size} mẫu",
+    "showComparisonChart": "Xem chart so sánh",
+    "hideComparisonChart": "Ẩn chart so sánh",
+    "retrain": "Train lại",
+    "retraining": "Đang train lại...",
+    "predictedUsing": "Dự đoán bằng",
+    "predictedClass": "Lớp dự đoán",
+    "inputText": "Text nhập",
+    "prediction": "Dự đoán"
+  },
+  "datasetSelector": {
+    "selectDataset": "Chọn dataset",
+    "noDatasetsAvailable": "No dataset nào"
+  },
+  "navigation": {
+    "textClassification": "Phân loại text",
+    "nlpFiltering": "Lọc text",
+    "chatBox": "Box chat"
+  },
+  "theme": {
+    "title": "Theme",
+    "selectTheme": "Chọn theme",
+    "styles": {
+      "co-dien": "Classic",
+      "thong-nhat": "Unity",
+      "doc-lap": "Independent",
+      "hanh-phuc": "Happy",
+      "tuyen-ngon": "Declaration",
+      "toi-yeu-vn": "I love VN",
+      "tu-do": "Freedom"
+    }
+  },
+  "HomePage": {
+    "hero": {
+      "title": "Tool NLP xịn sò",
+      "description": "Bộ tool siêu chất cho xử lý ngôn ngữ tự nhiên",
+      "tryDemo": "Thử demo",
+      "viewGithub": "Check GitHub"
+    },
+    "features": {
+      "title": "Features",
+      "textClassification": {
+        "title": "Phân loại text",
+        "description": "Phân text thành các nhóm cố định bằng mô hình ML xịn"
+      },
+      "nlpFiltering": {
+        "title": "Lọc text",
+        "description": "Lọc và process text bằng kỹ thuật NLP"
+      },
+      "chatBox": {
+        "title": "Box chat",
+        "description": "Giao diện chat tương tác để test mô hình NLP"
+      },
+      "tryNow": "Thử ngay"
+    },
+    "about": {
+      "title": "About",
+      "whatIs": {
+        "title": "Tool NLP là gì?",
+        "description": "Tool NLP là bộ công cụ xử lý ngôn ngữ tự nhiên mạnh mẽ, được thiết kế để giúp bạn hiểu và phân tích dữ liệu văn bản. Được xây dựng với công nghệ hiện đại và thực tiễn tốt nhất."
+      },
+      "benefits": {
+        "title": "Lợi ích",
+        "point1": "Giao diện dễ xài",
+        "point2": "Hỗ trợ nhiều ngôn ngữ",
+        "point3": "Xử lý thời gian thực"
+      }
+    },
+    "cta": {
+      "title": "Sẵn sàng bắt đầu?",
+      "description": "Thử demo phân loại văn bản để xem bộ công cụ hoạt động.",
+      "button": "Bắt đầu"
+    }
+  },
+  "chatBox": {
+    "title": "Smart chat box",
+    "description": "Chat với AI assistant",
+    "welcomeMessage": "Welcome to new chat!",
+    "startConversation": "Bắt đầu chat",
+    "inputPlaceholder": "Nhập mess của bạn...",
+    "sendButton": "Send",
+    "fetchError": "Không connect được với AI assistant",
+    "errorMessage": "Sorry, có lỗi khi process request của bạn.",
+    "newChat": "Tạo chat mới",
+    "deleteChat": "Xóa chat",
+    "save": "Save",
+    "cancel": "Drop",
+    "enterNewName": "Nhập tên mới",
+    "messages": {
+      "user": "Bạn",
+      "assistant": "Assistant",
+      "system": "System",
+      "loading": "Đang nghĩ..."
+    }
+  },
+  "nlpFiltering": {
+    "title": "Lọc NLP",
+    "description": "Lọc và process text bằng kỹ thuật NLP",
+    "filterText": "Lọc text",
+    "filterDescription": "Nhập text cần lọc",
+    "filterOptions": "Tùy chọn lọc",
+    "applyFilters": "Áp dụng filter",
+    "inputText": "Text nhập",
+    "filteredText": "Text đã lọc",
+    "processing": "Processing...",
+    "success": "Lọc xong!",
+    "error": "Lỗi lúc lọc",
+    "noData": "No text để lọc",
+    "filters": {
+      "removePunctuation": "Clear dấu câu",
+      "removeNumbers": "Clear số",
+      "removeExtraSpaces": "Clear khoảng trắng thừa",
+      "removeSymbols": "Clear ký tự đặc biệt",
+      "removeStopwords": "Clear từ dừng",
+      "lowercase": "Chuyển chữ thường",
+      "stem": "Tách từ gốc",
+      "lemmatize": "Chuẩn hóa từ",
+      "expandContractions": "Mở rộng từ tắt",
+      "correctSpelling": "Fix lỗi chính tả"
+    },
+    "results": {
+      "title": "Kết quả lọc",
+      "originalText": "Text gốc",
+      "processedText": "Text đã process",
+      "whatWasRemoved": "Đã clear cái gì",
+      "downloadResults": "Down kết quả"
+    },
+    "workflow": {
+      "currentText": "Text hiện tại",
+      "textInfo": "Processing: {length} ký tự",
+      "noText": "Chưa chọn text",
+      "selectText": "Chọn text để lọc"
+    }
+  }
+}

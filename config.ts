@@ -10,6 +10,11 @@ export type Locale = typeof locales[number];
 export const languageNames = {
   en: "English",
   vi: "Tiếng Việt",
+  vi_mien_tay: "Miền Tây",
+  vi_genz: "GenZ",
+  vi_khmer: "Tiếng Khmer",
+  vi_tay: "Tiếng Tày",
+  vi_cham: "Tiếng Chăm",
   fr: "Français",
   de: "Deutsch",
   es: "Español",

@@ -1,0 +1,343 @@
+{
+  "app": {
+    "title": "ឧបករណ៍ NLP",
+    "description": "ឧបករណ៍ ពឹងទ្រាប់ សម្រាប់ សម្អាត ភាសា ធម្មជាតិ",
+    "footer": "© {year} Kʊəs NLP - សម្រេច សិទ្ធិទុក"
+  },
+  "Header": {
+    "title": "ឧបករណ៍ NLP",
+    "navigation": {
+      "textClassification": "កំណែក អត្ថបទ",
+      "nlpFiltering": "ការត្រង NLP",
+      "chatBox": "ប្រអប់ជជែក"
+    }
+  },
+  "nav": {
+    "dataCollection": "យក ទិន្នន័យ",
+    "dataAugmentation": "ការបង្កើនទិន្នន័យ",
+    "dataCleaning": "សម្អាត ទិន្នន័យ",
+    "dataPreprocessing": "ការរៀបចំទិន្នន័យជាមុន",
+    "textRepresentation": "តំណាង អត្ថបទ",
+    "textClassification": "កំណែក"
+  },
+  "common": {
+    "add": "បន្ថែម",
+    "cancel": "បោះបង់",
+    "save": "ទុក",
+    "download": "ទាញយក",
+    "upload": "បង្ហោះ",
+    "next": "បន្ទាប់",
+    "back": "ត្រឡប់",
+    "process": "ដំណើរការ",
+    "processing": "កំពុងដំណើរការ...",
+    "saveAndContinue": "ទុក & បន្ទាប់",
+    "skip": "រំលង",
+    "loading": "កំពុងផ្ទុក...",
+    "error": "កំហុស",
+    "success": "សម្រេច",
+    "changeLanguage": "ប្តូរភាសា",
+    "switchingToPreTranslated": "កំពុងប្តូរទៅ {language}",
+    "switchingLanguage": "កំពុងប្តូរពី {from} ទៅ {to}",
+    "translationComplete": "ប្តូរពី {from} ទៅ {to} សម្រេច",
+    "languageSwitchError": "កំហុសក្នុងការប្តូរភាសា"
+  },
+  "workflow": {
+    "currentDataset": "ឧបករណ៍ ទិន្នន័យ​បច្ចុប្បន្ន",
+    "datasetInfo": "ព័ត៌មានសម្រាប់: {name}",
+    "noDataset": "មិនបានជ្រើសរើសឧបករណ៍ទិន្នន័យ",
+    "selectDataset": "ជ្រើសរើសឧបករណ៍ទិន្នន័យ",
+    "datasetSize": "ទំហំ: {size} សំណាក",
+    "datasetSource": "ប្រភព: {source}"
+  },
+  "dataCollection": {
+    "title": "យក ទិន្នន័យ",
+    "description": "បញ្ចូលអត្ថបទ ឬ URL ដើម្បីយកទិន្នន័យ",
+    "inputText": "បញ្ចូលអត្ថបទ",
+    "inputUrl": "បញ្ចូល URL",
+    "enterText": "បញ្ចូលអត្ថបទរបស់ខ្ញុំទៅនេះ...",
+    "enterUrl": "បញ្ចូល URL ដើម្បីយក...",
+    "collect": "យក",
+    "scrape": "យកពីគេហទំព័រ",
+    "scraping": "កំពុងយកពីគេហទំព័រ...",
+    "processing": "កំពុងយកទិន្នន័យ...",
+    "success": "យកទិន្នន័យសម្រេច!",
+    "error": "កំហុសក្នុងការយកទិន្នន័យ",
+    "noData": "សូមបញ្ចូលអត្ថបទ ឬ URL",
+    "publicDatasets": {
+      "title": "ឧបករណ៍ទិន្នន័យសាធារណៈ",
+      "sentimentAnalysis": "វិភាគអារម្មណ៍",
+      "textClassification": "កំណែកអត្ថបទ",
+      "spamDetection": "រាវរកសំបុត្រស្ពែម",
+      "languageIdentification": "រាវរកភាសា",
+      "intentClassification": "កំណែកចេតនា",
+      "namedEntityRecognition": "រាវរកអត្តនាម"
+    }
+  },
+  "dataAugmentation": {
+    "title": "ការបង្កើនទិន្នន័យ",
+    "description": "បង្កើនទិន្នន័យពីទិន្នន័យដើម",
+    "augment": "បង្កើន",
+    "processing": "កំពុងបង្កើនទិន្នន័យ...",
+    "success": "បង្កើនទិន្នន័យសម្រេច!",
+    "error": "កំហុសក្នុងការបង្កើនទិន្នន័យ",
+    "noData": "គ្មានទិន្នន័យដើម្បីបង្កើន",
+    "datasetSize": "ទំហំឧបករណ៍ទិន្នន័យ: {size} សំណាក",
+    "augmentationDecisionDescription": "ចង់បង្កើនឧបករណ៍ទិន្នន័យ ដើម្បីកែលម្អម៉ូដែលឬទេ?",
+    "enterToAugment": "ចុច Enter ដើម្បីបង្កើន",
+    "backspaceToSkip": "ចុច Backspace ដើម្បីរំលង",
+    "next": "បន្ទាប់"
+  },
+  "dataCleaning": {
+    "title": "សម្អាត ទិន្នន័យ",
+    "description": "លុបព័ត៌មានមិនត្រូវការ និងត្រៀមអត្ថបទ",
+    "cleaningTools": "ឧបករណ៍សម្អាត",
+    "examples": "ឧទាហរណ៍",
+    "inputText": "បញ្ចូលអត្ថបទ",
+    "cleanedText": "អត្ថបទដែលបានសម្អាត",
+    "cleanText": "សម្អាតអត្ថបទ",
+    "cleaning": "កំពុងសម្អាត...",
+    "cleanAndContinue": "សម្អាត & បន្ទាប់",
+    "cleanSuccess": "សម្អាតទិន្នន័យសម្រេច",
+    "noDataset": "មិនបានជ្រើសរើសឧបករណ៍ទិន្នន័យ",
+    "datasetPreview": "មើលឧបករណ៍ទិន្នន័យ",
+    "removePunctuation": "លុបវណ្ណយុត្តិ",
+    "removeNumbers": "លុបលេខ",
+    "removeExtraSpaces": "លុបដកឃ្លាលើស",
+    "removeSymbols": "លុបសញ្ញា",
+    "whatWasRemoved": "អ្វីដែលបានលុប",
+    "clean": "សម្អាត",
+    "enterToClean": "ចុច Enter ដើម្បីសម្អាត",
+    "backspaceToSkip": "ចុច Backspace ដើម្បីរំលង",
+    "success": "សម្អាតទិន្នន័យសម្រេច",
+    "error": "កំហុស",
+    "noData": "គ្មានទិន្នន័យដើម្បីសម្អាត",
+    "datasetSize": "ទំហំឧបករណ៍ទិន្នន័យ: {size} សំណាក",
+    "next": "បន្ទាប់",
+    "processing": "កំពុងសម្អាត..."
+  },
+  "textPreprocessing": {
+    "title": "ការរៀបចំអត្ថបទជាមុន",
+    "description": "រៀបចំ និងវិភាគអត្ថបទសម្រាប់ការវិភាគ",
+    "inputText": "បញ្ចូលអត្ថបទ",
+    "processedText": "អត្ថបទដែលបានរៀបចំ",
+    "processText": "រៀបចំអត្ថបទ",
+    "processing": "កំពុងរៀបចំ...",
+    "preprocessAndContinue": "រៀបចំ & បន្ទាប់",
+    "preprocessSuccess": "រៀបចំទិន្នន័យសម្រេច",
+    "noDataset": "មិនបានជ្រើសរើសឧបករណ៍ទិន្នន័យ",
+    "datasetSize": "ទំហំឧបករណ៍ទិន្នន័យ: {size} សំណាក",
+    "datasetPreview": "មើលឧបករណ៍ទិន្នន័យ",
+    "removeStopwords": "លុបពាក្យចោល",
+    "removePunctuation": "លុបវណ្ណយុត្តិ",
+    "removeWhitespace": "លុបដកឃ្លា",
+    "lowercase": "ប្តូរទៅអក្សរតូច",
+    "stem": "ប្តូរទៅឫសពាក្យ",
+    "lemmatize": "ប្តូរទៅពាក្យដើម",
+    "expandContractions": "ពន្លាតពាក្យកាត់",
+    "correctSpelling": "កែប្រកប",
+    "detectEntities": "រាវរកអង់ទីទី",
+    "tokens": "ពាក្យ",
+    "entities": "អង់ទីទី",
+    "steps": "ជំហានរៀបចំ",
+    "preprocess": "រៀបចំ",
+    "enterToPreprocess": "ចុច Enter ដើម្បីរៀបចំ",
+    "backspaceToSkip": "ចុច Backspace ដើម្បីរំលង",
+    "success": "រៀបចំសម្រេច!",
+    "error": "កំហុសក្នុងការរៀបចំ",
+    "noData": "គ្មានទិន្នន័យដើម្បីរៀបចំ",
+    "next": "បន្ទាប់",
+    "preprocessDescription": "រៀបចំអត្ថបទដោយលុបពាក្យចោល, វណ្ណយុត្តិ, និងដកឃ្លា។"
+  },
+  "textRepresentation": {
+    "title": "តំណាងអត្ថបទ",
+    "description": "ប្តូរអត្ថបទទៅជាវ៉ិចទ័រសម្រាប់ការវិភាគ",
+    "selectMethodPlaceholder": "ជ្រើសរើសវិធីតំណាង",
+    "selectMethod": "ជ្រើសរើសវិធី",
+    "basicMethods": "វិធីមូលដ្ឋាន",
+    "advancedMethods": "វិធីកម្រិតខ្ពស់",
+    "methods": {
+      "tfidf": "TF-IDF",
+      "bow": "Bag of Words (BoW)",
+      "count": "រាប់จำนวนពាក្យ",
+      "word2vec": "Word2Vec",
+      "bert": "BERT",
+      "doc2vec": "Doc2Vec",
+      "use": "Universal Sentence Encoder (USE)",
+      "fasttext": "FastText"
+    },
+    "represent": "តំណាង",
+    "processing": "កំពុងតំណាងអត្ថបទ...",
+    "success": "តំណាងសម្រេច!",
+    "error": "កំហុសក្នុងការតំណាងអត្ថបទ",
+    "noData": "គ្មានទិន្នន័យដើម្បីតំណាង",
+    "vectorInfo": "ព័ត៌មានវ៉ិចទ័រ",
+    "dimensions": "វិមាត្រ",
+    "samples": "จำนวนសំណាក",
+    "avgMagnitude": "មធ្យមភាគទំហំ",
+    "sparsity": "ភាពវាលរង់",
+    "modelInfo": "ព័ត៌មានម៉ូដែល",
+    "modelName": "ឈ្មោះម៉ូដែល",
+    "modelType": "ប្រភេទម៉ូដែល",
+    "vectorsReady": "វ៉ិចទ័រត្រៀមរួច",
+    "clickShowVectors": "ចុចដើម្បីមើលវ៉ិចទ័រ",
+    "datasetSize": "ទំហំឧបករណ៍ទិន្នន័យ: {size} សំណាក",
+    "representationDecision": "សម្រេចចិត្តតំណាង",
+    "representationDecisionDescription": "ចង់ប្តូរទិន្នន័យទៅជាវ៉ិចទ័រឬទេ?",
+    "performRepresentation": "ធ្វើតំណាង",
+    "skipRepresentation": "រំលងការតំណាង",
+    "results": "លទ្ធផល",
+    "showVectors": "បង្ហាញវ៉ិចទ័រ",
+    "hideVectors": "លាក់វ៉ិចទ័រ",
+    "vectorRepresentation": "តំណាងវ៉ិចទ័រ",
+    "next": "បន្ទាប់",
+    "selectSample": "ជ្រើសរើសសំណាក",
+    "originalText": "អត្ថបទដើម"
+  },
+  "textClassification": {
+    "title": "កំណែកអត្ថបទ",
+    "description": "កំណែកអត្ថបទទៅជាប្រភេទដោយម៉ូដែល",
+    "classifyText": "កំណែកអត្ថបទ",
+    "classifyDescription": "ជ្រើសរើសការងារ និងម៉ូដែលដើម្បីកំណែកអត្ថបទ",
+    "selectTask": "ជ្រើសរើសការងារ",
+    "selectModel": "ជ្រើសរើសម៉ូដែល",
+    "classify": "កំណែក",
+    "processing": "កំពុងកំណែក...",
+    "comparing": "កំពុងប្រៀបធៀប...",
+    "success": "កំណែកសម្រេច!",
+    "error": "កំហុសក្នុងការកំណែក",
+    "noData": "គ្មានទិន្នន័យដើម្បីកំណែក",
+    "datasetSize": "ទំហំឧបករណ៍ទិន្នន័យ: {size} សំណាក",
+    "showComparisonChart": "បង្ហាញតារាងប្រៀបធៀប",
+    "hideComparisonChart": "លាក់តារាងប្រៀបធៀប",
+    "retrain": "ហ្វឹកហាត់ឡើងវិញ",
+    "retraining": "កំពុងហ្វឹកហាត់ឡើងវិញ...",
+    "predictedUsing": "ទាយដោយ",
+    "predictedClass": "ប្រភេទដែលបានទាយ",
+    "inputText": "អត្ថបទបញ្ចូល",
+    "prediction": "ការព្យាករណ៍"
+  },
+  "datasetSelector": {
+    "selectDataset": "ជ្រើសរើសឧបករណ៍ទិន្នន័យ",
+    "noDatasetsAvailable": "គ្មានឧបករណ៍ទិន្នន័យស្រាប់"
+  },
+  "navigation": {
+    "textClassification": "កំណែកអត្ថបទ",
+    "nlpFiltering": "ការត្រងអត្ថបទ",
+    "chatBox": "ប្រអប់ជជែក"
+  },
+  "theme": {
+    "title": "ធីម",
+    "selectTheme": "ជ្រើសរើសធីម",
+    "styles": {
+      "co-dien": "ក្លាសិក",
+      "thong-nhat": "សម្រេច",
+      "doc-lap": "ឯករាជ្យ",
+      "hanh-phuc": "សុភមង្គល",
+      "tuyen-ngon": "សេចក្តីថ្លែងការណ៍",
+      "toi-yeu-vn": "ខ្ញុំស្រឡាញ់វៀតណាម",
+      "tu-do": "សេរីភាព"
+    }
+  },
+  "HomePage": {
+    "hero": {
+      "title": "ឧបករណ៍ NLP",
+      "description": "ឧបករណ៍ ពឹងទ្រាប់ សម្រាប់ សម្អាត ភាសា ធម្មជាតិ",
+      "tryDemo": "សាកល្បង Demo",
+      "viewGithub": "មើលលើ GitHub"
+    },
+    "features": {
+      "title": "លក្ខណៈពិសេស",
+      "textClassification": {
+        "title": "កំណែកអត្ថបទ",
+        "description": "កំណែកអត្ថបទទៅជាប្រភេទដោយម៉ូដែលកម្រិតខ្ពស់"
+      },
+      "nlpFiltering": {
+        "title": "ការត្រងអត្ថបទ",
+        "description": "ត្រង និងសម្អាតអត្ថបទដោយវិធីសម្អាតភាសាធម្មជាតិ"
+      },
+      "chatBox": {
+        "title": "ប្រអប់ជជែក",
+        "description": "ជជែកលេងដោយ AI ដើម្បីសាកល្បងម៉ូដែល NLP"
+      },
+      "tryNow": "សាកល្បងឥឡូវនេះ"
+    },
+    "about": {
+      "title": "អំពី",
+      "whatIs": {
+        "title": "តើឧបករណ៍ NLP ជាអ្វី?",
+        "description": "ឧបករណ៍ NLP គឺជាឧបករណ៍សម្អាតភាសាធម្មជាតិកម្រិតខ្ពស់ដែលជួយខ្ញុំវិភាគ និងកំណែកទិន្នន័យអត្ថបទ។ បង្កើតឡើងដោយប្រើប្រាស់បច្ចេកវិទ្យាថ្មី និងវិធីសាស្ត្រថ្មីៗ។"
+      },
+      "benefits": {
+        "title": "អត្ថប្រយោជន៍",
+        "point1": "ការវិភាគអត្ថបទជាក់លាក់",
+        "point2": "ការគាំទ្រច្រើនភាសា",
+        "point3": "ងាយស្រួលប្រើប្រាស់"
+      }
+    },
+    "cta": {
+      "title": "ត្រៀមរួចសម្រាប់ការប្រើប្រាស់ឬនៅ?",
+      "description": "សាកល្បង demo កំណែកអត្ថបទដើម្បីមើលលក្ខណៈពិសេសឧបករណ៍សម្អាតកម្រិតខ្ពស់។",
+      "button": "ប្រើប្រាស់ឥឡូវនេះ"
+    }
+  },
+  "chatBox": {
+    "title": "ប្រអប់ជជែកកម្រិតខ្ពស់",
+    "description": "ជជែកជាមួយ AI បូត",
+    "welcomeMessage": "សូមស្វាគមន៍មកកាន់ប្រអប់ជជែក!",
+    "startConversation": "ចាប់ផ្តើមការជជែក",
+    "inputPlaceholder": "បញ្ចូលសាររបស់អ្នកក្នុងនេះ...",
+    "sendButton": "ផ្ញើ",
+    "fetchError": "មិនអាចតភ្ជាប់ពី AI បានទេ",
+    "errorMessage": "សូមអភ័យទោស, មានកំហុសក្នុងការដំណើរការសាររបស់អ្នក។",
+    "newChat": "ការជជែកថ្មី",
+    "deleteChat": "លុបការជជែក",
+    "save": "ទុក",
+    "cancel": "បោះបង់",
+    "enterNewName": "បញ្ចូលឈ្មោះថ្មី",
+    "messages": {
+      "user": "អ្នកប្រើ",
+      "assistant": "ជំនួយការ AI",
+      "system": "ប្រព័ន្ធ",
+      "loading": "កំពុងរង់ចាំ..."
+    }
+  },
+  "nlpFiltering": {
+    "title": "ការត្រង NLP",
+    "description": "ត្រង និងសម្អាតអត្ថបទដោយវិធីសម្អាតភាសាធម្មជាតិ",
+    "filterText": "ត្រងអត្ថបទ",
+    "filterDescription": "បញ្ចូលអត្ថបទដែលចង់ត្រង",
+    "filterOptions": "ជម្រើសសម្រាប់ការត្រង",
+    "applyFilters": "អនុវត្តតម្រង",
+    "inputText": "អត្ថបទបញ្ចូល",
+    "filteredText": "អត្ថបទដែលបានត្រង",
+    "processing": "កំពុងត្រង...",
+    "success": "ត្រងសម្រេច!",
+    "error": "កំហុសក្នុងការត្រង",
+    "noData": "គ្មានអត្ថបទដើម្បីត្រង",
+    "filters": {
+      "removePunctuation": "លុបវណ្ណយុត្តិ",
+      "removeNumbers": "លុបលេខ",
+      "removeExtraSpaces": "លុបដកឃ្លាលើស",
+      "removeSymbols": "លុបសញ្ញា",
+      "removeStopwords": "លុបពាក្យចោល",
+      "lowercase": "ប្តូរទៅអក្សរតូច",
+      "stem": "ប្តូរទៅឫសពាក្យ",
+      "lemmatize": "ប្តូរទៅពាក្យដើម",
+      "expandContractions": "ពន្លាតពាក្យកាត់",
+      "correctSpelling": "កែប្រកប"
+    },
+    "results": {
+      "title": "លទ្ធផលការត្រង",
+      "originalText": "អត្ថបទដើម",
+      "processedText": "អត្ថបទដែលបានត្រង",
+      "whatWasRemoved": "អ្វីដែលបានលុប",
+      "downloadResults": "ទាញយកលទ្ធផល"
+    },
+    "workflow": {
+      "currentText": "អត្ថបទបច្ចុប្បន្ន",
+      "textInfo": "ព័ត៌មានអត្ថបទ: {length} អក្សរ",
+      "noText": "គ្មានអត្ថបទដែលបានជ្រើសរើស",
+      "selectText": "ជ្រើសរើសអត្ថបទដើម្បីត្រង"
+    }
+  }
+}

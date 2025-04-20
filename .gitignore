@@ -120,6 +120,11 @@ messages/*.json
 !messages/chat-box.json
 !messages/nlp-filtering.json
 !messages/text-classification.json
+!messages/vi_mien_tay.json
+!messages/vi_genz.json
+!messages/vi_khmer.json
+!messages/vi_tay.json
+!messages/vi_cham.json
 
 # Model files and training data
 server/models/*.pkl

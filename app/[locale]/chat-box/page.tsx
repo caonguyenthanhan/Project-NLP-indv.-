@@ -152,10 +152,69 @@ export default function ChatBox() {
     e.preventDefault()
     if (!input.trim() || isLoading) return
 
-    const userMessage = { role: "user" as const, content: input }
-    setMessages(prev => [...prev, userMessage])
-    setInput("")
-    setIsLoading(true)
+    // Nếu chưa có chat box nào được chọn hoặc đang ở Default Chat, tạo chat box mới
+    if (!chatName || chatName === "Default Chat") {
+      try {
+        const timestamp = new Date().toLocaleString('vi-VN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        const newChatName = `Chat ${timestamp}`;
+
+        // Tạo tin nhắn chào mừng
+        const welcomeMessage = { role: "system" as const, content: t("welcomeMessage") };
+        setMessages([welcomeMessage]);
+
+        // Lưu chat box mới vào lịch sử
+        await fetch("http://localhost:3000/api/chat/history", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_name: newChatName,
+            role: "system",
+            content: t("welcomeMessage")
+          })
+        });
+
+        setChatName(newChatName);
+        await fetchAvailableChats();
+        
+        // Tiếp tục với tin nhắn của người dùng
+        const userMessage = { role: "user" as const, content: input };
+        setMessages(prev => [...prev, userMessage]);
+        setInput("");
+        setIsLoading(true);
+
+        const response = await fetch("http://localhost:3000/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: [welcomeMessage, userMessage],
+            chat_name: newChatName
+          })
+        });
+
+        if (!response.ok) throw new Error("Failed to get response");
+
+        const data = await response.json();
+        setMessages(prev => [...prev, { role: "assistant", content: data.message }]);
+
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
+
+    // Xử lý tin nhắn bình thường nếu đã có chat box
+    const userMessage = { role: "user" as const, content: input };
+    setMessages(prev => [...prev, userMessage]);
+    setInput("");
+    setIsLoading(true);
 
     try {
       const response = await fetch("http://localhost:3000/api/chat", {
@@ -165,18 +224,18 @@ export default function ChatBox() {
           messages: [...messages, userMessage],
           chat_name: chatName
         })
-      })
+      });
 
-      if (!response.ok) throw new Error("Failed to get response")
+      if (!response.ok) throw new Error("Failed to get response");
 
-      const data = await response.json()
-      setMessages(prev => [...prev, { role: "assistant", content: data.message }])
+      const data = await response.json();
+      setMessages(prev => [...prev, { role: "assistant", content: data.message }]);
     } catch (error) {
-      console.error("Error:", error)
+      console.error("Error:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col h-screen max-w-3xl mx-auto">

@@ -18,6 +18,11 @@ import { useState, useEffect } from "react";
 const languages = [
   { code: "en", name: "English" },
   { code: "vi", name: "Tiếng Việt" },
+  { code: "vi_mien_tay", name: "Miền Tây" },
+  { code: "vi_genz", name: "Tiếng GenZ" },
+  { code: "vi_khmer", name: "Tiếng Khmer" },
+  { code: "vi_tay", name: "Tiếng Tày" },
+  { code: "vi_cham", name: "Tiếng Chăm" },
   { code: "zh", name: "中文" },
   { code: "ja", name: "日本語" },
   { code: "ko", name: "한국어" },
@@ -68,7 +73,7 @@ const languages = [
   { code: "ne", name: "नेपाली" }
 ] as const;
 
-const preTranslatedLocales = ['en', 'vi'] as const;
+const preTranslatedLocales = ['en', 'vi', 'vi_mien_tay', 'vi_genz', 'vi_khmer', 'vi_tay', 'vi_cham'] as const;
 
 export default function LanguageSelector() {
   const pathname = usePathname();

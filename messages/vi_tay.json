@@ -1,0 +1,343 @@
+{
+  "app": {
+    "title": "Tú công cụ NLP",
+    "description": "Tú công cụ slâư dú cho pặt eng tự nhiên",
+    "footer": "© {year} Khóa học NLP - Đạ đăng ký bản quyền"
+  },
+  "Header": {
+    "title": "Tú công cụ NLP",
+    "navigation": {
+      "textClassification": "Phân loại slư",
+      "nlpFiltering": "Chắt lọc NLP",
+      "chatBox": "Hộp cần"
+    }
+  },
+  "nav": {
+    "dataCollection": "Thu thập cần sl liệu",
+    "dataAugmentation": "Pổm thêm cần sl liệu",
+    "dataCleaning": "Láng slạch cần sl liệu",
+    "dataPreprocessing": "Chuẩn bị cần sl liệu",
+    "textRepresentation": "Pểu diễn slư",
+    "textClassification": "Phân loại"
+  },
+  "common": {
+    "add": "Pổm",
+    "cancel": "Bỏ",
+    "save": "Đắc",
+    "download": "Tải slống",
+    "upload": "Tải khửn",
+    "next": "Slíp", 
+    "back": "Piến lại",
+    "process": "Pặt",
+    "processing": "Đang pặt...", 
+    "saveAndContinue": "Đắc & Slíp", 
+    "skip": "Lèo", 
+    "loading": "Đang tải...",
+    "error": "Phjọoc", 
+    "success": "Pền công", 
+    "changeLanguage": "Piển eng",
+    "switchingToPreTranslated": "Đang piển slổng {language}",
+    "switchingLanguage": "Đang piển té {from} pây {to}",
+    "translationComplete": "Đạ dịch xong té {from} pây {to}",
+    "languageSwitchError": "Phjọoc khă piển eng" 
+  },
+  "workflow": {
+    "currentDataset": "Bộ cần sl liệu đang pặt",
+    "datasetInfo": "Đang pặt vạ: {name}",
+    "noDataset": "Chưa sle \"bộ cần sl liệu\"",
+    "selectDataset": "Sle \"bộ cần sl liệu\"",
+    "datasetSize": "To: {size} mẫu",
+    "datasetSource": "Nguồn: {source}"
+  },
+  "dataCollection": {
+    "title": "Thu thập cần sl liệu",
+    "description": "Nhập slư hoặc URL tái thu thập cần sl liệu",
+    "inputText": "Nhập slư",
+    "inputUrl": "Nhập URL",
+    "enterText": "Nhập slư của mừng nọ...",
+    "enterUrl": "Nhập URL tái thu thập...",
+    "collect": "Thu thập",
+    "scrape": "Thu thập té web",
+    "scraping": "Đang thu thập té web...",
+    "processing": "Đang thu thập cần sl liệu...",
+    "success": "Thu thập cần sl liệu pền công!",
+    "error": "Phjọoc khă thu thập cần sl liệu",
+    "noData": "Vui lòng nhập slư hoặc URL",
+    "publicDatasets": {
+      "title": "Bộ cần sl liệu công khai",
+      "sentimentAnalysis": "Phân tích cảm xúc",  
+      "textClassification": "Phân loại slư",
+      "spamDetection": "Phát hiện thư rác",
+      "languageIdentification": "Nhận diện eng",
+      "intentClassification": "Phân loại ý định",  
+      "namedEntityRecognition": "Nhận diện thực thể có slân" 
+    }
+  },
+  "dataAugmentation": {
+    "title": "Pổm thêm cần sl liệu",
+    "description": "Slảnh thêm cần sl liệu té cần sl liệu đang dú",
+    "augment": "Pổm thêm",
+    "processing": "Đang pổm thêm cần sl liệu...",
+    "success": "Pổm thêm cần sl liệu pền công!",
+    "error": "Phjọoc khă pổm thêm cần sl liệu",
+    "noData": "Bó dú cần sl liệu tái pổm thêm",
+    "datasetSize": "To bộ cần sl liệu: {size} mẫu",
+    "augmentationDecisionDescription": "Mừng có cần pổm thêm bộ cần sl liệu tái pặt đây mô hình hơn bó?",
+    "enterToAugment": "Nhấn Enter tái pổm thêm",
+    "backspaceToSkip": "Nhấn Backspace tái lèo",
+    "next": "Slíp"
+  },
+  "dataCleaning": {
+    "title": "Láng slạch cần sl liệu",
+    "description": "Pác ký tự bó cần vạ pặt slư chuẩn hơn",
+    "cleaningTools": "Công cụ láng slạch",
+    "examples": "Ví dụ",
+    "inputText": "Nhập slư",
+    "cleanedText": "Slư đạ láng slạch",
+    "cleanText": "Láng slư",
+    "cleaning": "Đang láng...",
+    "cleanAndContinue": "Láng & Slíp",
+    "cleanSuccess": "Láng cần sl liệu pền công",
+    "noDataset": "Chưa sle \"bộ cần sl liệu\"",
+    "datasetPreview": "Coóc trước bộ cần sl liệu",
+    "removePunctuation": "Pác slấu câu",
+    "removeNumbers": "Pác số",
+    "removeExtraSpaces": "Pác khoảng dú thừa",
+    "removeSymbols": "Pác ký hiệu",
+    "whatWasRemoved": "Đạ pác cái gì",
+    "clean": "Láng",
+    "enterToClean": "Nhấn Enter tái láng",
+    "backspaceToSkip": "Nhấn Backspace tái lèo",
+    "success": "Láng cần sl liệu pền công",
+    "error": "Phjọoc rồi",
+    "noData": "Chưa sle cần sl liệu",
+    "datasetSize": "To bộ cần sl liệu: {size} mẫu",
+    "next": "Slíp",
+    "processing": "Đang láng..."
+  },
+  "textPreprocessing": {
+    "title": "Chuẩn bị slư",
+    "description": "Pặt chuẩn vạ sẵn sàng slư tái phân tích",
+    "inputText": "Nhập slư",
+    "processedText": "Slư đạ pặt xong",
+    "processText": "Pặt slư",
+    "processing": "Đang chuẩn bị...",
+    "preprocessAndContinue": "Chuẩn bị & Slíp",
+    "preprocessSuccess": "Chuẩn bị cần sl liệu pền công",
+    "noDataset": "Chưa sle \"bộ cần sl liệu\"",
+    "datasetSize": "To bộ cần sl liệu: {size} mẫu",
+    "datasetPreview": "Coóc trước bộ cần sl liệu",
+    "removeStopwords": "Pác eng dừng",
+    "removePunctuation": "Pác slấu câu",
+    "removeWhitespace": "Pác khoảng dú",
+    "lowercase": "Piển pền slư halus", 
+    "stem": "Tách hắc eng",
+    "lemmatize": "Pặt eng pền chuẩn", 
+    "expandContractions": "Phey eng tắt",
+    "correctSpelling": "Sửa lỗi chính tả", 
+    "detectEntities": "Phát hiện thực thể", 
+    "tokens": "Eng",
+    "entities": "Thực thể", 
+    "steps": "Các bước pặt",
+    "preprocess": "Chuẩn bị",
+    "enterToPreprocess": "Nhấn Enter tái chuẩn bị",
+    "backspaceToSkip": "Nhấn Backspace tái lèo",
+    "success": "Chuẩn bị pền công!",
+    "error": "Phjọoc khă chuẩn bị",
+    "noData": "Bó dú cần sl liệu tái chuẩn bị",
+    "next": "Slíp",
+    "preprocessDescription": "Chuẩn bị slư bằng cách pặt chuẩn, pác eng dừng vạ ký tự bó cần."
+  },
+  "textRepresentation": {
+    "title": "Pểu diễn slư",
+    "description": "Piển slư pền số tái phân tích",
+    "selectMethodPlaceholder": "Sle cách pểu diễn",
+    "selectMethod": "Sle cách",
+    "basicMethods": "Cách cơ bản", 
+    "advancedMethods": "Cách cao cấp", 
+    "methods": { 
+      "tfidf": "TF-IDF",
+      "bow": "Bag of Words",
+      "count": "Náp eng", 
+      "word2vec": "Word2Vec",
+      "bert": "BERT",
+      "doc2vec": "Doc2Vec",
+      "use": "Universal Sentence Encoder",
+      "fasttext": "FastText"
+    },
+    "represent": "Pểu diễn",
+    "processing": "Đang pểu diễn slư...",
+    "success": "Pểu diễn pền công!",
+    "error": "Phjọoc khă pểu diễn slư",
+    "noData": "Bó dú cần sl liệu tái pểu diễn",
+    "vectorInfo": "Thông tin vector", 
+    "dimensions": "Số chiều", 
+    "samples": "Số mẫu", 
+    "avgMagnitude": "Độ to trung bình",
+    "sparsity": "Độ slưa", 
+    "modelInfo": "Thông tin mô hình", 
+    "modelName": "Slân mô hình", 
+    "modelType": "Loại mô hình", 
+    "vectorsReady": "Vector đạ sẵn sàng", 
+    "clickShowVectors": "Nhấn tái coóc vector",
+    "datasetSize": "To bộ cần sl liệu: {size} mẫu",
+    "representationDecision": "Quyết định pểu diễn", 
+    "representationDecisionDescription": "Mừng có cần pểu diễn cần sl liệu pền dạng số bó?",
+    "performRepresentation": "Pặt pểu diễn",
+    "skipRepresentation": "Lèo pểu diễn",
+    "results": "Kết quả", 
+    "showVectors": "Coóc vector",
+    "hideVectors": "Sjón vector", 
+    "vectorRepresentation": "Pểu diễn vector",
+    "next": "Slíp",
+    "selectSample": "Sle mẫu",
+    "originalText": "Slư gốc"
+  },
+  "textClassification": {
+    "title": "Phân loại slư",
+    "description": "Phân slư pây pạng nưa khác", 
+    "classifyText": "Phân loại slư",
+    "classifyDescription": "Sle việc vạ mô hình tái phân loại slư",
+    "selectTask": "Sle việc",
+    "selectModel": "Sle mô hình",
+    "classify": "Phân loại",
+    "processing": "Đang phân loại...",
+    "comparing": "Đang so sánh...", 
+    "success": "Phân loại pền công!",
+    "error": "Phjọoc khă phân loại",
+    "noData": "Bó dú cần sl liệu tái phân loại",
+    "datasetSize": "To bộ cần sl liệu: {size} mẫu",
+    "showComparisonChart": "Coóc biểu đồ so sánh", 
+    "hideComparisonChart": "Sjón biểu đồ so sánh", 
+    "retrain": "Hấn lại", 
+    "retraining": "Đang hấn lại...",
+    "predictedUsing": "Đoán bằng",
+    "predictedClass": "Lớp đoán slí",
+    "inputText": "Slư nhập",
+    "prediction": "Kết quả đoán"
+  },
+  "datasetSelector": {
+    "selectDataset": "Sle \"bộ cần sl liệu\"",
+    "noDatasetsAvailable": "Bó dú bộ cần sl liệu nả"
+  },
+  "navigation": {
+    "textClassification": "Phân loại slư",
+    "nlpFiltering": "Chắt lọc slư",
+    "chatBox": "Hộp cần"
+  },
+  "theme": {
+    "title": "Chủ đề", 
+    "selectTheme": "Sle chủ đề", 
+    "styles": { 
+      "co-dien": "Cổ điển",
+      "thong-nhat": "Thống nhất",
+      "doc-lap": "Độc lập",
+      "hanh-phuc": "Hạnh phúc",
+      "tuyen-ngon": "Tuyên ngôn",
+      "toi-yeu-vn": "Tua hâư Việt Nam", 
+      "tu-do": "Tự do"
+    }
+  },
+  "HomePage": {
+    "hero": {
+      "title": "Tú công cụ NLP",
+      "description": "Tú công cụ slâư dú cho pặt eng tự nhiên",
+      "tryDemo": "Thử nghiệm", 
+      "viewGithub": "Coóc khoăn GitHub" 
+    },
+    "features": {
+      "title": "Tính năng", 
+      "textClassification": {
+        "title": "Phân loại slư",
+        "description": "Phân loại slư pây pạng nưa dú sẵn bằng mô hình máy học cao cấp" 
+      },
+      "nlpFiltering": {
+        "title": "Chắt lọc slư",
+        "description": "Chắt lọc vạ pặt slư bằng kỹ thuật pặt eng tự nhiên" 
+      },
+      "chatBox": {
+        "title": "Hộp cần",
+        "description": "Giao diện cần tương tác tái kiểm tra mô hình NLP" 
+      },
+      "tryNow": "Thử slắm nẩy"
+    },
+    "about": {
+      "title": "Giới thiệu", 
+      "whatIs": {
+        "title": "Tú công cụ NLP pền cái gì?",
+        "description": "Tú công cụ NLP pền tú công cụ pặt eng tự nhiên mạnh mẽ, slảnh tái giúp mừng hiểu vạ phân tích cần sl liệu slư. Slảnh bằng công nghệ slắm nẩy vạ cách pặt đây nhất."
+      },
+      "benefits": {
+        "title": "Lợi ích", 
+        "point1": "Giao diện sle pjòi", 
+        "point2": "Hỗ trợ lai eng", 
+        "point3": "Pặt slí ngay"
+      }
+    },
+    "cta": {
+      "title": "Sẵn sàng bắt đầu bó?", 
+      "description": "Thử demo phân loại slư tái coóc tú công cụ hoạt động.", 
+      "button": "Bắt đầu" 
+    }
+  },
+  "chatBox": {
+    "title": "Hộp cần thông minh", 
+    "description": "Cần vạ po giúp AI",
+    "welcomeMessage": "Chào mừng pây cuộc cần mới!", 
+    "startConversation": "Bắt đầu cần",
+    "inputPlaceholder": "Nhập thư của mừng...",
+    "sendButton": "Slổng", 
+    "fetchError": "Bó kết nối slí vạ po giúp AI",
+    "errorMessage": "Xin lỗi, dú phjọoc khă pặt yêu cầu của mừng.", 
+    "newChat": "Slảnh cuộc cần mới",
+    "deleteChat": "Pác cuộc cần",
+    "save": "Đắc",
+    "cancel": "Bỏ",
+    "enterNewName": "Nhập slân mới",
+    "messages": {
+      "user": "Mừng", 
+      "assistant": "Po giúp", 
+      "system": "Hệ thống", 
+      "loading": "Đang slì..." 
+    }
+  },
+  "nlpFiltering": {
+    "title": "Chắt lọc NLP",
+    "description": "Chắt lọc vạ pặt slư bằng kỹ thuật pặt eng tự nhiên",
+    "filterText": "Chắt lọc slư",
+    "filterDescription": "Nhập slư cần chắt lọc",
+    "filterOptions": "Tùy chọn chắt lọc", 
+    "applyFilters": "Áp dụng bộ lọc", 
+    "inputText": "Slư nhập",
+    "filteredText": "Slư đạ chắt lọc",
+    "processing": "Đang pặt...", 
+    "success": "Chắt lọc pền công!",
+    "error": "Phjọoc khă chắt lọc",
+    "noData": "Bó dú slư tái chắt lọc",
+    "filters": {
+      "removePunctuation": "Pác slấu câu",
+      "removeNumbers": "Pác số",
+      "removeExtraSpaces": "Pác khoảng dú thừa",
+      "removeSymbols": "Pác ký tự đặc biệt", 
+      "removeStopwords": "Pác eng dừng",
+      "lowercase": "Piển pền slư halus",
+      "stem": "Tách hắc eng",
+      "lemmatize": "Pặt eng pền chuẩn",
+      "expandContractions": "Phey eng tắt",
+      "correctSpelling": "Sửa lỗi chính tả" 
+    },
+    "results": {
+      "title": "Kết quả chắt lọc",
+      "originalText": "Slư gốc",
+      "processedText": "Slư đạ pặt xong",
+      "whatWasRemoved": "Đạ pác cái gì",
+      "downloadResults": "Tải kết quả" 
+    },
+    "workflow": {
+      "currentText": "Slư đang pặt",
+      "textInfo": "Đang pặt: {length} ký tự", 
+      "noText": "Chưa sle slư",
+      "selectText": "Sle slư tái chắt lọc"
+    }
+  }
+}

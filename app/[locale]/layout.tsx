@@ -7,12 +7,27 @@ import { WorkflowProvider } from "@/context/workflow-context";
 import { ToasterProvider } from "@/components/providers/toaster-provider";
 import path from "path";
 import fs from "fs/promises";
+import { Metadata } from "next";
 
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
 });
+
+export const metadata: Metadata = {
+  title: "NLP Toolbox",
+  description: "A comprehensive NLP toolbox for text processing and analysis",
+  icons: {
+    icon: [
+      { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512x512.png", sizes: "512x512", type: "image/png" }
+    ],
+    apple: [
+      { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" }
+    ]
+  }
+};
 
 export function generateStaticParams() {
   return [{ locale: "en" }, { locale: "vi" }];

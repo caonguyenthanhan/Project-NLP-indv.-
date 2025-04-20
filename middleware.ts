@@ -3,7 +3,11 @@ import { defaultLocale } from "./config"
 
 // Supported locales
 export const locales = [
-  "en", "vi", "zh", "ja", "ko", "fr", "de", "es", "it", "ru", 
+  "en", "vi", 
+  // Vietnamese dialects
+  "vi_mien_tay", "vi_genz", "vi_khmer", "vi_tay", "vi_cham",
+  // Other languages
+  "zh", "ja", "ko", "fr", "de", "es", "it", "ru", 
   "ar", "hi", "pt", "nl", "pl", "tr", "uk", "th", "id", "ms",
   "sv", "da", "fi", "no", "cs", "hu", "ro", "sk", "bg", "el",
   "he", "bn", "fa", "sr", "hr", "sl", "et", "lv", "lt", "ur",

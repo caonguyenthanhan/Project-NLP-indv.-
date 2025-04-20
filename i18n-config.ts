@@ -8,7 +8,15 @@ i18next
   .init({
     lng: "en",
     fallbackLng: "en",
-    supportedLngs: ["en", "vi", "fr", "es", "de", "ja", "zh", "ko", "ru", "ar"],
+    supportedLngs: [
+      "en", 
+      "vi",
+      "vi_mien_tay",
+      "vi_genz",
+      "vi_khmer",
+      "vi_tay",
+      "vi_cham"
+    ],
     backend: {
       loadPath: "/messages/{{lng}}.json",
     },

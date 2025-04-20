@@ -1,0 +1,343 @@
+{
+  "app": {
+    "title": "Bộ đồ nghề NLP",
+    "description": "Bộ đồ nghề đầy đủ cho việc mần ngôn ngữ tự nhiên",
+    "footer": "© {year} Khóa học NLP - Đã cất bản quyền"
+  },
+  "Header": {
+    "title": "Bộ đồ nghề NLP",
+    "navigation": {
+      "textClassification": "Phân loại văn bản",
+      "nlpFiltering": "Lọc NLP",
+      "chatBox": "Hộp chuyện trò"
+    }
+  },
+  "nav": {
+    "dataCollection": "Lượm dữ liệu",
+    "dataAugmentation": "Thêm dzô dữ liệu",
+    "dataCleaning": "Chùi sạch dữ liệu",
+    "dataPreprocessing": "Sẵn sàng dữ liệu",
+    "textRepresentation": "Biểu diễn văn bản",
+    "textClassification": "Phân loại"
+  },
+  "common": {
+    "add": "Thêm dzô",
+    "cancel": "Bỏ",
+    "save": "Cất",
+    "download": "Tải dzìa",
+    "upload": "Tải lên",
+    "next": "Kế tiếp",
+    "back": "Dzìa lại",
+    "process": "Mần",
+    "processing": "Đang mần...",
+    "saveAndContinue": "Cất & Đi tiếp",
+    "skip": "Bỏ qua",
+    "loading": "Đang tải...",
+    "error": "Hư",
+    "success": "Trót lọt",
+    "changeLanguage": "Đổi thứ tiếng",
+    "switchingToPreTranslated": "Đang đổi qua {language}",
+    "switchingLanguage": "Đang đổi từ {from} qua {to}",
+    "translationComplete": "Đã dịch xong từ {from} qua {to}",
+    "languageSwitchError": "Hư khi đổi thứ tiếng"
+  },
+  "workflow": {
+    "currentDataset": "Bộ dữ liệu hiện tại",
+    "datasetInfo": "Đang mần với: {name}",
+    "noDataset": "Chưa chọn bộ dữ liệu",
+    "selectDataset": "Chọn bộ dữ liệu",
+    "datasetSize": "Cỡ: {size} mẫu",
+    "datasetSource": "Nguồn: {source}"
+  },
+  "dataCollection": {
+    "title": "Lượm dữ liệu",
+    "description": "Gõ dzô văn bản hay URL để lượm dữ liệu nghen",
+    "inputText": "Gõ văn bản",
+    "inputUrl": "Gõ URL",
+    "enterText": "Gõ văn bản của bạn vô đây...",
+    "enterUrl": "Gõ URL để lượm...",
+    "collect": "Lượm",
+    "scrape": "Lượm từ web",
+    "scraping": "Đang lượm từ web...",
+    "processing": "Đang lượm dữ liệu...",
+    "success": "Lượm dữ liệu trót lọt!",
+    "error": "Hư khi lượm dữ liệu",
+    "noData": "Dzui lòng gõ văn bản hay URL nghen",
+    "publicDatasets": {
+      "title": "Bộ dữ liệu công khai",
+      "sentimentAnalysis": "Phân tích cảm xúc",
+      "textClassification": "Phân loại văn bản",
+      "spamDetection": "Lùng thư rác",
+      "languageIdentification": "Nhận ra thứ tiếng",
+      "intentClassification": "Phân loại ý muốn",
+      "namedEntityRecognition": "Nhận ra thực thể có tên"
+    }
+  },
+  "dataAugmentation": {
+    "title": "Thêm dzô dữ liệu",
+    "description": "Tạo thêm dữ liệu từ dữ liệu sẵn có",
+    "augment": "Thêm dzô",
+    "processing": "Đang thêm dzô dữ liệu...",
+    "success": "Thêm dzô dữ liệu trót lọt!",
+    "error": "Hư khi thêm dzô dữ liệu",
+    "noData": "Hổng có dữ liệu để thêm dzô",
+    "datasetSize": "Cỡ bộ dữ liệu: {size} mẫu",
+    "augmentationDecisionDescription": "Bạn muốn thêm dzô bộ dữ liệu để tăng chất lượng mô hình hông?",
+    "enterToAugment": "Nhấn Enter để thêm dzô",
+    "backspaceToSkip": "Nhấn Backspace để bỏ qua",
+    "next": "Kế tiếp"
+  },
+  "dataCleaning": {
+    "title": "Chùi sạch dữ liệu",
+    "description": "Bỏ mấy ký tự thừa thãi và làm văn bản gọn gàng",
+    "cleaningTools": "Đồ nghề chùi sạch",
+    "examples": "Ví dụ",
+    "inputText": "Gõ văn bản",
+    "cleanedText": "Văn bản đã chùi sạch",
+    "cleanText": "Chùi văn bản",
+    "cleaning": "Đang chùi...",
+    "cleanAndContinue": "Chùi & Đi tiếp",
+    "cleanSuccess": "Chùi dữ liệu trót lọt",
+    "noDataset": "Chưa chọn bộ dữ liệu",
+    "datasetPreview": "Coi trước bộ dữ liệu",
+    "removePunctuation": "Bỏ dấu câu",
+    "removeNumbers": "Bỏ số",
+    "removeExtraSpaces": "Bỏ khoảng trắng thừa",
+    "removeSymbols": "Bỏ ký hiệu",
+    "whatWasRemoved": "Đã bỏ cái gì",
+    "clean": "Chùi",
+    "enterToClean": "Nhấn Enter để chùi",
+    "backspaceToSkip": "Nhấn Backspace để bỏ qua",
+    "success": "Chùi dữ liệu trót lọt",
+    "error": "Hư rồi",
+    "noData": "Chưa chọn dữ liệu",
+    "datasetSize": "Cỡ bộ dữ liệu: {size} mẫu",
+    "next": "Kế tiếp",
+    "processing": "Đang chùi..."
+  },
+  "textPreprocessing": {
+    "title": "Sẵn sàng văn bản",
+    "description": "Làm văn bản gọn gàng và sẵn sàng cho phân tích",
+    "inputText": "Gõ văn bản",
+    "processedText": "Văn bản đã mần",
+    "processText": "Mần văn bản",
+    "processing": "Đang sẵn sàng...",
+    "preprocessAndContinue": "Sẵn sàng & Đi tiếp",
+    "preprocessSuccess": "Sẵn sàng dữ liệu trót lọt",
+    "noDataset": "Chưa chọn bộ dữ liệu",
+    "datasetSize": "Cỡ bộ dữ liệu: {size} mẫu",
+    "datasetPreview": "Coi trước bộ dữ liệu",
+    "removeStopwords": "Bỏ từ dừng",
+    "removePunctuation": "Bỏ dấu câu",
+    "removeWhitespace": "Bỏ khoảng trắng",
+    "lowercase": "Đổi thành chữ thường",
+    "stem": "Tách gốc từ",
+    "lemmatize": "Chuẩn hóa từ",
+    "expandContractions": "Bung từ viết tắt",
+    "correctSpelling": "Sửa lỗi chính tả",
+    "detectEntities": "Lùng thực thể",
+    "tokens": "Từ",
+    "entities": "Thực thể",
+    "steps": "Mấy bước mần",
+    "preprocess": "Sẵn sàng",
+    "enterToPreprocess": "Nhấn Enter để sẵn sàng",
+    "backspaceToSkip": "Nhấn Backspace để bỏ qua",
+    "success": "Sẵn sàng trót lọt!",
+    "error": "Hư khi sẵn sàng",
+    "noData": "Hổng có dữ liệu để sẵn sàng",
+    "next": "Kế tiếp",
+    "preprocessDescription": "Sẵn sàng văn bản bằng cách làm gọn, bỏ từ dừng và mấy ký tự thừa."
+  },
+  "textRepresentation": {
+    "title": "Biểu diễn văn bản",
+    "description": "Đổi văn bản thành số để phân tích",
+    "selectMethodPlaceholder": "Chọn cách biểu diễn",
+    "selectMethod": "Chọn cách",
+    "basicMethods": "Cách cơ bản",
+    "advancedMethods": "Cách cao cấp",
+    "methods": {
+      "tfidf": "TF-IDF",
+      "bow": "Bag of Words",
+      "count": "Đếm từ",
+      "word2vec": "Word2Vec",
+      "bert": "BERT",
+      "doc2vec": "Doc2Vec",
+      "use": "Universal Sentence Encoder",
+      "fasttext": "FastText"
+    },
+    "represent": "Biểu diễn",
+    "processing": "Đang biểu diễn văn bản...",
+    "success": "Biểu diễn trót lọt!",
+    "error": "Hư khi biểu diễn văn bản",
+    "noData": "Hổng có dữ liệu để biểu diễn",
+    "vectorInfo": "Thông tin vector",
+    "dimensions": "Số chiều",
+    "samples": "Số mẫu",
+    "avgMagnitude": "Độ lớn trung bình",
+    "sparsity": "Độ thưa",
+    "modelInfo": "Thông tin mô hình",
+    "modelName": "Tên mô hình",
+    "modelType": "Loại mô hình",
+    "vectorsReady": "Vector đã sẵn sàng",
+    "clickShowVectors": "Nhấn để coi vector",
+    "datasetSize": "Cỡ bộ dữ liệu: {size} mẫu",
+    "representationDecision": "Quyết định biểu diễn",
+    "representationDecisionDescription": "Bạn muốn biểu diễn dữ liệu thành vector hông?",
+    "performRepresentation": "Làm biểu diễn",
+    "skipRepresentation": "Bỏ qua biểu diễn",
+    "results": "Kết quả",
+    "showVectors": "Coi vector",
+    "hideVectors": "Ẩn vector",
+    "vectorRepresentation": "Biểu diễn vector",
+    "next": "Kế tiếp",
+    "selectSample": "Chọn mẫu",
+    "originalText": "Văn bản gốc"
+  },
+  "textClassification": {
+    "title": "Phân loại văn bản",
+    "description": "Phân văn bản vô mấy nhóm khác nhau",
+    "classifyText": "Phân loại văn bản",
+    "classifyDescription": "Chọn việc và mô hình để phân loại văn bản",
+    "selectTask": "Chọn việc",
+    "selectModel": "Chọn mô hình",
+    "classify": "Phân loại",
+    "processing": "Đang phân loại...",
+    "comparing": "Đang so sánh...",
+    "success": "Phân loại trót lọt!",
+    "error": "Hư khi phân loại",
+    "noData": "Hổng có dữ liệu để phân loại",
+    "datasetSize": "Cỡ bộ dữ liệu: {size} mẫu",
+    "showComparisonChart": "Coi biểu đồ so sánh",
+    "hideComparisonChart": "Ẩn biểu đồ so sánh",
+    "retrain": "Học lại",
+    "retraining": "Đang học lại...",
+    "predictedUsing": "Dự đoán bằng",
+    "predictedClass": "Lớp dự đoán",
+    "inputText": "Văn bản gõ dzô",
+    "prediction": "Dự đoán"
+  },
+  "datasetSelector": {
+    "selectDataset": "Chọn bộ dữ liệu",
+    "noDatasetsAvailable": "Hổng có bộ dữ liệu nào"
+  },
+  "navigation": {
+    "textClassification": "Phân loại văn bản",
+    "nlpFiltering": "Lọc văn bản",
+    "chatBox": "Hộp chuyện trò"
+  },
+  "theme": {
+    "title": "Chủ đề",
+    "selectTheme": "Chọn chủ đề",
+    "styles": {
+      "co-dien": "Cổ điển",
+      "thong-nhat": "Thống nhất",
+      "doc-lap": "Độc lập",
+      "hanh-phuc": "Hạnh phúc",
+      "tuyen-ngon": "Tuyên ngôn",
+      "toi-yeu-vn": "Tui yêu Việt Nam",
+      "tu-do": "Tự do"
+    }
+  },
+  "HomePage": {
+    "hero": {
+      "title": "Bộ đồ nghề NLP",
+      "description": "Bộ đồ nghề đầy đủ cho việc mần ngôn ngữ tự nhiên",
+      "tryDemo": "Thử chơi",
+      "viewGithub": "Coi trên GitHub"
+    },
+    "features": {
+      "title": "Chức năng",
+      "textClassification": {
+        "title": "Phân loại văn bản",
+        "description": "Phân văn bản vô mấy nhóm có sẵn bằng mô hình máy học xịn"
+      },
+      "nlpFiltering": {
+        "title": "Lọc văn bản",
+        "description": "Lọc và mần văn bản bằng mấy kỹ thuật ngôn ngữ tự nhiên"
+      },
+      "chatBox": {
+        "title": "Hộp chuyện trò",
+        "description": "Giao diện trò chuyện tương tác để thử mấy mô hình NLP"
+      },
+      "tryNow": "Thử liền"
+    },
+    "about": {
+      "title": "Giới thiệu",
+      "whatIs": {
+        "title": "Bộ đồ nghề NLP là gì?",
+        "description": "Bộ đồ nghề NLP là bộ công cụ mần ngôn ngữ tự nhiên mạnh mẽ, được làm để giúp bạn hiểu và phân tích dữ liệu văn bản. Xây bằng công nghệ xịn và cách làm tốt nhất."
+      },
+      "benefits": {
+        "title": "Lợi ích",
+        "point1": "Giao diện dễ xài",
+        "point2": "Hỗ trợ nhiều thứ tiếng",
+        "point3": "Mần ngay tức thì"
+      }
+    },
+    "cta": {
+      "title": "Sẵn sàng dzô chưa?",
+      "description": "Thử demo phân loại văn bản để coi bộ đồ nghề hoạt động ra sao.",
+      "button": "Dzô liền"
+    }
+  },
+  "chatBox": {
+    "title": "Hộp chuyện trò thông minh",
+    "description": "Chuyện trò với trợ lý AI",
+    "welcomeMessage": "Chào mừng dzô cuộc trò chuyện mới!",
+    "startConversation": "Bắt đầu chuyện trò",
+    "inputPlaceholder": "Gõ tin nhắn của bạn vô đây...",
+    "sendButton": "Gửi",
+    "fetchError": "Hổng kết nối được với trợ lý AI",
+    "errorMessage": "Xin lỗi, có hư khi mần yêu cầu của bạn.",
+    "newChat": "Tạo cuộc trò chuyện mới",
+    "deleteChat": "Xóa cuộc trò chuyện",
+    "save": "Cất",
+    "cancel": "Bỏ",
+    "enterNewName": "Gõ tên mới",
+    "messages": {
+      "user": "Bạn",
+      "assistant": "Trợ lý",
+      "system": "Hệ thống",
+      "loading": "Đang nghĩ..."
+    }
+  },
+  "nlpFiltering": {
+    "title": "Lọc NLP",
+    "description": "Lọc và mần văn bản bằng kỹ thuật ngôn ngữ tự nhiên",
+    "filterText": "Lọc văn bản",
+    "filterDescription": "Gõ văn bản cần lọc",
+    "filterOptions": "Tùy chọn lọc",
+    "applyFilters": "Dùng bộ lọc",
+    "inputText": "Văn bản gõ dzô",
+    "filteredText": "Văn bản đã lọc",
+    "processing": "Đang mần...",
+    "success": "Lọc trót lọt!",
+    "error": "Hư trong lúc lọc",
+    "noData": "Hổng có văn bản để lọc",
+    "filters": {
+      "removePunctuation": "Bỏ dấu câu",
+      "removeNumbers": "Bỏ số",
+      "removeExtraSpaces": "Bỏ khoảng trắng thừa",
+      "removeSymbols": "Bỏ ký tự lạ",
+      "removeStopwords": "Bỏ từ dừng",
+      "lowercase": "Đổi thành chữ thường",
+      "stem": "Tách từ gốc",
+      "lemmatize": "Chuẩn hóa từ",
+      "expandContractions": "Bung từ viết tắt",
+      "correctSpelling": "Sửa lỗi chính tả"
+    },
+    "results": {
+      "title": "Kết quả lọc",
+      "originalText": "Văn bản gốc",
+      "processedText": "Văn bản đã mần",
+      "whatWasRemoved": "Đã bỏ cái gì",
+      "downloadResults": "Tải kết quả"
+    },
+    "workflow": {
+      "currentText": "Văn bản hiện tại",
+      "textInfo": "Đang mần: {length} ký tự",
+      "noText": "Chưa chọn văn bản",
+      "selectText": "Chọn văn bản để lọc"
+    }
+  }
+}
