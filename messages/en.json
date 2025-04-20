@@ -286,5 +286,47 @@
       "toi-yeu-vn": "I Love Vietnam",
       "tu-do": "Freedom"
     }
+  },
+  "HomePage": {
+    "hero": {
+      "title": "NLP Toolkit",
+      "description": "A comprehensive toolkit for Natural Language Processing",
+      "tryDemo": "Try Demo",
+      "viewGithub": "View on GitHub"
+    },
+    "features": {
+      "title": "Features",
+      "textClassification": {
+        "title": "Text Classification",
+        "description": "Classify text into predefined categories using advanced machine learning models"
+      },
+      "nlpFiltering": {
+        "title": "NLP Filtering",
+        "description": "Filter and process text using natural language processing techniques"
+      },
+      "chatBox": {
+        "title": "Chat Box",
+        "description": "Interactive chat interface for testing NLP models"
+      },
+      "tryNow": "Try Now"
+    },
+    "about": {
+      "title": "About",
+      "whatIs": {
+        "title": "What is NLP Toolkit?",
+        "description": "NLP Toolkit is a powerful suite of natural language processing tools designed to help you understand and analyze text data. Built with modern technologies and best practices."
+      },
+      "benefits": {
+        "title": "Benefits",
+        "point1": "Easy to use interface",
+        "point2": "Multiple language support",
+        "point3": "Real-time processing"
+      }
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "description": "Try our text classification demo to see the toolkit in action.",
+      "button": "Get Started"
+    }
   }
 }

@@ -238,5 +238,47 @@
       "toi-yeu-vn": "Tôi yêu Việt Nam",
       "tu-do": "Tự do"
     }
+  },
+  "HomePage": {
+    "hero": {
+      "title": "Bộ Công Cụ NLP",
+      "description": "Bộ công cụ toàn diện cho Xử lý Ngôn ngữ Tự nhiên",
+      "tryDemo": "Dùng thử",
+      "viewGithub": "Xem trên GitHub"
+    },
+    "features": {
+      "title": "Tính năng",
+      "textClassification": {
+        "title": "Phân loại Văn bản",
+        "description": "Phân loại văn bản thành các danh mục định sẵn bằng mô hình học máy tiên tiến"
+      },
+      "nlpFiltering": {
+        "title": "Lọc Văn bản",
+        "description": "Lọc và xử lý văn bản bằng các kỹ thuật xử lý ngôn ngữ tự nhiên"
+      },
+      "chatBox": {
+        "title": "Hộp Thoại",
+        "description": "Giao diện trò chuyện tương tác để kiểm tra các mô hình NLP"
+      },
+      "tryNow": "Dùng thử"
+    },
+    "about": {
+      "title": "Giới thiệu",
+      "whatIs": {
+        "title": "Bộ Công cụ NLP là gì?",
+        "description": "Bộ Công cụ NLP là một bộ công cụ xử lý ngôn ngữ tự nhiên mạnh mẽ được thiết kế để giúp bạn hiểu và phân tích dữ liệu văn bản. Được xây dựng với công nghệ hiện đại và thực tiễn tốt nhất."
+      },
+      "benefits": {
+        "title": "Lợi ích",
+        "point1": "Giao diện dễ sử dụng",
+        "point2": "Hỗ trợ nhiều ngôn ngữ",
+        "point3": "Xử lý thời gian thực"
+      }
+    },
+    "cta": {
+      "title": "Sẵn sàng bắt đầu?",
+      "description": "Hãy thử demo phân loại văn bản để xem bộ công cụ hoạt động.",
+      "button": "Bắt đầu"
+    }
   }
 }

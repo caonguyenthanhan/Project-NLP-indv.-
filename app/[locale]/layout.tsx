@@ -8,10 +8,10 @@ import { ToasterProvider } from "@/components/providers/toaster-provider";
 import path from "path";
 import fs from "fs/promises";
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter"
+  variable: "--font-inter",
 });
 
 export function generateStaticParams() {
@@ -22,7 +22,7 @@ async function getMessages(locale: string) {
   try {
     const messagesPath = path.join(process.cwd(), "messages", `${locale}.json`);
     const fileExists = await fs.access(messagesPath).then(() => true).catch(() => false);
-    
+
     if (!fileExists) {
       console.error(`Messages file not found for locale ${locale} at path: ${messagesPath}`);
       notFound();
@@ -41,9 +41,9 @@ export default async function LocaleLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>; // params is a Promise
 }) {
-  const locale = params.locale;
+  const { locale } = await params; // Await to resolve locale
   const messages = await getMessages(locale);
 
   return (
@@ -54,15 +54,10 @@ export default async function LocaleLayout({
         enableSystem
         disableTransitionOnChange
       >
-        <NextIntlClientProvider 
-          locale={locale}
-          messages={messages}
-        >
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <WorkflowProvider>
             <Header />
-            <main className="container py-6">
-              {children}
-            </main>
+            <main className="container py-6">{children}</main>
             <ToasterProvider />
           </WorkflowProvider>
         </NextIntlClientProvider>

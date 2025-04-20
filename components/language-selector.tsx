@@ -13,6 +13,7 @@ import {
 import { Globe, Loader2 } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "sonner";
+import { useState, useEffect } from "react";
 
 const languages = [
   { code: "en", name: "English" },
@@ -65,9 +66,9 @@ const languages = [
   { code: "km", name: "ខ្មែរ" },
   { code: "lo", name: "ລາວ" },
   { code: "ne", name: "नेपाली" }
-];
+] as const;
 
-const preTranslatedLocales = ['en', 'vi'];
+const preTranslatedLocales = ['en', 'vi'] as const;
 
 export default function LanguageSelector() {
   const pathname = usePathname();
@@ -75,10 +76,15 @@ export default function LanguageSelector() {
   const router = useRouter();
   const { translate, isTranslating } = useTranslation();
   const t = useTranslations("common");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleLocaleChange = async (newLocale: string) => {
-    const targetLanguage = languages.find(l => l.code === newLocale)?.name;
-    const currentLanguage = languages.find(l => l.code === currentLocale)?.name;
+    const targetLanguage = languages.find(l => l.code === newLocale)?.name || newLocale;
+    const currentLanguage = languages.find(l => l.code === currentLocale)?.name || currentLocale;
 
     // Get the path without the locale prefix
     const pathWithoutLocale = pathname.replace(`/${currentLocale}`, '') || '/';
@@ -88,20 +94,22 @@ export default function LanguageSelector() {
 
     try {
       // If switching to a pre-translated locale (en or vi)
-      if (preTranslatedLocales.includes(newLocale)) {
-        // Just show a quick switching message
+      if (preTranslatedLocales.includes(newLocale as typeof preTranslatedLocales[number])) {
+        // Show a quick switching message
         toast.success(t("switchingToPreTranslated", { 
-          language: targetLanguage 
+          language: targetLanguage as string
         }));
-        router.push(newPath);
+        
+        // Navigate to new locale
+        window.location.href = newPath;
         return;
       }
 
       // For other languages, show translation progress
       const switchingToast = toast.loading(
         t("switchingLanguage", { 
-          from: currentLanguage, 
-          to: targetLanguage 
+          from: currentLanguage as string, 
+          to: targetLanguage as string
         })
       );
 
@@ -123,20 +131,29 @@ export default function LanguageSelector() {
       // Show success message
       toast.success(
         t("translationComplete", { 
-          from: currentLanguage, 
-          to: targetLanguage 
+          from: currentLanguage as string, 
+          to: targetLanguage as string
         }),
         { id: switchingToast }
       );
 
       // Navigate to new locale
-      router.push(newPath);
+      window.location.href = newPath;
 
     } catch (error) {
       console.error('Translation error:', error);
       toast.error(t("languageSwitchError"));
     }
   };
+
+  // Prevent hydration issues
+  if (!mounted) {
+    return (
+      <Button variant="ghost" size="icon" className="relative">
+        <Globe className="h-4 w-4" />
+      </Button>
+    );
+  }
 
   return (
     <DropdownMenu>
