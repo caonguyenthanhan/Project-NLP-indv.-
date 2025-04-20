@@ -33,9 +33,13 @@
     "saveAndContinue": "Save & Continue",
     "skip": "Skip",
     "loading": "Loading...",
-    "error": "Error occurred",
+    "error": "An error occurred",
     "success": "Success",
-    "changeLanguage": "Change Language"
+    "changeLanguage": "Change Language",
+    "switchingToPreTranslated": "Switching to {language}",
+    "switchingLanguage": "Switching from {from} to {to}",
+    "translationComplete": "Translation completed from {from} to {to}",
+    "languageSwitchError": "Error switching language"
   },
   "workflow": {
     "currentDataset": "Current Dataset",

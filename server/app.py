@@ -555,6 +555,45 @@ async def translate_endpoint(request: TranslationRequest):
         logger.error(f"Translation error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+class LanguageSwitchRequest(BaseModel):
+    language: str
+
+@app.post("/api/switch-language")
+async def switch_language(request: LanguageSwitchRequest):
+    try:
+        language = request.language
+        logger.info(f"Switching to language: {language}")
+
+        # Check if translation exists
+        messages_dir = os.path.join(SERVER_DIR, "..", "messages")
+        target_file = os.path.join(messages_dir, f"{language}.json")
+        
+        if os.path.exists(target_file):
+            logger.info(f"Translation file exists for {language}")
+            return {"status": "success", "message": f"Using existing translation for {language}"}
+        
+        # If file doesn't exist, create it by translating from English
+        source_file = os.path.join(messages_dir, "en.json")
+        if not os.path.exists(source_file):
+            raise HTTPException(status_code=404, detail="English translation file not found")
+        
+        with open(source_file, 'r', encoding='utf-8') as f:
+            source_data = json.load(f)
+        
+        # Translate the data
+        translated_data = await perform_translation(source_data, language)
+        
+        # Save the translated data
+        with open(target_file, 'w', encoding='utf-8') as f:
+            json.dump(translated_data, f, ensure_ascii=False, indent=2)
+        
+        logger.info(f"Created new translation for {language}")
+        return {"status": "success", "message": f"Created new translation for {language}"}
+        
+    except Exception as e:
+        logger.error(f"Error switching language: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="localhost", port=8000) 

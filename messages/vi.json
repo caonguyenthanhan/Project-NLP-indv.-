@@ -35,7 +35,12 @@
     "loading": "Đang tải...",
     "error": "Đã xảy ra lỗi",
     "success": "Thành công",
-    "changeLanguage": "Thay đổi ngôn ngữ"
+    "changeLanguage": "Thay đổi ngôn ngữ",
+    "switchingLanguage": "Đang chuyển từ {from} sang {to}",
+    "translatingContent": "Đang dịch nội dung từ {from} sang {to}...",
+    "translationComplete": "Đã dịch xong từ {from} sang {to}",
+    "languageSwitchError": "Lỗi khi chuyển ngôn ngữ",
+    "switchingToPreTranslated": "Chuyển sang {language}"
   },
   "workflow": {
     "currentDataset": "Bộ dữ liệu hiện tại",

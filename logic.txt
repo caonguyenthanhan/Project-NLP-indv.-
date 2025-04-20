@@ -1,0 +1,139 @@
+=== NLP TOOLKIT - LOGIC DOCUMENTATION ===
+
+1. TRANSLATION SYSTEM
+-------------------
+a) Cấu trúc thư mục ngôn ngữ:
+- /messages/: Chứa các file dịch chính thức (en.json, vi.json)
+- /messages/auto-translations/: Chứa các file dịch tự động (không commit vào git)
+
+b) Quy trình dịch tự động:
+1. Khi người dùng chọn ngôn ngữ mới:
+   - Kiểm tra file trong /messages/ (bản dịch chính thức)
+   - Nếu không có, kiểm tra trong /messages/auto-translations/ (bản dịch tự động)
+   - Nếu vẫn không có, tạo bản dịch mới:
+     * Lấy nội dung từ en.json làm nguồn
+     * Sử dụng Google Cloud Translation API để dịch
+     * Lưu kết quả vào /messages/auto-translations/
+
+c) Xử lý dịch:
+- Sử dụng Google Cloud Translation API
+- Dịch đệ quy cho cấu trúc JSON lồng nhau
+- Giữ nguyên các key, chỉ dịch các giá trị
+
+2. THEME SYSTEM
+-------------
+a) Cấu trúc theme:
+- Mỗi theme có ID và className riêng
+- Sử dụng CSS Variables để định nghĩa màu sắc
+- Theme được áp dụng thông qua class trên thẻ body
+
+b) Các theme có sẵn:
+- Thống Nhất (thong-nhat)
+- Độc Lập (doc-lap)
+- Hạnh Phúc (hanh-phuc)
+- Tuyên Ngôn (tuyen-ngon)
+- Tôi Yêu Việt Nam (toi-yeu-vn)
+- Tự Do (tu-do)
+
+c) Cách hoạt động:
+1. Theme được lưu trong localStorage
+2. Khi chọn theme mới:
+   - Xóa class theme cũ khỏi body
+   - Thêm class theme mới vào body
+   - Cập nhật localStorage
+3. Theme được khôi phục khi tải lại trang
+
+3. LANGUAGE SELECTOR
+------------------
+a) Cấu trúc:
+- Dropdown menu với danh sách ngôn ngữ
+- Hiển thị tên ngôn ngữ bản địa
+- Icon loading khi đang dịch
+
+b) Quy trình chuyển đổi ngôn ngữ:
+1. Người dùng chọn ngôn ngữ mới
+2. Kiểm tra xem có phải ngôn ngữ có sẵn (en, vi):
+   - Nếu có: chuyển đổi ngay
+   - Nếu không: hiển thị loading và bắt đầu dịch
+3. Sau khi có file dịch (có sẵn hoặc mới tạo):
+   - Chuyển hướng đến URL mới với locale mới
+   - Next.js tự động load bản dịch tương ứng
+
+4. ROUTING & INTERNATIONALIZATION
+------------------------------
+a) Cấu trúc URL:
+- /{locale}/[...path]
+- Locale luôn là phần tử đầu tiên của path
+
+b) Middleware xử lý:
+1. Kiểm tra locale trong URL
+2. Nếu không có locale: chuyển hướng đến locale mặc định
+3. Nếu locale không hợp lệ: chuyển hướng đến 404
+
+c) Tải bản dịch:
+1. Next.js tự động tải file dịch dựa trên locale
+2. Fallback về tiếng Anh nếu không tìm thấy key
+
+5. ENVIRONMENT VARIABLES
+----------------------
+Các biến môi trường cần thiết:
+- GOOGLE_CLOUD_PROJECT_ID: ID dự án Google Cloud
+- GOOGLE_CLOUD_PRIVATE_KEY: Private key của service account
+- GOOGLE_CLOUD_CLIENT_EMAIL: Email của service account
+- NEXT_PUBLIC_API_URL: URL của API (development: http://localhost:3000)
+
+6. FILE STRUCTURE
+---------------
+/app
+  /[locale]        # Routes theo ngôn ngữ
+  /api            # API endpoints
+/components       # React components
+/messages         # Translation files
+  /*.json        # Official translations
+  /auto-translations  # Auto-generated translations
+/styles          # CSS files
+/public          # Static files
+/lib             # Shared utilities
+
+7. API ENDPOINTS
+--------------
+/api/switch-language
+- Method: POST
+- Body: { language: string }
+- Response: 
+  * success: { status: 'success', message: string, path: string }
+  * error: { error: string }
+
+=== CÁC CHỨC NĂNG CHÍNH ===
+
+1. Text Classification
+--------------------
+[Đang cập nhật...]
+
+2. NLP Filtering
+--------------
+[Đang cập nhật...]
+
+3. Chat Box
+----------
+[Đang cập nhật...]
+
+=== LƯU Ý QUAN TRỌNG ===
+
+1. Security
+----------
+- Không commit file .env hoặc credentials
+- Không commit các bản dịch tự động
+- Kiểm tra và sanitize input từ người dùng
+
+2. Performance
+------------
+- Sử dụng lazy loading cho components
+- Tối ưu hóa việc gọi API dịch
+- Cache bản dịch đã tạo
+
+3. Maintenance
+------------
+- Cập nhật logic.txt khi có thay đổi lớn
+- Ghi chú rõ ràng cho các thay đổi quan trọng
+- Backup regular translations 

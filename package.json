@@ -65,6 +65,8 @@
     "react-resizable-panels": "^2.1.7",
     "react-toastify": "^11.0.5",
     "recharts": "^2.15.0",
+    "request": "^2.88.2",
+    "retry-request": "^8.0.0",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.5.5",
     "typescript": "5.3.3",

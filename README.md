@@ -1,242 +1,153 @@
-# Project NLP: Comprehensive Text Representation Learning Platform
+# NLP Toolkit 🚀
 
-Project NLP là một nền tảng học tập và thực hành toàn diện về các phương pháp biểu diễn văn bản trong xử lý ngôn ngữ tự nhiên (Natural Language Processing). Dự án này được thiết kế để giúp người dùng hiểu và trực quan hóa cách các kỹ thuật NLP khác nhau chuyển đổi văn bản thành các biểu diễn số học mà máy tính có thể xử lý.
+Bộ công cụ xử lý ngôn ngữ tự nhiên toàn diện với giao diện người dùng hiện đại và hỗ trợ đa ngôn ngữ.
 
-## Các thành phần chính
+## ✨ Tính năng
 
-### 1. Quy trình xử lý dữ liệu 5 bước
+- 📝 **Phân loại văn bản** - Phân loại văn bản vào các nhóm khác nhau
+- 🔍 **Lọc NLP** - Lọc và xử lý văn bản theo nhiều tiêu chí
+- 💬 **Hộp thoại** - Tương tác với mô hình NLP qua giao diện chat
+- 🌐 **Đa ngôn ngữ** - Hỗ trợ hơn 40 ngôn ngữ với dịch tự động
+- 🎨 **Giao diện tùy biến** - 6 theme độc đáo lấy cảm hứng từ văn hóa Việt Nam
 
-Dự án được tổ chức theo quy trình xử lý dữ liệu 5 bước: 
+## 🚀 Bắt đầu
 
-* **Thu thập dữ liệu**: Nhập và quản lý tài liệu văn bản 
-* **Tăng cường dữ liệu**: Mở rộng tập dữ liệu để cải thiện hiệu suất mô hình 
-* **Làm sạch dữ liệu**: Loại bỏ nhiễu và chuẩn hóa văn bản 
-* **Tiền xử lý dữ liệu**: Chuẩn bị văn bản cho các thuật toán NLP 
-* **Biểu diễn văn bản**: Chuyển đổi văn bản thành biểu diễn số học 
+### Yêu cầu hệ thống
 
+- Node.js 18.x trở lên
+- Python 3.8 trở lên
+- Google Cloud Translation API credentials
 
-### 2. Phương pháp biểu diễn văn bản
-
-Dự án phân loại các phương pháp biểu diễn văn bản thành hai nhóm: 
-
-#### Phương pháp cơ bản
-
-* **One-Hot Encoding**: Biểu diễn mỗi từ dưới dạng vector nhị phân với một phần tử có giá trị 1 và tất cả các phần tử khác là 0 
-* **Bag of Words**: Biểu diễn văn bản dưới dạng tập hợp các từ không theo thứ tự, đếm số lần xuất hiện của mỗi từ 
-* **N-Grams**: Phân tích chuỗi liên tiếp gồm n từ, giúp nắm bắt thông tin về thứ tự từ 
-* **TF-IDF**: Đánh giá tầm quan trọng của từ dựa trên tần suất xuất hiện trong tài liệu và độ hiếm của từ trong toàn bộ tập tài liệu 
-
-#### Phương pháp nâng cao
-
-* **Word2Vec**: Tạo vector từ bằng mạng nơ-ron, ánh xạ từ vào không gian vector liên tục 
-* **GloVe**: Phân tích thống kê đồng xuất hiện từ-từ toàn cục để tạo vector biểu diễn 
-* **FastText**: Mở rộng Word2Vec bằng cách biểu diễn từ dưới dạng tập hợp n-gram ký tự 
-* **Doc2Vec**: Mở rộng Word2Vec để học biểu diễn cho câu, đoạn văn hoặc tài liệu 
-* **Sentence Transformers**: Sử dụng mô hình transformer như BERT để tạo vector biểu diễn cho câu hoặc đoạn văn 
-
-### 3. Phân loại văn bản (Text Classification)
-
-Phân loại văn bản là một tính năng cốt lõi của dự án, cho phép người dùng huấn luyện và thử nghiệm các mô hình học máy trên các tập dữ liệu văn bản. Tính năng này hỗ trợ nhiều thuật toán phân loại khác nhau, giúp người dùng hiểu cách các mô hình phân loại văn bản hoạt động.
-
-#### Các thuật toán hỗ trợ
-
-* **Naïve Bayes**: Sử dụng định lý Bayes để phân loại văn bản, với các tham số tùy chỉnh như alpha (smoothing) và khả năng học xác suất tiên nghiệm của lớp (fit prior).
-* **Logistic Regression**: (Sắp ra mắt) Một thuật toán tuyến tính để phân loại văn bản.
-* **SVM (Support Vector Machine)**: (Sắp ra mắt) Sử dụng không gian vector để tìm ranh giới phân chia tối ưu.
-* **K-NN (K-Nearest Neighbors)**: (Sắp ra mắt) Phân loại dựa trên các điểm dữ liệu gần nhất trong không gian đặc trưng.
-
-#### Tính năng chính
-
-* **Huấn luyện mô hình**: Người dùng có thể chọn một tập dữ liệu (như IMDB Reviews, Twitter Sentiment) hoặc tải lên tập dữ liệu tùy chỉnh, sau đó huấn luyện mô hình với các tham số tùy chỉnh.
-* **Dự đoán**: Sau khi huấn luyện, người dùng có thể nhập văn bản mới để dự đoán nhãn (ví dụ: tích cực/tiêu cực trong phân tích tình cảm).
-* **Tùy chỉnh tham số**: Cung cấp các tùy chọn như alpha smoothing và fit prior (cho Naïve Bayes) để tinh chỉnh mô hình.
-* **Thông báo trực quan**: Sử dụng `react-toastify` để hiển thị thông báo về trạng thái huấn luyện và dự đoán (đang xử lý, thành công, hoặc lỗi).
-* **Xử lý lỗi**: Kiểm tra và thông báo lỗi nếu người dùng chưa chọn tập dữ liệu hoặc chưa tải lên file dataset.
-
-#### Tích hợp với giao diện
-
-* Giao diện tabbed cho phép người dùng chuyển đổi giữa các thuật toán phân loại khác nhau (Naïve Bayes, Logistic, SVM, K-NN).
-* Form nhập liệu để tải file dataset, cấu hình tham số, và nhập văn bản cần dự đoán.
-* Kết quả dự đoán được hiển thị trực quan dưới dạng văn bản.
-
-#### Ứng dụng trong giáo dục và nghiên cứu
-
-* Hiểu cách các thuật toán phân loại văn bản hoạt động.
-* So sánh hiệu suất của các thuật toán trên cùng một tập dữ liệu.
-* Thử nghiệm các tham số để cải thiện hiệu suất mô hình.
-
-### 4. Giao diện tương tác
-
-Giao diện người dùng trực quan cho phép: 
-
-* **Quản lý tài liệu**: Xem, thêm và chỉnh sửa tài liệu văn bản.
-* **Lựa chọn phương pháp**: Chuyển đổi giữa các phương pháp biểu diễn cơ bản và nâng cao, cũng như các thuật toán phân loại văn bản.
-* **Tùy chọn xử lý**: Cấu hình các tùy chọn như loại bỏ stopwords, loại bỏ dấu câu, chuyển đổi chữ thường.
-* **Trực quan hóa kết quả**: Xem kết quả biểu diễn văn bản dưới dạng ma trận hoặc vector, và kết quả dự đoán phân loại văn bản.
-
-## Ứng dụng và lợi ích
-
-### Giáo dục và học tập
-
-* Hiểu rõ các khái niệm NLP cơ bản và nâng cao.
-* So sánh trực tiếp các phương pháp biểu diễn văn bản và thuật toán phân loại khác nhau.
-* Trực quan hóa cách văn bản được chuyển đổi thành dạng số học và cách các mô hình phân loại dự đoán nhãn.
-
-### Nghiên cứu và phát triển
-
-* Thử nghiệm nhanh các phương pháp biểu diễn văn bản và thuật toán phân loại khác nhau.
-* Đánh giá hiệu quả của các kỹ thuật tiền xử lý và các tham số mô hình.
-* Chuẩn bị dữ liệu cho các mô hình học máy và học sâu.
-
-### Ứng dụng thực tế
-
-* **Phân loại văn bản**: Gắn nhãn tự động cho tài liệu (ví dụ: spam/ham, tích cực/tiêu cực).
-* **Phân tích tình cảm**: Xác định cảm xúc trong văn bản (tích cực, tiêu cực, trung lập).
-* **Tìm kiếm ngữ nghĩa**: Cải thiện tìm kiếm dựa trên ý nghĩa của văn bản.
-* **Hệ thống gợi ý**: Gợi ý nội dung dựa trên phân loại văn bản.
-* **Tóm tắt văn bản**: Sử dụng biểu diễn văn bản để tóm tắt nội dung.
-
-## Công nghệ sử dụng
-
-* **Frontend**: React, Next.js, Tailwind CSS, shadcn/ui.
-* **Backend**: Node.js (cho server), FastAPI (cho các tác vụ như huấn luyện mô hình và dự đoán).
-* **Xử lý NLP**: Tích hợp các thư viện như NLTK, Gensim, spaCy, Hugging Face Transformers, scikit-learn (cho phân loại văn bản).
-* **Trực quan hóa**: Biểu đồ và ma trận tương tác để hiển thị kết quả.
-
-## Hướng phát triển tương lai
-
-* Tích hợp thêm các phương pháp biểu diễn văn bản mới.
-* Thêm các thuật toán phân loại văn bản mới (Logistic Regression, SVM, K-NN).
-* Thêm các công cụ đánh giá và so sánh hiệu suất giữa các thuật toán phân loại.
-* Hỗ trợ nhiều ngôn ngữ hơn ngoài tiếng Anh.
-* Tích hợp với các mô hình học máy để thực hiện các tác vụ NLP phức tạp hơn.
-* Phát triển API để tích hợp với các ứng dụng khác.
-
-Project NLP là một công cụ giáo dục và thực hành toàn diện, giúp người dùng hiểu sâu về cách văn bản được biểu diễn và phân loại trong các hệ thống xử lý ngôn ngữ tự nhiên, từ các phương pháp cơ bản đến các kỹ thuật học sâu hiện đại.
-
----
-
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-### 1. Run the Development Server (Frontend)
-
-First, run the Next.js development server for the frontend:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-## Hướng dẫn sử dụng
-
-### 1. Thu thập dữ liệu (Data Collection)
-- Nhập văn bản trực tiếp hoặc URL để thu thập dữ liệu
-- Hỗ trợ scraping dữ liệu từ các trang web
-- Xem và quản lý dữ liệu đã thu thập
-
-### 2. Tăng cường dữ liệu (Data Augmentation)
-- Tạo thêm dữ liệu từ dữ liệu hiện có
-- Áp dụng các kỹ thuật như thay thế từ đồng nghĩa, dịch ngược
-- Cân bằng tập dữ liệu
-
-### 3. Làm sạch dữ liệu (Data Cleaning)
-- Loại bỏ nhiễu và dữ liệu không mong muốn
-- Chuẩn hóa văn bản
-- Kiểm tra và sửa lỗi chính tả
-
-### 4. Tiền xử lý (Preprocessing)
-- Tách từ và câu
-- Loại bỏ stopwords
-- Chuẩn hóa chữ hoa/thường
-- Lemmatization/Stemming
-
-### 5. Biểu diễn văn bản (Text Representation)
-- Chuyển đổi văn bản thành vector số học
-- Hỗ trợ nhiều phương pháp: Bag of Words, TF-IDF, Word2Vec, v.v.
-- Trực quan hóa kết quả biểu diễn
-
-### 6. Phân loại văn bản (Text Classification)
-- Huấn luyện mô hình trên dữ liệu đã xử lý
-- Hỗ trợ nhiều thuật toán: Naive Bayes, Logistic Regression, v.v.
-- Đánh giá và so sánh hiệu suất các mô hình
-- Dự đoán nhãn cho văn bản mới
-
-### Lưu ý quan trọng
-- Đảm bảo đã cài đặt đầy đủ dependencies trước khi sử dụng
-- Kiểm tra kết nối internet khi sử dụng chức năng scraping
-- Lưu ý dung lượng và định dạng file khi tải lên
-- Theo dõi thông báo lỗi và cảnh báo trong quá trình sử dụng
-
-# NLP Toolkit
-
-Bộ công cụ xử lý ngôn ngữ tự nhiên với các chức năng:
-- Thu thập dữ liệu (Data Collection)
-- Tăng cường dữ liệu (Data Augmentation)
-- Làm sạch dữ liệu (Data Cleaning)
-- Tiền xử lý (Preprocessing)
-- Biểu diễn văn bản (Text Representation)
-- Phân loại văn bản (Text Classification)
-
-## Yêu cầu hệ thống
-
-- Node.js (>= 14.0.0)
-- Python (>= 3.8)
-- npm (>= 6.0.0)
-
-## Cài đặt
+### Cài đặt
 
 1. Clone repository:
 ```bash
-git clone <repository-url>
-cd <project-folder>
+git clone https://github.com/your-username/nlp-toolkit.git
+cd nlp-toolkit
 ```
 
-2. Cài đặt tất cả dependencies (Node.js và Python):
+2. Cài đặt dependencies:
 ```bash
-npm run setup
+# Frontend dependencies
+npm install
+
+# Backend dependencies
+pip install -r requirements.txt
 ```
 
-Lệnh này sẽ:
-- Cài đặt các package Node.js
-- Cài đặt các thư viện Python cần thiết
-- Tải NLTK data
-- Chuẩn bị môi trường để chạy ứng dụng
+3. Thiết lập môi trường:
+- Tạo file `.env.local` từ `.env.example`
+- Thêm Google Cloud Translation API credentials
 
-## Chạy ứng dụng
-
-Sau khi cài đặt hoàn tất, chạy ứng dụng:
+4. Khởi chạy ứng dụng:
 ```bash
-npm run dev:all
+# Development
+npm run dev
+
+# Production
+npm run build
+npm start
 ```
 
-Truy cập:
-- Frontend: http://localhost:3000
-- Backend: http://localhost:8000
+## 🌐 Đa ngôn ngữ
 
-## Cấu trúc thư mục
+### Ngôn ngữ được hỗ trợ sẵn
+- 🇻🇳 Tiếng Việt
+- 🇬🇧 English
+
+### Dịch tự động
+- Hỗ trợ hơn 40 ngôn ngữ thông qua Google Cloud Translation API
+- Tự động lưu các bản dịch để tái sử dụng
+- Không yêu cầu dịch lại cho các ngôn ngữ đã có
+
+## 🎨 Themes
+
+### Theme có sẵn
+1. **Thống Nhất** - Beige & Red
+2. **Độc Lập** - Smoky White & Dark Gray
+3. **Hạnh Phúc** - Dark Red & Light Yellow
+4. **Tuyên Ngôn** - Turquoise & Beige
+5. **Tôi Yêu Việt Nam** - Dark Green & White
+6. **Tự Do** - Dark Blue & Orange
+
+## 📁 Cấu trúc dự án
 
 ```
-.
-├── components/          # React components
-├── server/             # Python FastAPI backend
-│   ├── models/         # Trained models
-│   ├── app.py         # Server entry point
-│   └── ...
-└── ...
+/app
+  /[locale]     # Routes theo ngôn ngữ
+  /api          # API endpoints
+/components     # React components
+/messages       # Translation files
+/styles         # CSS files
+/public         # Static files
+/lib           # Shared utilities
 ```
 
-## Scripts có sẵn
+## 🔧 Configuration
 
-- `npm run dev`: Chạy frontend development server
-- `npm run server`: Chạy backend server
-- `npm run dev:all`: Chạy cả frontend và backend
-- `npm run setup`: Cài đặt tất cả dependencies
-- `npm run install-py-deps`: Cài đặt Python dependencies
-- `npm run download-nltk`: Tải NLTK data
+### Environment Variables
+
+```env
+GOOGLE_CLOUD_PROJECT_ID=your-project-id
+GOOGLE_CLOUD_PRIVATE_KEY=your-private-key
+GOOGLE_CLOUD_CLIENT_EMAIL=your-client-email
+NEXT_PUBLIC_API_URL=http://localhost:3000
+```
+
+## 🛠️ Development
+
+### Scripts
+
+```bash
+# Development
+npm run dev
+
+# Build
+npm run build
+
+# Production
+npm start
+
+# Type checking
+npm run type-check
+
+# Linting
+npm run lint
+```
+
+### Adding New Features
+
+1. Tạo branch mới cho tính năng
+2. Phát triển và test tính năng
+3. Cập nhật documentation và translations
+4. Tạo pull request
+
+## 📚 Documentation
+
+- [Logic Documentation](./logic.txt)
+- [API Documentation](./api-docs.md)
+- [Contributing Guidelines](./CONTRIBUTING.md)
+
+## 🤝 Contributing
+
+Đóng góp luôn được chào đón! Xem [Contributing Guidelines](./CONTRIBUTING.md) để biết thêm chi tiết.
+
+## 📄 License
+
+MIT License - Xem [LICENSE](./LICENSE) để biết thêm chi tiết.
+
+## 👥 Authors
+
+- Your Name - Initial work
+
+## 🙏 Acknowledgments
+
+- Next.js Team
+- Vercel
+- Google Cloud Translation API
+- Shadcn UI
+- TailwindCSS
+
+## 📞 Support
+
+Nếu bạn gặp vấn đề, vui lòng tạo issue trong repository.

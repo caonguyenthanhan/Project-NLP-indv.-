@@ -1,20 +1,21 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-/.pnp
+node_modules/
+.pnp/
 .pnp.js
 .yarn/install-state.gz
 
 # testing
-/coverage
+coverage/
 
 # next.js
-/.next/
-/out/
+.next/
+out/
 
 # production
-/build
+build/
+dist/
 
 # misc
 .DS_Store
@@ -110,3 +111,6 @@ components/venv/
 # Google API Key files
 translationapp-457311-6ddc3e83277a.json
 server/config.json
+
+# Auto-generated translations
+messages/auto-translations/
