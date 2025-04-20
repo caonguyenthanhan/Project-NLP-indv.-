@@ -1,8 +1,16 @@
 {
   "app": {
     "title": "NLP Toolkit",
-    "description": "A comprehensive toolkit for Natural Language Processing techniques",
+    "description": "A comprehensive toolkit for Natural Language Processing",
     "footer": "© {year} NLP Course - All Rights Reserved"
+  },
+  "Header": {
+    "title": "NLP Toolkit",
+    "navigation": {
+      "textClassification": "Text Classification",
+      "nlpFiltering": "NLP Filtering",
+      "chatBox": "Chat Box"
+    }
   },
   "nav": {
     "dataCollection": "Data Collection",
@@ -22,7 +30,12 @@
     "back": "Back",
     "process": "Process",
     "processing": "Processing...",
-    "saveAndContinue": "Save & Continue"
+    "saveAndContinue": "Save & Continue",
+    "skip": "Skip",
+    "loading": "Loading...",
+    "error": "Error occurred",
+    "success": "Success",
+    "changeLanguage": "Change Language"
   },
   "workflow": {
     "currentDataset": "Current Dataset",
@@ -256,5 +269,18 @@
     "textClassification": "Text Classification",
     "nlpFiltering": "NLP Filtering",
     "chatBox": "Chat Box"
+  },
+  "theme": {
+    "title": "Theme",
+    "selectTheme": "Select Theme",
+    "styles": {
+      "co-dien": "Classic",
+      "thong-nhat": "Unified",
+      "doc-lap": "Independent",
+      "hanh-phuc": "Happiness",
+      "tuyen-ngon": "Manifesto",
+      "toi-yeu-vn": "I Love Vietnam",
+      "tu-do": "Freedom"
+    }
   }
 }

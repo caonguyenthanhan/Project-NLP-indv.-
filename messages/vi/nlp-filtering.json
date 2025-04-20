@@ -1,0 +1,8 @@
+{
+  "title": "Lọc văn bản",
+  "description": "Lọc và xử lý văn bản",
+  "filterText": "Lọc văn bản",
+  "filterDescription": "Nhập văn bản cần lọc",
+  "filterOptions": "Tùy chọn lọc",
+  "applyFilters": "Áp dụng bộ lọc"
+} 

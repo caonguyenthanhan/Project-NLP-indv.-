@@ -1,28 +1,26 @@
 import createMiddleware from "next-intl/middleware"
-import { locales } from './config'
+import { defaultLocale } from "./config"
 
 // Supported locales
-const locales = ['en', 'vi', 'fr', 'de', 'es', 'it', 'ja', 'ko', 'zh']
+export const locales = [
+  "en", "vi", "zh", "ja", "ko", "fr", "de", "es", "it", "ru", 
+  "ar", "hi", "pt", "nl", "pl", "tr", "uk", "th", "id", "ms",
+  "sv", "da", "fi", "no", "cs", "hu", "ro", "sk", "bg", "el",
+  "he", "bn", "fa", "sr", "hr", "sl", "et", "lv", "lt", "ur",
+  "ta", "te", "ml", "kn", "mr", "gu", "my", "km", "lo", "ne"
+]
 
 export default createMiddleware({
   // A list of all locales that are supported
   locales,
-  // If this locale is matched, pathnames work without a prefix (e.g. `/about`)
-  defaultLocale: 'en',
-  // Prefix all locales with their identifier
-  localePrefix: 'as-needed',
-  pathnames: {
-    '/': '/',
-    '/data-cleaning': '/data-cleaning',
-    '/data-augmentation': '/data-augmentation',
-    '/text-preprocessing': '/text-preprocessing',
-    '/text-representation': '/text-representation',
-    '/text-classification': '/text-classification'
-  }
+  // Used when no locale matches
+  defaultLocale,
+  // Enable locale detection
+  localeDetection: true
 })
 
 export const config = {
-  // Skip all paths that should not be internationalized
-  matcher: ['/', '/(vi|en)/:path*']
+  // Match only internationalized pathnames
+  matcher: ['/', '/((?!api|_next|.*\\..*).*)']
 }
 

@@ -1,0 +1,8 @@
+{
+  "title": "Hộp thoại",
+  "description": "Tương tác với mô hình ngôn ngữ",
+  "sendMessage": "Gửi tin nhắn",
+  "enterMessage": "Nhập tin nhắn...",
+  "clearChat": "Xóa cuộc trò chuyện",
+  "copyResponse": "Sao chép phản hồi"
+} 

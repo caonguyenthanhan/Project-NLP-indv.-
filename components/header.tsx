@@ -4,13 +4,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Filter, Bot } from "lucide-react";
+import { MessageSquare, Filter, Bot, Sun, Moon } from "lucide-react";
 import LanguageSelector from "@/components/language-selector";
-import ThemeToggle from "@/components/theme-toggle";
+import ThemeSelector from "@/components/theme-selector";
+import { useTheme } from "next-themes";
 
 export default function Header() {
   const pathname = usePathname();
-  const t = useTranslations();
+  const t = useTranslations("Header");
+  const { theme, setTheme } = useTheme();
 
   const isActive = (path: string) => {
     return pathname === path;
@@ -21,7 +23,7 @@ export default function Header() {
       <div className="container flex h-14 items-center justify-between">
         <div className="flex items-center">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <span className="font-bold">{t("app.title")}</span>
+            <span className="font-bold">{t("title")}</span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
             <Link
@@ -54,7 +56,7 @@ export default function Header() {
           </nav>
         </div>
         <div className="flex items-center space-x-4">
-          <ThemeToggle />
+          <ThemeSelector />
           <LanguageSelector />
         </div>
       </div>

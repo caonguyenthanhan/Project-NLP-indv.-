@@ -1,0 +1,12 @@
+{
+  "title": "Theme",
+  "selectTheme": "Select Theme",
+  "themes": {
+    "thong-nhat": "Unity",
+    "doc-lap": "Independence",
+    "hanh-phuc": "Happiness",
+    "tuyen-ngon": "Declaration",
+    "toi-yeu-vn": "I Love Vietnam",
+    "tu-do": "Freedom"
+  }
+} 

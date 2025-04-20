@@ -4,6 +4,14 @@
     "description": "Bộ công cụ toàn diện cho kỹ thuật Xử lý Ngôn ngữ Tự nhiên",
     "footer": "© {year} NLP Course - All Rights Reserved"
   },
+  "Header": {
+    "title": "NLP Toolkit",
+    "navigation": {
+      "textClassification": "Phân loại văn bản",
+      "nlpFiltering": "Lọc văn bản",
+      "chatBox": "Hộp thoại"
+    }
+  },
   "nav": {
     "dataCollection": "Thu thập dữ liệu",
     "dataAugmentation": "Tăng cường dữ liệu",
@@ -26,7 +34,8 @@
     "skip": "Bỏ qua",
     "loading": "Đang tải...",
     "error": "Đã xảy ra lỗi",
-    "success": "Thành công"
+    "success": "Thành công",
+    "changeLanguage": "Thay đổi ngôn ngữ"
   },
   "workflow": {
     "currentDataset": "Bộ dữ liệu hiện tại",
@@ -208,8 +217,21 @@
     "noDatasetsAvailable": "Không có bộ dữ liệu nào"
   },
   "navigation": {
-    "textClassification": "Phân loại Văn bản",
-    "nlpFiltering": "Lọc NLP",
-    "chatBox": "Hộp Chat"
+    "textClassification": "Phân loại văn bản",
+    "nlpFiltering": "Lọc văn bản",
+    "chatBox": "Hộp thoại"
+  },
+  "theme": {
+    "title": "Chủ đề",
+    "selectTheme": "Chọn chủ đề",
+    "styles": {
+      "co-dien": "Cổ điển",
+      "thong-nhat": "Thống nhất",
+      "doc-lap": "Độc lập",
+      "hanh-phuc": "Hạnh phúc",
+      "tuyen-ngon": "Tuyên ngôn",
+      "toi-yeu-vn": "Tôi yêu Việt Nam",
+      "tu-do": "Tự do"
+    }
   }
 }

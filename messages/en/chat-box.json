@@ -1,0 +1,8 @@
+{
+  "title": "Chat Box",
+  "description": "Interact with the language model",
+  "sendMessage": "Send Message",
+  "enterMessage": "Enter your message...",
+  "clearChat": "Clear Chat",
+  "copyResponse": "Copy Response"
+} 

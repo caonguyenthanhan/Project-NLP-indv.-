@@ -1,0 +1,117 @@
+@import 'variables';
+@import 'mixins';
+
+// Override default theme with dark mode
+body {
+  background-color: #000;
+  color: #fff;
+}
+
+// Layout
+.container {
+  background-color: #111;
+}
+
+// Navigation
+.nav {
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #333;
+  
+  &__logo {
+    color: #fff;
+  }
+}
+
+// Steps
+.steps {
+  &__item {
+    background-color: #222;
+    color: #ccc;
+    border: 1px solid #333;
+    
+    &--active {
+      background-color: $primary;
+      color: #fff;
+      border-color: $primary;
+    }
+  }
+}
+
+// Cards
+.card {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+}
+
+// Forms
+.form {
+  &__input,
+  &__textarea {
+    background-color: #222;
+    color: #fff;
+    border-color: #333;
+
+    &:focus {
+      border-color: $primary;
+    }
+  }
+  
+  &__label {
+    color: #ccc;
+  }
+}
+
+// Tables
+.table {
+  th {
+    background-color: #222;
+    color: #ccc;
+  }
+  
+  td {
+    border-color: #333;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #1a1a1a;
+  }
+}
+
+// Custom components
+.dataset-table {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  
+  th {
+    background-color: #222;
+  }
+}
+
+.input-section {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  padding: $spacing-md;
+  border-radius: $border-radius-md;
+}
+
+// Buttons
+.button {
+  &--primary {
+    background-color: $primary;
+    color: #fff;
+    
+    &:hover:not(:disabled) {
+      background-color: darken($primary, 10%);
+    }
+  }
+  
+  &--secondary {
+    background-color: #333;
+    color: #fff;
+    border-color: #555;
+    
+    &:hover:not(:disabled) {
+      background-color: #444;
+    }
+  }
+} 

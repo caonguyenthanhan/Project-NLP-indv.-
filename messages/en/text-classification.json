@@ -1,0 +1,11 @@
+{
+  "title": "Text Classification",
+  "description": "Classify text into different categories",
+  "selectTask": "Select Task",
+  "selectModel": "Select Model",
+  "classifyText": "Classify Text",
+  "classifyDescription": "Enter text to classify",
+  "comparing": "Comparing...",
+  "retraining": "Retraining...",
+  "hideComparisonChart": "Hide Comparison Chart"
+} 

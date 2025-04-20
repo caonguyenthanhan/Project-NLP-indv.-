@@ -11,11 +11,11 @@
     "server": "cd server && python app.py",
     "dev:all": "concurrently \"npm run dev\" \"npm run server\"",
     "download-nltk": "cd server && python download_nltk.py",
-    "install-py-deps": "cd server && python install_requirements.py",
-    "setup": "npm install && npm run install-py-deps && npm run download-nltk && echo \"\nSetup completed! You can now run 'npm run dev:all' to start the application.\""
+    "install-py-deps": "cd server && pip install -r requirements.txt",
+    "setup": "npm install && npm run install-py-deps && echo \"\nSetup completed! You can now run 'npm run dev:all' to start the application.\""
   },
   "dependencies": {
-    "@google-cloud/translate": "^9.0.1",
+    "@google-cloud/translate": "^7.2.2",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.4",
@@ -44,7 +44,6 @@
     "@radix-ui/react-toggle": "^1.1.1",
     "@radix-ui/react-toggle-group": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.6",
-    "autoprefixer": "10.4.17",
     "axios": "^1.6.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -66,9 +65,8 @@
     "react-resizable-panels": "^2.1.7",
     "react-toastify": "^11.0.5",
     "recharts": "^2.15.0",
-    "sonner": "^1.7.1",
+    "sonner": "^1.7.4",
     "tailwind-merge": "^2.5.5",
-    "tailwindcss": "3.4.1",
     "typescript": "5.3.3",
     "uuid": "^11.1.0",
     "vaul": "^0.9.6",
@@ -78,8 +76,19 @@
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
+    "@types/react-toastify": "^4.0.2",
     "@types/uuid": "^10.0.0",
+    "autoprefixer": "^10.4.21",
     "concurrently": "^8.2.2",
-    "postcss": "8.4.33"
+    "css-loader": "^7.1.2",
+    "postcss": "^8.5.3",
+    "postcss-flexbugs-fixes": "^5.0.2",
+    "postcss-loader": "^8.1.1",
+    "postcss-preset-env": "^10.1.6",
+    "sass": "^1.86.3",
+    "sass-loader": "^16.0.5",
+    "style-loader": "^4.0.0",
+    "tailwindcss": "^3.3.0",
+    "tailwindcss-animate": "^1.0.7"
   }
 }

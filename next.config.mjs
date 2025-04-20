@@ -2,57 +2,44 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./i18n.ts');
 
-let userConfig = undefined
-try {
-  userConfig = await import('./v0-user-next.config')
-} catch (e) {
-  // ignore error
-}
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Style configurations
+  sassOptions: {
+    includePaths: ['./styles'],
+  },
+  // Image optimization
+  images: {
+    domains: ['localhost'],
+    unoptimized: true
+  },
+  // Build configurations
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
-  images: {
-    unoptimized: true,
-  },
   experimental: {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
   },
-  // Xóa cấu hình i18n cũ dành cho Pages Router
-  // i18n: {
-  //   locales: ['en', 'vi', 'ja', 'zh'],
-  //   defaultLocale: 'en',
-  // }
-}
-
-mergeConfig(nextConfig, userConfig)
-
-function mergeConfig(nextConfig, userConfig) {
-  if (!userConfig) {
-    return
-  }
-
-  for (const key in userConfig) {
-    if (
-      typeof nextConfig[key] === 'object' &&
-      !Array.isArray(nextConfig[key])
-    ) {
-      nextConfig[key] = {
-        ...nextConfig[key],
-        ...userConfig[key],
+  // Server configurations
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:8000/api/:path*'
       }
-    } else {
-      nextConfig[key] = userConfig[key]
-    }
+    ];
+  },
+  // Environment configurations
+  env: {
+    NEXT_PUBLIC_API_URL: 'http://localhost:8000',
+    NEXT_PUBLIC_DEFAULT_LOCALE: 'vi'
   }
-}
+};
 
 export default withNextIntl(nextConfig);
 

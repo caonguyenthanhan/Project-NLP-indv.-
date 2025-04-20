@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/header";
 import { WorkflowProvider } from "@/context/workflow-context";
 import { ToasterProvider } from "@/components/providers/toaster-provider";
+import path from "path";
+import fs from "fs/promises";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -18,8 +20,18 @@ export function generateStaticParams() {
 
 async function getMessages(locale: string) {
   try {
-    return (await import(`@/messages/${locale}.json`)).default;
+    const messagesPath = path.join(process.cwd(), "messages", `${locale}.json`);
+    const fileExists = await fs.access(messagesPath).then(() => true).catch(() => false);
+    
+    if (!fileExists) {
+      console.error(`Messages file not found for locale ${locale} at path: ${messagesPath}`);
+      notFound();
+    }
+
+    const messagesContent = await fs.readFile(messagesPath, "utf-8");
+    return JSON.parse(messagesContent);
   } catch (error) {
+    console.error(`Error loading messages for locale ${locale}:`, error);
     notFound();
   }
 }
@@ -31,7 +43,7 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  const { locale } = params;
+  const locale = params.locale;
   const messages = await getMessages(locale);
 
   return (

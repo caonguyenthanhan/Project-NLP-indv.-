@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Response
 import requests
 from bs4 import BeautifulSoup
 import logging
@@ -16,14 +16,19 @@ import traceback
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import numpy as np
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 import subprocess
 import matplotlib.pyplot as plt
 import ssl
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import torch
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 from sentence_transformers import SentenceTransformer
+from pydantic import BaseModel
+import json
+from googletrans import Translator
+from google.cloud import translate_v2 as translate
+from translation_server import translate_messages as perform_translation
 
 # Get the absolute path of the server directory
 SERVER_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -59,6 +64,22 @@ def download_nltk_data():
 # Try to download NLTK data
 download_nltk_data()
 
+# Initialize Google Cloud Translate client
+try:
+    # Load credentials from config.json
+    with open('config.json', 'r') as f:
+        credentials = json.load(f)
+    
+    # Set environment variable for Google Cloud credentials
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'config.json'
+    
+    # Initialize the client
+    translate_client = translate.Client()
+    logger.info("Google Cloud Translate client initialized successfully")
+except Exception as e:
+    logger.error(f"Failed to initialize Google Cloud Translate client: {str(e)}")
+    translate_client = None
+
 app = FastAPI()
 
 app.add_middleware(
@@ -68,6 +89,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def add_utf8_charset(request: Request, call_next):
+    response = await call_next(request)
+    if response.headers.get("content-type") == "application/json":
+        response.headers["content-type"] = "application/json; charset=utf-8"
+    return response
 
 # Mount the models directory to serve static files
 app.mount("/models", StaticFiles(directory=MODELS_DIR), name="models")
@@ -497,6 +525,36 @@ async def retrain_models():
 async def health_check():
     return {"status": "ok", "message": "Server is running"}
 
+class TranslationRequest(BaseModel):
+    messages: Dict
+    targetLanguage: str
+
+@app.post("/translate")
+async def translate_endpoint(request: TranslationRequest):
+    try:
+        target_language = request.targetLanguage
+        messages_dir = os.path.join(SERVER_DIR, "messages")
+        
+        # Kiểm tra xem bản dịch đã tồn tại chưa
+        if check_translation_exists(target_language, messages_dir):
+            # Nếu đã có file dịch, đọc từ file
+            with open(os.path.join(messages_dir, f"{target_language}.json"), 'r', encoding='utf-8') as f:
+                return json.load(f)
+        
+        # Nếu chưa có file dịch, dịch từ file en.json và lưu
+        source_file = os.path.join(messages_dir, "en.json")
+        if translate_and_save_file(source_file, target_language):
+            # Đọc file vừa dịch
+            with open(os.path.join(messages_dir, f"{target_language}.json"), 'r', encoding='utf-8') as f:
+                return json.load(f)
+        else:
+            # Nếu dịch thất bại, dịch trực tiếp không lưu file
+            return perform_translation(request.messages, target_language)
+            
+    except Exception as e:
+        logger.error(f"Translation error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+    uvicorn.run(app, host="localhost", port=8000) 

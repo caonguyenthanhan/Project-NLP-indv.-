@@ -106,3 +106,7 @@ components/venv/
 
 *.dll
 *.lib
+
+# Google API Key files
+translationapp-457311-6ddc3e83277a.json
+server/config.json

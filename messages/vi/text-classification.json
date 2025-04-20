@@ -1,0 +1,11 @@
+{
+  "title": "Phân loại văn bản",
+  "description": "Phân loại văn bản thành các danh mục khác nhau",
+  "selectTask": "Chọn tác vụ",
+  "selectModel": "Chọn mô hình",
+  "classifyText": "Phân loại văn bản",
+  "classifyDescription": "Nhập văn bản cần phân loại",
+  "comparing": "Đang so sánh...",
+  "retraining": "Đang huấn luyện lại...",
+  "hideComparisonChart": "Ẩn biểu đồ so sánh"
+} 

@@ -1,0 +1,157 @@
+@import 'variables';
+@import 'mixins';
+
+// Global styles
+body {
+  font-family: $font-family;
+  font-size: $font-size-base;
+  color: $text-primary;
+  background-color: $surface;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+
+// Layout
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+  
+  @include responsive(lg) {
+    padding: 0 $spacing-lg;
+  }
+}
+
+// Navigation
+.nav {
+  @include flex(row, space-between, center);
+  background-color: $background;
+  padding: $spacing-md;
+  box-shadow: $shadow-sm;
+  position: sticky;
+  top: 0;
+  z-index: $z-index-sticky;
+  
+  &__logo {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $primary;
+  }
+  
+  &__menu {
+    @include flex(row, flex-end, center);
+    gap: $spacing-md;
+  }
+}
+
+// Steps
+.steps {
+  @include flex(row, flex-start, center);
+  margin: $spacing-lg 0;
+  gap: $spacing-md;
+  
+  &__item {
+    @include flex(row, center, center);
+    gap: $spacing-sm;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $border-radius-md;
+    background-color: $background;
+    color: $text-secondary;
+    
+    &--active {
+      background-color: $primary;
+      color: white;
+    }
+  }
+}
+
+// Cards
+.card {
+  @include card;
+  margin-bottom: $spacing-lg;
+  
+  &__title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacing-md;
+  }
+  
+  &__content {
+    @include flex(column);
+    gap: $spacing-md;
+  }
+}
+
+// Forms
+.form {
+  &__group {
+    @include flex(column);
+    gap: $spacing-sm;
+    margin-bottom: $spacing-md;
+  }
+  
+  &__label {
+    font-weight: $font-weight-medium;
+    color: $text-secondary;
+  }
+  
+  &__input {
+    @include input-base;
+  }
+  
+  &__textarea {
+    @include input-base;
+    min-height: 120px;
+    resize: vertical;
+  }
+}
+
+// Buttons
+.button {
+  &--primary {
+    @include button-primary;
+  }
+  
+  &--secondary {
+    @include button-secondary;
+  }
+}
+
+// Tables
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  
+  th, td {
+    padding: $spacing-sm;
+    text-align: left;
+    border-bottom: 1px solid $border;
+  }
+  
+  th {
+    font-weight: $font-weight-medium;
+    color: $text-secondary;
+    background-color: $surface;
+  }
+}
+
+// Utilities
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-primary { color: $primary; }
+.text-secondary { color: $text-secondary; }
+.text-error { color: $error; }
+.text-success { color: $success; }
+
+.mt-1 { margin-top: $spacing-xs; }
+.mt-2 { margin-top: $spacing-sm; }
+.mt-3 { margin-top: $spacing-md; }
+.mt-4 { margin-top: $spacing-lg; }
+.mt-5 { margin-top: $spacing-xl; }
+
+.mb-1 { margin-bottom: $spacing-xs; }
+.mb-2 { margin-bottom: $spacing-sm; }
+.mb-3 { margin-bottom: $spacing-md; }
+.mb-4 { margin-bottom: $spacing-lg; }
+.mb-5 { margin-bottom: $spacing-xl; } 

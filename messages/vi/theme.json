@@ -1,0 +1,12 @@
+{
+  "title": "Chủ đề",
+  "selectTheme": "Chọn chủ đề",
+  "themes": {
+    "thong-nhat": "Thống nhất",
+    "doc-lap": "Độc lập",
+    "hanh-phuc": "Hạnh phúc",
+    "tuyen-ngon": "Tuyên ngôn",
+    "toi-yeu-vn": "Tôi yêu Việt Nam",
+    "tu-do": "Tự do"
+  }
+} 

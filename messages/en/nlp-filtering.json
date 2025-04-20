@@ -1,0 +1,8 @@
+{
+  "title": "Text Filtering",
+  "description": "Filter and process text",
+  "filterText": "Filter Text",
+  "filterDescription": "Enter text to filter",
+  "filterOptions": "Filter Options",
+  "applyFilters": "Apply Filters"
+} 
