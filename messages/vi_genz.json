@@ -280,12 +280,12 @@
       "button": "Bắt đầu"
     }
   },
-  "chatBox": {
-    "title": "Smart chat box",
-    "description": "Chat với AI assistant",
-    "welcomeMessage": "Welcome to new chat!",
-    "startConversation": "Bắt đầu chat",
-    "inputPlaceholder": "Nhập mess của bạn...",
+"chatBox": {
+    "title": "Hệ thống Chatbot Support Sinh viên",
+    "description": "Check các feature chatbot được design để support sinh viên",
+    "welcomeMessage": "Welcome đến cuộc chat mới!",
+    "startConversation": "Start chat",
+    "inputPlaceholder": "Type mess của bạn...",
     "sendButton": "Send",
     "fetchError": "Không connect được với AI assistant",
     "errorMessage": "Sorry, có lỗi khi process request của bạn.",
@@ -299,6 +299,34 @@
       "assistant": "Assistant",
       "system": "System",
       "loading": "Đang nghĩ..."
+    },
+    "tryNow": "Thử ngay",
+    "contextApi": {
+      "title": "Context API", 
+      "description": "Chatbot dùng API context để hiểu và trả lời các câu hỏi về trường học",
+      "features": {
+        "1": "Hiểu context từ các câu hỏi trước",
+        "2": "Trả lời chính xác câu hỏi liên quan đến trường học",
+        "3": "Duy trì mạch chat tự nhiên"
+      }
+    },
+    "fineTuned": {
+      "title": "Fine-tuned", 
+      "description": "Chatbot được train chuyên biệt cho các kịch bản support sinh viên",
+      "features": {
+        "1": "Kiến thức sâu về các vấn đề trường học",
+        "2": "Xử lý các tình huống phức tạp",
+        "3": "Cung cấp thông tin chi tiết và chính xác"
+      }
+    },
+    "generalApi": {
+      "title": "General API", 
+      "description": "Chatbot đa năng có thể trả lời nhiều loại câu hỏi khác nhau",
+      "features": {
+        "1": "Trả lời câu hỏi chung",
+        "2": "Support nhiều topic",
+        "3": "Tương tác linh hoạt"
+      }
     }
   },
   "nlpFiltering": {

@@ -280,17 +280,17 @@
       "button": "Dzô liền"
     }
   },
-  "chatBox": {
-    "title": "Hộp chuyện trò thông minh",
-    "description": "Chuyện trò với trợ lý AI",
-    "welcomeMessage": "Chào mừng dzô cuộc trò chuyện mới!",
+"chatBox": {
+    "title": "Hệ thống Chatbot trợ giúp học sinh",
+    "description": "Coi mấy chức năng chatbot khác nhau làm ra để trợ giúp học sinh",
+    "welcomeMessage": "Chào mừng dzô cuộc chuyện trò mới!",
     "startConversation": "Bắt đầu chuyện trò",
-    "inputPlaceholder": "Gõ tin nhắn của bạn vô đây...",
+    "inputPlaceholder": "Gõ tin nhắn của bạn...",
     "sendButton": "Gửi",
     "fetchError": "Hổng kết nối được với trợ lý AI",
-    "errorMessage": "Xin lỗi, có hư khi mần yêu cầu của bạn.",
-    "newChat": "Tạo cuộc trò chuyện mới",
-    "deleteChat": "Xóa cuộc trò chuyện",
+    "errorMessage": "Xin lỗi, có hư hao lúc mần yêu cầu của bạn.",
+    "newChat": "Tạo chuyện trò mới",
+    "deleteChat": "Xóa chuyện trò",
     "save": "Cất",
     "cancel": "Bỏ",
     "enterNewName": "Gõ tên mới",
@@ -299,6 +299,34 @@
       "assistant": "Trợ lý",
       "system": "Hệ thống",
       "loading": "Đang nghĩ..."
+    },
+    "tryNow": "Thử liền",
+    "contextApi": {
+      "title": "Context API", 
+      "description": "Chatbot xài API ngữ cảnh để hiểu với trả lời câu hỏi dzìa trường lớp",
+      "features": {
+        "1": "Hiểu ngữ cảnh từ mấy câu hỏi trước",
+        "2": "Trả lời đúng câu hỏi dzìa trường lớp",
+        "3": "Giữ cho cuộc nói chuyện tự nhiên"
+      }
+    },
+    "fineTuned": {
+      "title": "Fine-tuned", 
+      "description": "Chatbot được dạy riêng cho mấy vụ trợ giúp học sinh",
+      "features": {
+        "1": "Biết sâu dzụ trường lớp",
+        "2": "Xử lý được mấy vụ khó",
+        "3": "Cho thông tin chi tiết, đúng"
+      }
+    },
+    "generalApi": {
+      "title": "General API", 
+      "description": "Chatbot đa năng trả lời được đủ loại câu hỏi",
+      "features": {
+        "1": "Trả lời câu hỏi chung chung",
+        "2": "Hỗ trợ nhiều chủ đề",
+        "3": "Tương tác linh hoạt"
+      }
     }
   },
   "nlpFiltering": {

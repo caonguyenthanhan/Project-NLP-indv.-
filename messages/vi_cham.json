@@ -281,24 +281,52 @@
     }
   },
   "chatBox": {
-    "title": "Kotak cerita pintar",
-    "description": "Cerita dengan asisten AI",
+    "title": "Sistem Chatbot Bantu Pelajar",
+     "description": "Lihat fitur chatbot berbeza dirancang untuk bantu pelajar",
     "welcomeMessage": "Selamat datang ke cerita baru!",
     "startConversation": "Mulai cerita",
-    "inputPlaceholder": "Masuk pesan kau di sini...",
+    "inputPlaceholder": "Masuk pesan kau...",
     "sendButton": "Kirim",
     "fetchError": "Tak bisa hubung dengan asisten AI",
     "errorMessage": "Maaf, ada salah saat prusés permintaan kau.",
     "newChat": "Buat cerita baru",
     "deleteChat": "Hapus cerita",
     "save": "Simpan",
-    "cancel": "Hapus",
+    "cancel": "Hapus", 
     "enterNewName": "Masuk nama baru",
     "messages": {
       "user": "Kau",
       "assistant": "Asisten",
       "system": "Sistem",
       "loading": "Sedang pikir..."
+    },
+    "tryNow": "Coba sekarang",
+    "contextApi": {
+      "title": "Context API", 
+      "description": "Chatbot pakai API kontekstual untuk paham dan jawab soal sekolah",
+      "features": {
+        "1": "Paham konteks dari soal sebelumnya",
+        "2": "Jawab betul soal sekolah",
+        "3": "Jaga alur cerita alami"
+      }
+    },
+    "fineTuned": {
+      "title": "Fine-tuned", 
+      "description": "Chatbot dilatih khusus untuk skenario bantu pelajar",
+      "features": {
+        "1": "Pengetahuan mendalam tentang sekolah",
+        "2": "Atasi situasi rumit",
+        "3": "Beri info detail dan betul"
+      }
+    },
+    "generalApi": {
+      "title": "General API", 
+      "description": "Chatbot serbaguna bisa jawab berbagai jenis soal",
+      "features": {
+        "1": "Jawab soal umum",
+        "2": "Dukung banyak topik",
+        "3": "Interaksi fleksibel"
+      }
     }
   },
   "nlpFiltering": {

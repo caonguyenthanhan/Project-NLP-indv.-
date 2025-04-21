@@ -601,83 +601,93 @@ class ChatMessage(BaseModel):
 
 class ChatRequest(BaseModel):
     messages: List[ChatMessage]
+    chat_name: str
 
-@app.post("/api/chat")
-async def chat_endpoint(request: ChatRequest):
+@app.post("/api/chat/context")
+async def context_chat_endpoint(request: ChatRequest):
     try:
         # Lấy tin nhắn cuối cùng từ người dùng
-        last_user_message = request.messages[-1].content
+        user_message = request.messages[-1].content if request.messages else ""
         
-        # Gọi API của AIMLAPI
-        api_key = os.getenv("AIMLAPI_KEY")
-        if not api_key:
-            raise HTTPException(status_code=500, detail="AIMLAPI key is not configured")
+        # Chuẩn bị tham số cho yêu cầu GET
+        params = {
+            "message": user_message,
+            "sessionId": request.chat_name
+        }
 
-        response = requests.post(
-            "https://api.aimlapi.com/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "model": "gpt-3.5-turbo",
-                "messages": [{"role": msg.role, "content": msg.content} for msg in request.messages],
-                "temperature": 0.7,
-                "max_tokens": 1000
-            }
-        )
+        logger.info(f"[*] Đang gửi yêu cầu tới: https://caonguyenthanhan.app.n8n.cloud/webhook/chatbot-response")
+        logger.info(f"[*] Tham số: {params}")
 
-        if not response.ok:
-            error_data = response.text
-            logger.error(f"AIMLAPI Error Response: {error_data}")
-            raise HTTPException(status_code=response.status_code, detail="Failed to get response from AI")
+        try:
+            # Thực hiện yêu cầu GET với timeout 30 giây
+            response = requests.get(
+                "https://caonguyenthanhan.app.n8n.cloud/webhook/chatbot-response",
+                params=params,
+                timeout=30
+            )
 
-        data = response.json()
-        ai_response = data["choices"][0]["message"]["content"]
+            # In ra mã trạng thái HTTP
+            logger.info(f"\n[*] Mã trạng thái HTTP: {response.status_code}")
 
-        # Lưu lịch sử chat vào file CSV
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        csv_line = f'"{last_user_message.replace(""", """)}","{ai_response.replace(""", """)}","{now}"\n'
-        
-        # Đảm bảo thư mục data tồn tại
-        data_dir = os.path.join(SERVER_DIR, "data")
-        if not os.path.exists(data_dir):
-            os.makedirs(data_dir)
-        
-        # Ghi vào file CSV
-        with open(os.path.join(data_dir, "chat_history.csv"), "a", encoding="utf-8") as f:
-            f.write(csv_line)
+            # Kiểm tra xem yêu cầu có thành công không (mã 200 OK)
+            if response.status_code == 200:
+                # Lưu tin nhắn vào lịch sử
+                await save_chat_history(request.chat_name, "user", user_message)
+                await save_chat_history(request.chat_name, "assistant", response.text)
+                
+                return {"message": response.text}
+            else:
+                # In ra lỗi nếu mã trạng thái không phải 200
+                error_msg = f"[!] Lỗi: Yêu cầu thất bại với mã trạng thái {response.status_code}"
+                logger.error(error_msg)
+                logger.error(f"[*] Nội dung phản hồi: {response.text}")
+                raise HTTPException(status_code=response.status_code, detail=error_msg)
 
-        return {"message": ai_response, "role": "assistant"}
-
+        except requests.exceptions.Timeout:
+            error_msg = "[!] Lỗi: Yêu cầu bị hết thời gian chờ (timeout)."
+            logger.error(error_msg)
+            raise HTTPException(status_code=408, detail=error_msg)
+        except requests.exceptions.RequestException as e:
+            error_msg = f"[!] Lỗi trong quá trình gửi yêu cầu: {e}"
+            logger.error(error_msg)
+            raise HTTPException(status_code=500, detail=error_msg)
+        except Exception as e:
+            error_msg = f"[!] Có lỗi không mong muốn xảy ra: {e}"
+            logger.error(error_msg)
+            raise HTTPException(status_code=500, detail=error_msg)
+            
     except Exception as e:
-        logger.error(f"Error in chat endpoint: {str(e)}")
+        logger.error(f"Error in context chat: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/chat/history")
-async def get_chat_history():
+async def save_chat_history(chat_name: str, role: str, content: str):
     try:
-        data_dir = os.path.join(SERVER_DIR, "data")
-        history_file = os.path.join(data_dir, "chat_history.csv")
+        # Lưu tin nhắn vào file JSON
+        history_file = os.path.join(SERVER_DIR, "chat_history.json")
         
-        if not os.path.exists(history_file):
-            return {"history": []}
+        # Đọc lịch sử hiện tại
+        if os.path.exists(history_file):
+            with open(history_file, "r", encoding="utf-8") as f:
+                history = json.load(f)
+        else:
+            history = {}
+            
+        # Thêm tin nhắn mới
+        if chat_name not in history:
+            history[chat_name] = []
+            
+        history[chat_name].append({
+            "role": role,
+            "content": content,
+            "timestamp": datetime.now().isoformat()
+        })
         
-        history = []
-        with open(history_file, "r", encoding="utf-8") as f:
-            for line in f:
-                if line.strip():
-                    user_msg, ai_msg, timestamp = line.strip().split(",")
-                    history.append({
-                        "user_message": user_msg.strip('"'),
-                        "ai_message": ai_msg.strip('"'),
-                        "timestamp": timestamp.strip('"')
-                    })
-        
-        return {"history": history}
+        # Lưu lại lịch sử
+        with open(history_file, "w", encoding="utf-8") as f:
+            json.dump(history, f, ensure_ascii=False, indent=2)
+            
     except Exception as e:
-        logger.error(f"Error getting chat history: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Error saving chat history: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

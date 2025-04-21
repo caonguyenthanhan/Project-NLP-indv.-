@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     const { messages, chat_name } = await req.json();
-    
+
     const apiKey = process.env.AIMLAPI_KEY;
     if (!apiKey) {
       throw new Error('AIMLAPI key is not configured');
@@ -16,13 +16,13 @@ export async function POST(req: Request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
-        messages: messages.map((msg: any) => ({
-          role: msg.role,
-          content: msg.content
-        })),
-        temperature: 0.7,
-        max_tokens: 1000
+      model: 'gpt-3.5-turbo',
+      messages: messages.map((msg: any) => ({
+        role: msg.role,
+        content: msg.content
+      })),
+      temperature: 0.7,
+      max_tokens: 1000
       })
     });
 

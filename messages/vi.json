@@ -281,8 +281,8 @@
     }
   },
   "chatBox": {
-    "title": "Hộp thoại thông minh",
-    "description": "Trò chuyện với trợ lý AI",
+    "title": "Hệ Thống Chatbot Hỗ Trợ Sinh Viên",
+    "description": "Khám phá các tính năng chatbot khác nhau được thiết kế để hỗ trợ sinh viên",
     "welcomeMessage": "Chào mừng đến với cuộc trò chuyện mới!",
     "startConversation": "Bắt đầu cuộc trò chuyện",
     "inputPlaceholder": "Nhập tin nhắn của bạn...",
@@ -299,6 +299,34 @@
       "assistant": "Trợ lý",
       "system": "Hệ thống",
       "loading": "Đang suy nghĩ..."
+    },
+    "tryNow": "Thử ngay",
+    "contextApi": {
+      "title": "Context API",
+      "description": "Chatbot sử dụng API có ngữ cảnh để hiểu và trả lời các câu hỏi liên quan đến trường học",
+      "features": {
+        "1": "Hiểu ngữ cảnh từ các câu hỏi trước",
+        "2": "Trả lời chính xác các câu hỏi về trường học",
+        "3": "Duy trì cuộc trò chuyện tự nhiên"
+      }
+    },
+    "fineTuned": {
+      "title": "Fine-tuned",
+      "description": "Chatbot được huấn luyện đặc biệt cho các tình huống hỗ trợ sinh viên",
+      "features": {
+        "1": "Kiến thức chuyên sâu về trường học",
+        "2": "Xử lý các tình huống phức tạp",
+        "3": "Cung cấp thông tin chi tiết và chính xác"
+      }
+    },
+    "generalApi": {
+      "title": "General API",
+      "description": "Chatbot đa năng có thể trả lời nhiều loại câu hỏi khác nhau",
+      "features": {
+        "1": "Trả lời các câu hỏi chung",
+        "2": "Hỗ trợ nhiều chủ đề",
+        "3": "Tương tác linh hoạt"
+      }
     }
   },
   "nlpFiltering": {

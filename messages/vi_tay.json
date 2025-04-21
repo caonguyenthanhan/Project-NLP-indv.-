@@ -280,25 +280,53 @@
       "button": "Bắt đầu" 
     }
   },
-  "chatBox": {
-    "title": "Hộp cần thông minh", 
-    "description": "Cần vạ po giúp AI",
-    "welcomeMessage": "Chào mừng pây cuộc cần mới!", 
+"chatBox": {
+    "title": "Hệ thống Hộp cần giúp slí học",
+    "description": "Coóc lai tính năng hộp cần slảnh tái giúp slí học",
+    "welcomeMessage": "Chào mừng pây cuộc cần mới!",
     "startConversation": "Bắt đầu cần",
     "inputPlaceholder": "Nhập thư của mừng...",
-    "sendButton": "Slổng", 
+    "sendButton": "Slổng",
     "fetchError": "Bó kết nối slí vạ po giúp AI",
-    "errorMessage": "Xin lỗi, dú phjọoc khă pặt yêu cầu của mừng.", 
+    "errorMessage": "Xin lỗi, dú phjọoc khă pặt yêu cầu của mừng.",
     "newChat": "Slảnh cuộc cần mới",
     "deleteChat": "Pác cuộc cần",
     "save": "Đắc",
     "cancel": "Bỏ",
     "enterNewName": "Nhập slân mới",
     "messages": {
-      "user": "Mừng", 
-      "assistant": "Po giúp", 
-      "system": "Hệ thống", 
-      "loading": "Đang slì..." 
+      "user": "Mừng",
+      "assistant": "Po giúp",
+      "system": "Hệ thống",
+      "loading": "Đang slì..."
+    },
+    "tryNow": "Thử slắm nẩy",
+    "contextApi": {
+      "title": "Context API", 
+      "description": "Hộp cần pjoong API ngữ cảnh tái hiểu vạ đáp eng thâm sliên quan pây trường học",
+      "features": {
+        "1": "Hiểu ngữ cảnh té eng thâm trước",
+        "2": "Đáp slí chính xác eng thâm sliên quan pây trường học",
+        "3": "Slữ luồng cần tự nhiên" 
+      }
+    },
+    "fineTuned": {
+      "title": "Fine-tuned",
+      "description": "Hộp cần hấn đặc biệt cho tình huống giúp slí học",
+      "features": {
+        "1": "Hiểu sâu cần sliên quan pây trường học",
+        "2": "Pặt slí tình huống phức tạp",
+        "3": "Páo cần sl liệu chi tiết vạ chính xác"
+      }
+    },
+    "generalApi": {
+      "title": "General API", 
+      "description": "Hộp cần đa năng đáp slí lai loại eng thâm",
+      "features": {
+        "1": "Đáp eng thâm tổng quát",
+        "2": "Hỗ trợ lai chủ đề",
+        "3": "Tương tác linh hoạt"
+      }
     }
   },
   "nlpFiltering": {

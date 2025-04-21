@@ -330,24 +330,52 @@
     }
   },
   "chatBox": {
-    "title": "Smart Chat Box",
-    "description": "Chat with an AI assistant",
-    "welcomeMessage": "Welcome to the new chat!",
-    "startConversation": "Start a conversation",
-    "inputPlaceholder": "Type your message here...",
+    "title": "Student Support Chatbot System",
+    "description": "Explore different chatbot features designed to support students",
+    "welcomeMessage": "Welcome to a new conversation!",
+    "startConversation": "Start conversation",
+    "inputPlaceholder": "Type your message...",
     "sendButton": "Send",
-    "fetchError": "Could not connect to AI assistant",
+    "fetchError": "Unable to connect to AI assistant",
     "errorMessage": "Sorry, an error occurred while processing your request.",
-    "newChat": "New Chat",
-    "deleteChat": "Delete Chat",
+    "newChat": "Create new chat",
+    "deleteChat": "Delete chat",
     "save": "Save",
     "cancel": "Cancel",
     "enterNewName": "Enter new name",
     "messages": {
       "user": "You",
-      "assistant": "AI",
+      "assistant": "Assistant",
       "system": "System",
       "loading": "Thinking..."
+    },
+    "tryNow": "Try Now",
+    "contextApi": {
+      "title": "Context API",
+      "description": "Chatbot using contextual API to understand and answer school-related questions",
+      "features": {
+        "1": "Understand context from previous questions",
+        "2": "Accurately answer school-related questions",
+        "3": "Maintain natural conversation flow"
+      }
+    },
+    "fineTuned": {
+      "title": "Fine-tuned",
+      "description": "Chatbot specially trained for student support scenarios",
+      "features": {
+        "1": "In-depth knowledge about school matters",
+        "2": "Handle complex situations",
+        "3": "Provide detailed and accurate information"
+      }
+    },
+    "generalApi": {
+      "title": "General API",
+      "description": "Versatile chatbot that can answer various types of questions",
+      "features": {
+        "1": "Answer general questions",
+        "2": "Support multiple topics",
+        "3": "Flexible interaction"
+      }
     }
   },
   "nlpFiltering": {

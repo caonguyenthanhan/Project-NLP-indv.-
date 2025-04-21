@@ -112,3 +112,28 @@ Dự án này được phát hành theo giấy phép MIT - xem file LICENSE đ�
 ## Lời Cảm Ơn
 
 Cảm ơn tất cả những người đã đóng góp cho dự án này.
+
+# NLP Toolbox
+
+A comprehensive Natural Language Processing (NLP) toolbox for text processing and analysis.
+
+## Features
+
+### Chat Box
+
+The application provides three different types of chatbot implementations:
+
+1. **Context API Chatbot** (`/chat-box/context-api`)
+   - Uses a simple API with context limitations
+   - Ideal for specific use cases where context is predefined
+   - Limited by the provided context scope
+
+2. **Fine-tuned Chatbot** (`/chat-box/fine-tuned`)
+   - Custom-trained using BERT/RoBERTa models
+   - Fine-tuned on specific datasets for better performance
+   - Provides more accurate responses for specialized domains
+
+3. **General API Chatbot** (`/chat-box/general-api`)
+   - Uses a pure API implementation
+   - Provides general-purpose responses
+   - Not limited by specific context or training data
