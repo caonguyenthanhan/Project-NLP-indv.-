@@ -30,18 +30,29 @@ from googletrans import Translator
 from google.cloud import translate_v2 as translate
 from translation_server import translate_messages as perform_translation
 from datetime import datetime
-
-# Get the absolute path of the server directory
-SERVER_DIR = os.path.dirname(os.path.abspath(__file__))
-MODELS_DIR = os.path.join(SERVER_DIR, "models")
-
-# Ensure models directory exists
-if not os.path.exists(MODELS_DIR):
-    os.makedirs(MODELS_DIR)
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
+import joblib
+from pathlib import Path
+import asyncio
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Constants
+BASE_DIR = Path(__file__).parent
+MODEL_SCRIPT_NAME = "project_nlp_model.py"
+SCRIPT_TIMEOUT = 600  # 10 phút
+MODELS_DIR = BASE_DIR / "server" / "models"
+
+# Ensure models directory exists
+if not os.path.exists(MODELS_DIR):
+    os.makedirs(MODELS_DIR)
+    logger.info(f"Created models directory at: {MODELS_DIR}")
+else:
+    logger.info(f"Using existing models directory at: {MODELS_DIR}")
 
 # Setup NLTK downloader with SSL context
 try:
@@ -50,6 +61,7 @@ except AttributeError:
     pass
 else:
     ssl._create_default_https_context = _create_unverified_https_context
+
 
 # Download NLTK data with error handling
 def download_nltk_data():
@@ -265,32 +277,49 @@ async def preprocess_data(request: dict):
                 texts.append(item)
         
         preprocessed_texts = []
+        preprocessing_info = {
+            "steps_applied": [],
+            "original_texts": texts
+        }
+        
         for text in texts:
             if not isinstance(text, str):
                 continue
                 
+            original_text = text
+            
             # Apply preprocessing steps
             if options.get("lowercase", True):
                 text = text.lower()
+                preprocessing_info["steps_applied"].append("lowercase")
             
             # Tokenize
             tokens = word_tokenize(text)
+            preprocessing_info["steps_applied"].append("tokenize")
             
             # Remove stopwords
             if options.get("remove_stopwords", True):
                 tokens = [t for t in tokens if t not in stop_words]
+                preprocessing_info["steps_applied"].append("remove_stopwords")
             
             # Lemmatize
             if options.get("lemmatize", True):
                 tokens = [lemmatizer.lemmatize(t) for t in tokens]
+                preprocessing_info["steps_applied"].append("lemmatize")
             
             # Join tokens back into text
             processed_text = " ".join(tokens)
-            preprocessed_texts.append({"text": processed_text})
+            preprocessed_texts.append({
+                "text": processed_text,
+                "original_text": original_text
+            })
             
-        return {"processed_data": preprocessed_texts}
+        return {
+            "processed_data": preprocessed_texts,
+            "preprocessing_info": preprocessing_info
+        }
     except Exception as e:
-        print(f"Error in preprocess_data: {str(e)}")
+        logger.error(f"Error in preprocess_data: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/represent")
@@ -346,125 +375,122 @@ async def represent_text(request: Request):
 
 @app.post("/compare-models")
 async def compare_models(request: dict):
-    data = request.get("data")
-    task = request.get("task")
-    model_type = request.get("modelType", "svm")  # Default to SVM if not specified
-    datasetInfo = request.get("datasetInfo", {})
-    
-    if not data or not task:
-        raise HTTPException(status_code=400, detail="Data and task are required")
-    
-    texts = [item["text"] for item in data]
-    
-    # Map task names to dataset names
-    task_map = {
-        "Sentiment Analysis": "IMDB_Reviews",
-        "Text Classification": "BBC_News",
-        "Spam Detection": "SMS_Spam",
-        "Rating Prediction": "Yelp_Reviews",
-    }
-    
-    # Map model type to model file name
-    model_map = {
-        "naive_bayes": "Naive Bayes",
-        "logistic_regression": "Logistic Regression",
-        "svm": "SVM",
-    }
-    
-    dataset_name = task_map.get(task)
-    if not dataset_name:
-        raise HTTPException(status_code=400, detail=f"Task {task} not supported")
-    
-    model_name = model_map.get(model_type)
-    if not model_name:
-        raise HTTPException(status_code=400, detail=f"Model type {model_type} not supported")
-    
-    # Check if models directory exists
-    models_dir = "models"
-    if not os.path.exists(models_dir):
-        logger.error(f"Models directory not found: {models_dir}")
-        raise HTTPException(status_code=500, detail="Models directory not found")
-    
-    # Check if vectorizer file exists
-    vectorizer_path = os.path.join(models_dir, f"{dataset_name}_vectorizer.pkl")
-    if not os.path.exists(vectorizer_path):
-        logger.error(f"Vectorizer file not found: {vectorizer_path}")
-        raise HTTPException(status_code=500, detail=f"Vectorizer file not found for {dataset_name}")
-    
     try:
-        # Load vectorizer
-        with open(vectorizer_path, "rb") as f:
-            try:
-                vectorizer = pickle.load(f)
-            except Exception as e:
-                logger.error(f"Error loading vectorizer: {str(e)}")
-                logger.error(traceback.format_exc())
-                # Return mock data for demonstration
-                return {
-                    "accuracies": {
-                        "naive_bayes": 0.85,
-                        "logistic_regression": 0.88,
-                        "svm": 0.90,
-                    },
-                    "prediction": "0"
-                }
+        data = request.get("data")
+        task = request.get("task")
+        model_type = request.get("modelType", "svm")
+        datasetInfo = request.get("datasetInfo", {})
+        preprocessing_info = request.get("preprocessing_info", {})
         
-        # Transform input text
-        X = vectorizer.transform(texts)
+        if not data or not task:
+            raise HTTPException(status_code=400, detail="Data and task are required")
         
-        # Define models to load for accuracy comparison
-        models = ["Naive Bayes", "Logistic Regression", "SVM"]
-        accuracies = {}
-        prediction = None
-        
-        # Load and apply each model for accuracy comparison
-        for model_type_name in models:
-            model_path = os.path.join(models_dir, f"{dataset_name}_{model_type_name}.pkl")
-            if not os.path.exists(model_path):
-                logger.warning(f"Model file not found: {model_path}")
-                accuracies[model_type_name.lower().replace(' ', '_')] = 0.8  # Default accuracy
-                continue
-                
-            try:
-                with open(model_path, "rb") as f:
-                    model = pickle.load(f)
-                
-                # Calculate accuracy (mock for demonstration)
-                accuracies[model_type_name.lower().replace(' ', '_')] = np.random.uniform(0.75, 0.95)
-                
-                # If this is the selected model, use it for prediction
-                if model_type_name == model_name:
-                    pred = model.predict(X)
-                    prediction = str(pred[0])
-            except Exception as e:
-                logger.error(f"Error with model {model_type_name}: {str(e)}")
-                logger.error(traceback.format_exc())
-                accuracies[model_type_name.lower().replace(' ', '_')] = 0.8  # Default accuracy
-        
-        # If no prediction was made with the selected model, try to load it specifically
-        if prediction is None:
-            selected_model_path = os.path.join(models_dir, f"{dataset_name}_{model_name}.pkl")
-            if os.path.exists(selected_model_path):
-                try:
-                    with open(selected_model_path, "rb") as f:
-                        model = pickle.load(f)
-                    pred = model.predict(X)
-                    prediction = str(pred[0])
-                except Exception as e:
-                    logger.error(f"Error with selected model: {str(e)}")
-                    logger.error(traceback.format_exc())
-                    prediction = "0"  # Default prediction
-            else:
-                prediction = "0"  # Default prediction
-        
-        return {
-            "accuracies": accuracies,
-            "prediction": prediction
+        # Map task names to dataset names
+        task_map = {
+            "Sentiment Analysis": "IMDB_Reviews",
+            "Text Classification": "BBC_News",
+            "Spam Detection": "SMS_Spam",
+            "Rating Prediction": "Yelp_Reviews",
         }
         
+        # Map model type to model file name
+        model_map = {
+            "naive_bayes": "Naive Bayes",
+            "logistic_regression": "Logistic Regression",
+            "svm": "SVM",
+        }
+        
+        dataset_name = task_map.get(task)
+        if not dataset_name:
+            raise HTTPException(status_code=400, detail=f"Task {task} not supported")
+        
+        model_name = model_map.get(model_type)
+        if not model_name:
+            raise HTTPException(status_code=400, detail=f"Model type {model_type} not supported")
+        
+        # Check if models directory exists
+        if not os.path.exists(MODELS_DIR):
+            raise HTTPException(status_code=500, detail="Models directory not found")
+        
+        # Extract and preprocess texts from data
+        texts = []
+        original_texts = []
+        for item in data:
+            if isinstance(item, dict):
+                if "text" in item:
+                    texts.append(item["text"])
+                    original_texts.append(item.get("original_text", item["text"]))
+                elif "processed_text" in item:
+                    texts.append(item["processed_text"])
+                    original_texts.append(item.get("original_text", item["processed_text"]))
+            elif isinstance(item, str):
+                texts.append(item)
+                original_texts.append(item)
+        
+        if not texts:
+            raise HTTPException(status_code=400, detail="No valid text data provided")
+        
+        # Load vectorizer
+        vectorizer_path = os.path.join(MODELS_DIR, f"{dataset_name}_vectorizer.pkl")
+        if not os.path.exists(vectorizer_path):
+            raise HTTPException(status_code=404, detail=f"Vectorizer not found for {dataset_name}")
+        
+        try:
+            # Use joblib instead of pickle
+            vectorizer = joblib.load(vectorizer_path)
+            X = vectorizer.transform(texts)
+        except Exception as e:
+            logger.error(f"Error loading vectorizer: {str(e)}")
+            raise HTTPException(status_code=500, detail="Error loading vectorizer")
+        
+        # Load and apply the selected model
+        model_path = os.path.join(MODELS_DIR, f"{dataset_name}_{model_name}.pkl")
+        if not os.path.exists(model_path):
+            raise HTTPException(status_code=404, detail=f"Model not found for {dataset_name}")
+        
+        try:
+            # Use joblib instead of pickle
+            model = joblib.load(model_path)
+            predictions = model.predict(X)
+            
+            # Map predictions to labels based on dataset
+            mapped_predictions = []
+            for pred in predictions:
+                if dataset_name == 'IMDB_Reviews':
+                    mapped_predictions.append('Positive' if pred == 1 else 'Negative')
+                elif dataset_name == 'BBC_News':
+                    label_map = {
+                        0: 'business',
+                        1: 'entertainment',
+                        2: 'politics',
+                        3: 'sport',
+                        4: 'tech'
+                    }
+                    mapped_predictions.append(label_map.get(pred, str(pred)))
+                elif dataset_name == 'SMS_Spam':
+                    mapped_predictions.append('spam' if pred == 1 else 'ham')
+                elif dataset_name == 'Yelp_Reviews':
+                    mapped_predictions.append(f"{pred + 1} stars")
+                else:
+                    mapped_predictions.append(str(pred))
+            
+            return {
+                "predictions": mapped_predictions,
+                "raw_predictions": predictions.tolist(),
+                "input_texts": original_texts,
+                "model_info": {
+                    "dataset": dataset_name,
+                    "model": model_name,
+                }
+            }
+        except Exception as e:
+            logger.error(f"Error loading/applying model: {str(e)}")
+            raise HTTPException(status_code=500, detail="Error loading or applying model")
+            
+    except HTTPException as he:
+        raise he
     except Exception as e:
         logger.error(f"Error in compare_models: {str(e)}")
-        logger.error(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/model-comparison-image")
@@ -484,43 +510,87 @@ async def get_model_comparison_image():
     return {"imagePath": relative_path}
 
 @app.post("/retrain-models")
-async def retrain_models():
+async def retrain_models() -> Dict[str, str]:
     try:
-        # Get the path to project_nlp_modele.py - go up one directory from server
-        # parent_dir = os.path.dirname(SERVER_DIR)
-        model_script_path = os.path.join("project_nlp_model.py")
+        # Construct model script path
+        model_script_path = BASE_DIR / MODEL_SCRIPT_NAME
         
         logger.info(f"Attempting to run script at: {model_script_path}")
         
-        if not os.path.exists(model_script_path):
+        # Verify script exists
+        if not model_script_path.is_file():
             raise HTTPException(
-                status_code=500,
+                status_code=404,
                 detail=f"Model script not found at {model_script_path}"
             )
         
-        # Run the script
-        process = subprocess.Popen([sys.executable, model_script_path], 
-                                 stdout=subprocess.PIPE, 
-                                 stderr=subprocess.PIPE)
-        stdout, stderr = process.communicate()
+        # Prepare subprocess arguments
+        cmd = [sys.executable, str(model_script_path)]
         
-        if process.returncode != 0:
-            logger.error(f"Error running model script: {stderr.decode()}")
-            raise HTTPException(status_code=500, detail="Model retraining failed")
+        try:
+            # Run script with timeout
+            process = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
             
-        # Create new model comparison image
-        image_path = os.path.join(MODELS_DIR, "model_comparison.png")
-        if create_model_comparison_image(image_path):
+            # Wait for completion with timeout
+            stdout, stderr = await asyncio.wait_for(
+                process.communicate(),
+                timeout=SCRIPT_TIMEOUT
+            )
+            
+            # Decode stdout and stderr with fallback
+            def safe_decode(data: bytes) -> str:
+                try:
+                    return data.decode('utf-8')
+                except UnicodeDecodeError:
+                    try:
+                        return data.decode('latin-1')
+                    except UnicodeDecodeError:
+                        return data.decode('utf-8', errors='replace')
+            
+            # Check process result
+            if process.returncode != 0:
+                error_msg = safe_decode(stderr) if stderr else "Unknown error"
+                logger.error(f"Script execution failed: {error_msg}")
+                raise HTTPException(
+                    status_code=500,
+                    detail=f"Model retraining failed: {error_msg}"
+                )
+                
+            # Verify script output
+            output = safe_decode(stdout) if stdout else ""
+            logger.info(f"Script output: {output}")
+            
+            # Create model comparison image
+            image_path = MODELS_DIR / "model_comparison.png"
+            if not await asyncio.to_thread(create_model_comparison_image, str(image_path)):
+                raise HTTPException(
+                    status_code=500,
+                    detail="Failed to create model comparison image"
+                )
+                
             return {
                 "message": "Models retrained successfully",
-                "imagePath": "/models/model_comparison.png"
+                "imagePath": f"/models/model_comparison.png"
             }
-        else:
-            raise HTTPException(status_code=500, detail="Failed to create model comparison image")
+            
+        except asyncio.TimeoutError:
+            logger.error("Model training script timed out")
+            raise HTTPException(
+                status_code=504,
+                detail=f"Model retraining timed out after {SCRIPT_TIMEOUT} seconds"
+            )
+            
+        except subprocess.SubprocessError as e:
+            logger.error(f"Subprocess error: {str(e)}")
+            raise HTTPException(status_code=500, detail=f"Subprocess error: {str(e)}")
             
     except Exception as e:
-        logger.error(f"Error in retrain_models: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Unexpected error in retrain_models: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @app.get("/health")
 async def health_check():
@@ -688,6 +758,164 @@ async def save_chat_history(chat_name: str, role: str, content: str):
             
     except Exception as e:
         logger.error(f"Error saving chat history: {str(e)}")
+
+@app.post("/classify")
+async def classify_text(request: Request):
+    try:
+        data = await request.json()
+        texts = []
+        for item in data.get("data", []):
+            if isinstance(item, dict) and "text" in item:
+                texts.append(item["text"])
+            elif isinstance(item, str):
+                texts.append(item)
+            
+        if not texts:
+            raise HTTPException(status_code=400, detail="No texts provided")
+
+        task = data.get("task")
+        model_type = data.get("modelType", "svm")
+
+        # Map task names to dataset names and their corresponding label mappings
+        task_map = {
+            "Sentiment Analysis": {
+                "dataset": "IMDB_Reviews",
+                "labels": {
+                    0: "Negative",
+                    1: "Positive"
+                }
+            },
+            "Text Classification": {
+                "dataset": "BBC_News",
+                "labels": {
+                    0: "business",
+                    1: "entertainment",
+                    2: "politics",
+                    3: "sport",
+                    4: "tech"
+                }
+            },
+            "Spam Detection": {
+                "dataset": "SMS_Spam",
+                "labels": {
+                    0: "ham",
+                    1: "spam"
+                }
+            },
+            "Rating Prediction": {
+                "dataset": "Yelp_Reviews",
+                "labels": {
+                    0: "1 star",
+                    1: "2 stars",
+                    2: "3 stars",
+                    3: "4 stars",
+                    4: "5 stars"
+                }
+            }
+        }
+
+        # Map model type to model file name
+        model_map = {
+            "naive_bayes": "Naive_Bayes",
+            "logistic_regression": "Logistic_Regression",
+            "svm": "SVM"
+        }
+
+        task_info = task_map.get(task)
+        if not task_info:
+            raise HTTPException(status_code=400, detail=f"Task {task} not supported")
+
+        dataset_name = task_info["dataset"]
+        label_mapping = task_info["labels"]
+
+        model_name = model_map.get(model_type)
+        if not model_name:
+            raise HTTPException(status_code=400, detail=f"Model type {model_type} not supported")
+
+        # Load the trained model and vectorizer
+        try:
+            model_path = os.path.join(MODELS_DIR, f"{dataset_name}_{model_name}.pkl")
+            vectorizer_path = os.path.join(MODELS_DIR, f"{dataset_name}_vectorizer.pkl")
+            
+            if not os.path.exists(model_path) or not os.path.exists(vectorizer_path):
+                raise FileNotFoundError(f"Model or vectorizer not found for {dataset_name}")
+            
+            # Use joblib for loading
+            model = joblib.load(model_path)
+            vectorizer = joblib.load(vectorizer_path)
+                
+            logger.info(f"Loaded model and vectorizer for {dataset_name}")
+        except Exception as e:
+            logger.error(f"Error loading model/vectorizer: {str(e)}")
+            raise HTTPException(status_code=500, detail="Error loading model")
+
+        # Preprocess and transform texts
+        try:
+            # Basic preprocessing
+            processed_texts = []
+            for text in texts:
+                # Convert to lowercase
+                text = text.lower()
+                # Remove extra whitespace
+                text = ' '.join(text.split())
+                processed_texts.append(text)
+
+            # Transform texts using vectorizer
+            X = vectorizer.transform(processed_texts)
+            
+            # Get predictions and probabilities if available
+            predictions = model.predict(X)
+            
+            # Try to get prediction probabilities if the model supports it
+            try:
+                if hasattr(model, 'predict_proba'):
+                    probabilities = model.predict_proba(X)
+                else:
+                    # For models like SVM that don't have predict_proba
+                    probabilities = None
+            except:
+                probabilities = None
+
+            # Map predictions to labels
+            mapped_predictions = []
+            confidence_scores = []
+            
+            for idx, pred in enumerate(predictions):
+                # Get the mapped label
+                mapped_label = label_mapping.get(pred, str(pred))
+                mapped_predictions.append(mapped_label)
+                
+                # Get confidence score if available
+                if probabilities is not None:
+                    confidence = float(probabilities[idx][pred])
+                    confidence_scores.append(confidence)
+                else:
+                    confidence_scores.append(None)
+
+            response_data = {
+                "predictions": mapped_predictions,
+                "raw_predictions": predictions.tolist(),
+                "confidence_scores": confidence_scores,
+                "input_texts": texts,
+                "processed_texts": processed_texts,
+                "model_info": {
+                    "dataset": dataset_name,
+                    "model": model_name,
+                    "task": task
+                }
+            }
+
+            return response_data
+
+        except Exception as e:
+            logger.error(f"Error during prediction: {str(e)}")
+            logger.error(traceback.format_exc())
+            raise HTTPException(status_code=500, detail=f"Error during prediction: {str(e)}")
+
+    except Exception as e:
+        logger.error(f"Error in classify_text: {str(e)}")
+        logger.error(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn
