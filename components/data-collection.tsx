@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -114,9 +114,17 @@ export default function DataCollection() {
     }
   }
 
-  const handleUrlKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !isLoading) {
-      collectUrl();
+  const handleTextKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !isLoading && textInput.trim()) {
+      e.preventDefault()
+      collectText()
+    }
+  }
+
+  const handleUrlKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !isLoading && urlInput.trim()) {
+      e.preventDefault()
+      collectUrl()
     }
   }
 
@@ -135,8 +143,17 @@ export default function DataCollection() {
               <TabsTrigger value="url">{t("inputUrl")}</TabsTrigger>
             </TabsList>
             <TabsContent value="text" className="mt-4">
-              <Input value={textInput} onChange={e => setTextInput(e.target.value)} placeholder={t("enterText")} />
-              <Button onClick={collectText} disabled={isLoading} className="mt-4">
+              <Input 
+                value={textInput} 
+                onChange={e => setTextInput(e.target.value)} 
+                onKeyDown={handleTextKeyDown}
+                placeholder={t("enterText")} 
+              />
+              <Button 
+                onClick={collectText} 
+                disabled={isLoading || !textInput.trim()} 
+                className="mt-4"
+              >
                 {isLoading ? <Loader2 className="animate-spin" /> : t("collect")}
               </Button>
             </TabsContent>
@@ -144,10 +161,14 @@ export default function DataCollection() {
               <Input 
                 value={urlInput} 
                 onChange={e => setUrlInput(e.target.value)} 
-                onKeyPress={handleUrlKeyPress}
+                onKeyDown={handleUrlKeyDown}
                 placeholder={t("enterUrl")} 
               />
-              <Button onClick={collectUrl} disabled={isLoading} className="mt-4">
+              <Button 
+                onClick={collectUrl} 
+                disabled={isLoading || !urlInput.trim()} 
+                className="mt-4"
+              >
                 {isLoading ? <Loader2 className="animate-spin" /> : t("scrape")}
               </Button>
             </TabsContent>

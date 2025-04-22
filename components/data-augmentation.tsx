@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
@@ -102,6 +102,19 @@ export default function DataAugmentation() {
     }
     setCurrentStep(2)
   }
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Enter" && !isLoading) {
+      augmentData()
+    } else if (e.key === "Backspace" && !isLoading) {
+      skipAugmentation()
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [isLoading])
 
   return (
     <div className="space-y-6">

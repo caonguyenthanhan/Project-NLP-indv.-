@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import React, { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select"
@@ -11,11 +11,16 @@ import { useWorkflow } from "@/context/workflow-context"
 import { v4 as uuidv4 } from "uuid"
 import { Loader2, Eye, EyeOff } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
+import { useRouter, usePathname } from "next/navigation"
+import { Dataset } from '../types/dataset'
 
-export default function TextRepresentation() {
+const TextRepresentation: React.FC = () => {
   const t = useTranslations("textRepresentation")
   const common = useTranslations("common")
   const { toast } = useToast()
+  const router = useRouter()
+  const pathname = usePathname()
+  const locale = pathname.split('/')[1] // Get locale from URL path
   const { currentDataset, setCurrentDataset, setCurrentStep, datasets, setDatasets } = useWorkflow()
   const [method, setMethod] = useState("tfidf")
   const [isLoading, setIsLoading] = useState(false)
@@ -55,7 +60,11 @@ export default function TextRepresentation() {
       if (e.key === "Enter" && !isLoading && currentDataset) {
         representData()
       } else if (e.key === "Backspace" && currentDataset) {
-        skipRepresentation()
+        // Show vectors
+        toast({
+          title: "Vectors visible",
+          description: "You can now see the vector representations for each text.",
+        })
       }
     }
 
@@ -64,12 +73,28 @@ export default function TextRepresentation() {
   }, [isLoading, currentDataset])
 
   const handleContinue = () => {
-    if (shouldRepresent === "yes") {
-      representData()
-    } else {
-      skipRepresentation()
-    }
+    representData()
   }
+
+  const handleNextStep = () => {
+    setCurrentStep(5)
+    const event = new CustomEvent('tabChange', { detail: 'classification' })
+    window.dispatchEvent(event)
+    router.push(`/${locale}/text-classification`)
+  }
+
+  useEffect(() => {
+    const handleTabChange = (e: CustomEvent) => {
+      if (e.detail === 'classification') {
+        setCurrentStep(5)
+      }
+    }
+
+    window.addEventListener('tabChange', handleTabChange as EventListener)
+    return () => {
+      window.removeEventListener('tabChange', handleTabChange as EventListener)
+    }
+  }, [])
 
   const representData = async () => {
     if (!currentDataset) {
@@ -120,9 +145,12 @@ export default function TextRepresentation() {
 
       setDatasets([...datasets.filter(d => d !== currentDataset), newDataset])
       setCurrentDataset(newDataset)
+      
+      // Show toast at the top
       toast({
         title: t("vectorsReady"),
         description: t("clickShowVectors"),
+        className: "top-0",
       })
     } catch (error: any) {
       const errorMessage = error.message || t("failedToRepresent")
@@ -130,7 +158,8 @@ export default function TextRepresentation() {
       toast({
         title: t("error"),
         description: errorMessage,
-        className: "bg-destructive text-destructive-foreground"
+        variant: "destructive",
+        className: "top-0",
       })
     } finally {
       setIsLoading(false)
@@ -142,18 +171,6 @@ export default function TextRepresentation() {
       setShowVectors(true)
     }
   }, [representedData, features])
-
-  const skipRepresentation = () => {
-    if (!currentDataset) {
-      toast({
-        title: t("error"),
-        description: t("noData"),
-        className: "bg-destructive text-destructive-foreground"
-      })
-      return
-    }
-    setCurrentStep(5)
-  }
 
   const toggleVectors = () => {
     setShowVectors(!showVectors)
@@ -179,7 +196,7 @@ export default function TextRepresentation() {
         </CardHeader>
         <CardContent>
           {error && (
-            <div className="bg-destructive/15 text-destructive px-4 py-2 rounded-md">
+            <div className="bg-destructive/15 text-destructive px-4 py-2 rounded-md mb-4">
               {error}
             </div>
           )}
@@ -189,51 +206,34 @@ export default function TextRepresentation() {
               <p>{t("datasetSize", { size: currentDataset.metadata?.size || 0 })}</p>
               
               <div className="mt-4">
-                <h3 className="text-sm font-medium mb-2">{t("representationDecision")}</h3>
-                <p className="text-sm text-muted-foreground mb-4">{t("representationDecisionDescription")}</p>
-                <RadioGroup value={shouldRepresent} onValueChange={(value: "yes" | "no") => setShouldRepresent(value)} className="flex flex-col space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="yes" id="represent-yes" />
-                    <Label htmlFor="represent-yes">{t("performRepresentation")}</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="no" id="represent-no" />
-                    <Label htmlFor="represent-no">{t("skipRepresentation")}</Label>
-                  </div>
-                </RadioGroup>
+                <h3 className="text-sm font-medium mb-2">{t("selectMethod")}</h3>
+                <Select value={method} onValueChange={setMethod}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder={t("selectMethodPlaceholder")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>{t("basicMethods")}</SelectLabel>
+                      {representationMethods.basic.map((m) => (
+                        <SelectItem key={m.id} value={m.id}>
+                          {m.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                    <SelectGroup>
+                      <SelectLabel>{t("advancedMethods")}</SelectLabel>
+                      {representationMethods.advanced.map((m) => (
+                        <SelectItem key={m.id} value={m.id}>
+                          <div>
+                            <div>{m.name}</div>
+                            <div className="text-xs text-muted-foreground">{m.description}</div>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
-
-              {shouldRepresent === "yes" && (
-                <div className="mt-4">
-                  <h3 className="text-sm font-medium mb-2">{t("selectMethod")}</h3>
-                  <Select value={method} onValueChange={setMethod}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder={t("selectMethodPlaceholder")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>{t("basicMethods")}</SelectLabel>
-                        {representationMethods.basic.map((m) => (
-                          <SelectItem key={m.id} value={m.id}>
-                            {m.name}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                      <SelectGroup>
-                        <SelectLabel>{t("advancedMethods")}</SelectLabel>
-                        {representationMethods.advanced.map((m) => (
-                          <SelectItem key={m.id} value={m.id}>
-                            <div>
-                              <div>{m.name}</div>
-                              <div className="text-xs text-muted-foreground">{m.description}</div>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
 
               {currentDataset.metadata?.represented && (
                 <div className="mt-6">
@@ -294,28 +294,47 @@ export default function TextRepresentation() {
           )}
         </CardContent>
         <CardFooter className="flex justify-end space-x-2">
-          <Button 
-            onClick={handleContinue}
-            disabled={isLoading || !currentDataset}
-            className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                {common("processing")}
-              </>
-            ) : shouldRepresent === "yes" ? (
-              <>
-                <Eye className="h-4 w-4" />
-                {t("represent")}
-              </>
-            ) : (
-              t("next")
-            )}
-          </Button>
+          {!currentDataset?.metadata?.represented ? (
+            <Button 
+              onClick={representData}
+              disabled={isLoading || !currentDataset}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  {common("processing")}
+                </>
+              ) : (
+                <>
+                  <Eye className="h-4 w-4" />
+                  {t("represent")}
+                </>
+              )}
+            </Button>
+          ) : (
+            <>
+              <Button 
+                variant="outline" 
+                onClick={toggleVectors} 
+                className="flex items-center gap-2"
+              >
+                {showVectors ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showVectors ? t("hideVectors") : t("showVectors")}
+              </Button>
+              <Button 
+                onClick={handleNextStep}
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                {t("next")}
+              </Button>
+            </>
+          )}
         </CardFooter>
       </Card>
     </div>
   )
 }
+
+export default TextRepresentation
 

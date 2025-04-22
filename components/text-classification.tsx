@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -10,21 +10,55 @@ import { Progress } from "@/components/ui/progress"
 import { useTranslations } from "next-intl"
 import { ToastContainer, toast } from "react-toastify"
 import { useWorkflow } from "@/context/workflow-context"
-import { AlertCircle, BarChart, RefreshCw } from "lucide-react"
+import { AlertCircle, BarChart, RefreshCw, Loader2 } from "lucide-react"
 import ModelComparisonChart from "./model-comparison-chart"
 import Image from "next/image"
+import { useToast } from "@/components/ui/use-toast"
+import { Dataset } from "../types/dataset"
+import { ToastAction } from "@/components/ui/toast"
 
-export default function TextClassification() {
+interface PredictionResult {
+  text: string;
+  prediction: string;
+  confidence: number | null;
+  raw_prediction: number;
+}
+
+interface ClassificationResults {
+  predictions: PredictionResult[];
+  raw_predictions: number[];
+  confidence_scores: number[] | null;
+  input_texts: string[];
+  model_info: {
+    dataset: string;
+    model: string;
+    task: string;
+  };
+}
+
+interface TaskLabels {
+  [key: string]: string[]
+}
+
+const taskLabels: TaskLabels = {
+  "Sentiment Analysis": ["negative", "positive"],
+  "Text Classification": ["business", "entertainment", "politics", "sport", "tech"],
+  "Spam Detection": ["ham", "spam"],
+  "Rating Prediction": ["1", "2", "3", "4", "5"]
+}
+
+const TextClassification: React.FC = () => {
   const t = useTranslations("textClassification")
   const { currentDataset, setCurrentDataset, setCurrentStep, datasets, setDatasets } = useWorkflow()
-  const [task, setTask] = useState("")
+  const [task, setTask] = useState("Text Classification")
   const [modelType, setModelType] = useState("svm")
-  const [results, setResults] = useState(null)
+  const [results, setResults] = useState<ClassificationResults | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
   const [showComparisonChart, setShowComparisonChart] = useState(false)
-  const [modelImagePath, setModelImagePath] = useState(null)
+  const [modelImagePath, setModelImagePath] = useState<string | null>(null)
   const [isRetraining, setIsRetraining] = useState(false)
+  const { toast } = useToast()
 
   // Load model comparison image path
   useEffect(() => {
@@ -48,14 +82,20 @@ export default function TextClassification() {
     setErrorMessage("")
   }, [currentDataset, task])
 
-  const tasks = ["Sentiment Analysis", "Text Classification", "Spam Detection", "Rating Prediction"]
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && !isLoading && currentDataset) {
+        classifyData()
+      } else if (e.key === "Backspace" && currentDataset) {
+        setCurrentStep(4)
+      }
+    }
 
-  const taskLabels = {
-    "Sentiment Analysis": ["negative", "positive"],
-    "Text Classification": ["business", "entertainment", "politics", "sport", "tech"],
-    "Spam Detection": ["ham", "spam"],
-    "Rating Prediction": ["1", "2", "3", "4", "5"],
-  }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [isLoading, currentDataset])
+
+  const tasks = ["Sentiment Analysis", "Text Classification", "Spam Detection", "Rating Prediction"]
 
   const modelTypes = [
     { id: "naive_bayes", name: "Naive Bayes" },
@@ -65,7 +105,6 @@ export default function TextClassification() {
 
   const handleRetrain = async () => {
     setIsRetraining(true)
-    const toastId = toast.loading(t("retraining"))
     try {
       const response = await fetch("http://localhost:8000/retrain-models", {
         method: "POST",
@@ -76,21 +115,18 @@ export default function TextClassification() {
       }
 
       const data = await response.json()
-      toast.update(toastId, {
-        render: data.message,
-        type: "success",
-        isLoading: false,
-        autoClose: 3000,
+      toast({
+        description: data.message
       })
 
       // Update image path after retraining
       setModelImagePath(data.imagePath)
     } catch (error) {
-      toast.update(toastId, {
-        render: error.message,
-        type: "error",
-        isLoading: false,
-        autoClose: 5000,
+      const message = error instanceof Error ? error.message : String(error)
+      toast({
+        variant: "destructive",
+        description: message,
+        action: <ToastAction altText="Try again">{t("tryAgain")}</ToastAction>
       })
     } finally {
       setIsRetraining(false)
@@ -123,17 +159,38 @@ export default function TextClassification() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.detail || `Comparison failed: ${response.status}`)
+        const errorMessage = errorData.detail || `Error: ${response.status}`
+        
+        // Handle specific error cases
+        if (response.status === 404) {
+          if (errorMessage.includes("Vectorizer not found") || errorMessage.includes("Model not found")) {
+            setErrorMessage(t("modelNotFound"))
+            toast.update(toastId, {
+              render: t("modelNotFound"),
+              type: "error",
+              isLoading: false,
+              autoClose: 5000,
+            })
+            return
+          }
+        }
+        
+        throw new Error(errorMessage)
       }
 
       const data = await response.json()
       setResults(data)
-      toast.update(toastId, { render: t("success"), type: "success", isLoading: false, autoClose: 3000 })
+      toast.update(toastId, { 
+        render: t("success"), 
+        type: "success", 
+        isLoading: false, 
+        autoClose: 3000 
+      })
     } catch (error) {
       console.error("Model comparison error:", error)
-      setErrorMessage(error.message || "Unknown error occurred")
+      setErrorMessage(error.message || t("unknownError"))
       toast.update(toastId, {
-        render: `Error: ${error.message || "Unknown error"}`,
+        render: error.message || t("unknownError"),
         type: "error",
         isLoading: false,
         autoClose: 5000,
@@ -144,17 +201,104 @@ export default function TextClassification() {
   }
 
   // Helper function to get the label from prediction
-  const getPredictionLabel = (prediction) => {
-    if (!prediction) return "Unknown"
+  const getPredictionLabel = (prediction: any, task: string): string => {
+    if (prediction === undefined || prediction === null) return "Unknown";
 
-    if (taskLabels[task]) {
-      const predIndex = Number.parseInt(prediction)
-      if (!isNaN(predIndex) && predIndex >= 0 && predIndex < taskLabels[task].length) {
-        return taskLabels[task][predIndex]
-      }
+    switch (task) {
+      case "Sentiment Analysis":
+        return prediction === 1 ? "Positive" : "Negative";
+      case "Text Classification":
+        const newsLabels = {
+          0: "Business",
+          1: "Entertainment",
+          2: "Politics",
+          3: "Sport",
+          4: "Tech"
+        };
+        return newsLabels[prediction] || "Unknown";
+      case "Spam Detection":
+        return prediction === 1 ? "Spam" : "Ham";
+      case "Rating Prediction":
+        return `${prediction + 1} stars`;
+      default:
+        return String(prediction);
     }
+  }
 
-    return prediction
+  const handleContinue = () => {
+    classifyData()
+  }
+
+  const handleBack = () => {
+    setCurrentStep(4)
+  }
+
+  const classifyData = async () => {
+    if (!currentDataset) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch('http://localhost:8000/classify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: currentDataset.data,
+          modelType: modelType,
+          task: task
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to classify data');
+      }
+
+      const result = await response.json();
+      
+      // Update results with proper label mapping
+      const updatedResults: ClassificationResults = {
+        ...result,
+        predictions: result.predictions.map((pred: string, idx: number) => ({
+          text: result.input_texts[idx],
+          prediction: pred,
+          confidence: result.confidence_scores ? result.confidence_scores[idx] : null,
+          raw_prediction: result.raw_predictions[idx]
+        }))
+      };
+      
+      setResults(updatedResults);
+      
+      // Show success toast
+      toast({
+        description: t("classificationComplete", { 
+          model: modelType, 
+          accuracy: updatedResults.confidence_scores ? 
+            `${(Math.max(...updatedResults.confidence_scores) * 100).toFixed(2)}%` : 
+            'N/A'
+        })
+      });
+    } catch (err) {
+      console.error("Classification error:", err);
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setErrorMessage(errorMessage || t("unknownError"));
+      
+      // Show error toast
+      toast({
+        variant: "destructive",
+        description: errorMessage || t("unknownError"),
+        action: <ToastAction altText="Try again">{t("tryAgain")}</ToastAction>
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "Enter" && !isLoading && currentDataset) {
+      classifyData()
+    }
   }
 
   return (
@@ -211,14 +355,14 @@ export default function TextClassification() {
 
               <div className="mt-4">
                 <label className="block text-sm font-medium mb-1">{t("selectTask")}</label>
-                <Select onValueChange={setTask} value={task}>
-                  <SelectTrigger className="w-full md:w-[280px]">
-                    <SelectValue placeholder={t("selectTask")} />
+                <Select value={task} onValueChange={setTask}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder={t("selectTaskPlaceholder")} />
                   </SelectTrigger>
                   <SelectContent>
-                    {tasks.map((taskOption) => (
-                      <SelectItem key={taskOption} value={taskOption}>
-                        {taskOption}
+                    {tasks.map((task) => (
+                      <SelectItem key={task} value={task}>
+                        {task}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -238,38 +382,52 @@ export default function TextClassification() {
               </div>
 
               {errorMessage && (
-                <div className="mt-4 p-3 bg-destructive/10 border border-destructive/30 rounded-md flex items-start">
-                  <AlertCircle className="h-5 w-5 text-destructive mr-2 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-destructive">{t("errorOccurred")}</p>
-                    <p className="text-sm mt-1">{errorMessage}</p>
-                    <p className="text-sm mt-2">{t("tryDifferentTask")}</p>
-                  </div>
+                <div className="mt-4 p-3 bg-destructive/10 border border-destructive/30 rounded-md">
+                  <p className="text-destructive">{errorMessage}</p>
+                  <p className="text-sm text-muted-foreground mt-2">{t("tryDifferentTask")}</p>
                 </div>
               )}
 
               {results && (
                 <div className="mt-6 space-y-4">
-                  {results.prediction && (
+                  {results.predictions && results.predictions.length > 0 && (
                     <div className="mt-4 p-4 bg-muted/30 rounded-md">
-                      <h4 className="font-medium">{t("prediction")}</h4>
-                      <div className="flex flex-col mt-2">
-                        <div className="flex items-start mt-2">
-                          <span className="font-medium mr-2 whitespace-nowrap">{t("inputText")}:</span>
-                          <span className="text-sm">{currentDataset.data[0]?.text.substring(0, 100)}...</span>
-                        </div>
-                        <div className="flex items-center mt-3">
-                          <span className="font-medium mr-2">{t("predictedClass")}:</span>
-                          <span className="text-lg font-semibold px-3 py-1 bg-primary/10 rounded-full">
-                            {getPredictionLabel(results.prediction)}
-                          </span>
-                        </div>
-                        <div className="mt-3 text-sm text-muted-foreground">
-                          {t("predictedUsing")}{" "}
-                          <span className="font-medium">
-                            {modelTypes.find((m) => m.id === modelType)?.name || modelType}
-                          </span>
-                        </div>
+                      <h4 className="font-medium">{t("predictions")}</h4>
+                      <div className="flex flex-col mt-2 space-y-4">
+                        {results.predictions.map((item: any, index: number) => (
+                          <div key={index} className="p-3 bg-background rounded-md">
+                            <div className="flex items-start">
+                              <span className="font-medium mr-2 whitespace-nowrap">{t("inputText")}:</span>
+                              <span className="text-sm">
+                                {typeof item.text === 'string' ? 
+                                  (item.text.substring(0, 100) + (item.text.length > 100 ? "..." : "")) :
+                                  "Invalid text format"}
+                              </span>
+                            </div>
+                            <div className="flex items-center mt-2">
+                              <span className="font-medium mr-2">{t("predictedClass")}:</span>
+                              <span className="text-lg font-semibold px-3 py-1 bg-primary/10 rounded-full">
+                                {item.prediction}
+                              </span>
+                              {item.confidence && (
+                                <span className="ml-2 text-sm text-muted-foreground">
+                                  ({(item.confidence * 100).toFixed(1)}% confidence)
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-xs text-muted-foreground mt-1">
+                              {t("rawPrediction")}: {item.raw_prediction}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-3 text-sm text-muted-foreground">
+                        {t("predictedUsing")}{" "}
+                        <span className="font-medium">
+                          {modelTypes.find((m) => m.id === modelType)?.name || modelType}
+                        </span>
+                        {" "}{t("onDataset")}{" "}
+                        <span className="font-medium">{results.model_info?.dataset}</span>
                       </div>
                     </div>
                   )}
@@ -280,13 +438,20 @@ export default function TextClassification() {
             <p className="text-red-500">{t("noData")}</p>
           )}
         </CardContent>
-        <CardFooter>
-          <Button onClick={compareModels} disabled={isLoading || !currentDataset || !task}>
-            {isLoading ? t("comparing") : t("classify")}
+        <CardFooter className="flex justify-end space-x-2">
+          <Button 
+            onClick={classifyData} 
+            disabled={isLoading || !currentDataset}
+            title={t("enterToClassify")}
+            onKeyDown={handleKeyDown}
+          >
+            {isLoading ? <Loader2 className="animate-spin" /> : t("classify")}
           </Button>
         </CardFooter>
       </Card>
     </div>
   )
 }
+
+export default TextClassification
 

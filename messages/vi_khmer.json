@@ -214,7 +214,10 @@
     "predictedUsing": "ទាយដោយ",
     "predictedClass": "ប្រភេទដែលបានទាយ",
     "inputText": "អត្ថបទបញ្ចូល",
-    "prediction": "ការព្យាករណ៍"
+    "predictions": "លទ្ធផលព្យាករណ៍",
+    "tryDifferentTask": "សាកល្បងប្រើប្រាស់ការងារផ្សេងៗ",
+    "rawPrediction": "លទ្ធផលព្យាករណ៍ដែលបានទាយ",
+    "tryAgain": "សាកល្បងឡើងវិញ"
   },
   "datasetSelector": {
     "selectDataset": "ជ្រើសរើសឧបករណ៍ទិន្នន័យ",

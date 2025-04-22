@@ -117,6 +117,12 @@ export default function TextPreprocessing() {
     setCurrentStep(3)
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "Enter" && !isLoading && currentDataset) {
+      preprocessData()
+    }
+  }
+
   return (
     <div className="space-y-6">
       <ToastContainer />
@@ -140,6 +146,7 @@ export default function TextPreprocessing() {
             onClick={preprocessData} 
             disabled={isLoading || !currentDataset}
             title={t("enterToPreprocess")}
+            onKeyDown={handleKeyDown}
           >
             {isLoading ? <Loader2 className="animate-spin" /> : t("preprocess")}
           </Button>

@@ -214,7 +214,10 @@
     "predictedUsing": "Dự đoán bằng",
     "predictedClass": "Lớp dự đoán",
     "inputText": "Văn bản gõ dzô",
-    "prediction": "Dự đoán"
+    "predictions": "Kết quả dự đoán",
+    "tryDifferentTask": "Thử dzụ khác",
+    "rawPrediction": "Kết quả dự đoán gốc",
+    "tryAgain": "Thử lại"
   },
   "datasetSelector": {
     "selectDataset": "Chọn bộ dữ liệu",

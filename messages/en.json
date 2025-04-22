@@ -263,7 +263,10 @@
     "predictedUsing": "Predicted using",
     "predictedClass": "Predicted class",
     "inputText": "Input text",
-    "prediction": "Prediction"
+    "predictions": "Predicted results",
+    "tryDifferentTask": "Try different task",
+    "rawPrediction": "Raw prediction",
+    "tryAgain": "Try again"
   },
   "datasetSelector": {
     "selectDataset": "Select a dataset",

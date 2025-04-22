@@ -214,7 +214,10 @@
     "predictedUsing": "Ramal dengan",
     "predictedClass": "Kelompok ramal",
     "inputText": "Teks masuk",
-    "prediction": "Ramalan"
+    "predictions": "Hasil ramalan",
+    "tryDifferentTask": "Coba tugas lain",
+    "rawPrediction": "Hasil ramalan gak",
+    "tryAgain": "Coba lagi"
   },
   "datasetSelector": {
     "selectDataset": "Pilih set data",

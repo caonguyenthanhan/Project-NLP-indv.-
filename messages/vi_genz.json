@@ -214,7 +214,9 @@
     "predictedUsing": "Dự đoán bằng",
     "predictedClass": "Lớp dự đoán",
     "inputText": "Text nhập",
-    "prediction": "Dự đoán"
+    "predictions": "Sự thật chỉ có 1 đó chính là: ",
+    "tryDifferentTask": "Thử cái khác liền!",
+    "rawPrediction": "Kết quả dự đoán gốc"
   },
   "datasetSelector": {
     "selectDataset": "Chọn dataset",
