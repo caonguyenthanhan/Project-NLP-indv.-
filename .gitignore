@@ -157,3 +157,26 @@ data/
 
 # Dependencies
 node_modules/
+
+# Large model files
+server/phobert-finetuned-viquad2/model.safetensors
+server/phobert-finetuned-viquad2/tokenizer.json
+server/phobert-finetuned-viqued2/sentencepiece.bpe.model
+server/phobert-finetuned-viquad2/checkpoint-*/
+server/phobert-finetuned-viquad2/runs/
+
+# Jupyter notebooks
+*.ipynb
+
+# Python cache
+server/__pycache__/
+server/*.pyc
+
+# Chat history and logs
+server/chat_history.json
+server/data/*.json
+server/data/*.csv
+
+# Temporary files
+*.tmp
+*.temp
