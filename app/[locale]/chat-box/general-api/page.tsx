@@ -21,6 +21,12 @@ interface ChatHistory {
   messages: Message[]
 }
 
+interface APIResponse {
+  response: string
+  confidence: number
+  category: string
+}
+
 export default function GeneralAPIChatBox() {
   const t = useTranslations("chatBox")
   const { theme } = useTheme()
@@ -161,7 +167,7 @@ export default function GeneralAPIChatBox() {
         });
         const newChatName = `General API Chat ${timestamp}`;
 
-        const welcomeMessage = { role: "system" as const, content: t("welcomeMessage") };
+        const welcomeMessage: Message = { role: "system", content: t("welcomeMessage") };
         setMessages([welcomeMessage]);
 
         await fetch("http://localhost:3000/api/chat/history", {
@@ -177,56 +183,116 @@ export default function GeneralAPIChatBox() {
         setChatName(newChatName);
         await fetchAvailableChats();
         
-        const userMessage = { role: "user" as const, content: input };
-        setMessages(prev => [...prev, userMessage]);
+        const userMessage: Message = { role: "user", content: input };
+        setMessages((prev: Message[]) => [...prev, userMessage] as Message[]);
         setInput("");
         setIsLoading(true);
 
-        const response = await fetch("http://localhost:3000/api/chat/general", {
+        const response = await fetch("http://localhost:8000/api/chat/general", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            messages: [welcomeMessage, userMessage],
-            chat_name: newChatName
+            message: input,
+            sessionId: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
           })
         });
 
         if (!response.ok) throw new Error("Failed to get response");
 
-        const data = await response.json();
-        setMessages(prev => [...prev, { role: "assistant", content: data.message }]);
+        const data: APIResponse = await response.json();
+        const assistantMessage: Message = { 
+          role: "assistant", 
+          content: data.response 
+        };
+        setMessages((prev: Message[]) => [...prev, assistantMessage] as Message[]);
+
+        // Save messages to history
+        await fetch("http://localhost:3000/api/chat/history", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_name: newChatName,
+            role: "user",
+            content: input
+          })
+        });
+
+        await fetch("http://localhost:3000/api/chat/history", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_name: newChatName,
+            role: "assistant",
+            content: data.response
+          })
+        });
 
       } catch (error) {
         console.error("Error:", error);
+        const errorMessage: Message = { 
+          role: "assistant", 
+          content: t("errorMessage") 
+        };
+        setMessages(prev => [...prev, errorMessage]);
       } finally {
         setIsLoading(false);
       }
-      return;
-    }
+    } else {
+      try {
+        const userMessage: Message = { role: "user", content: input };
+        setMessages((prev: Message[]) => [...prev, userMessage] as Message[]);
+        setInput("");
+        setIsLoading(true);
 
-    const userMessage = { role: "user" as const, content: input };
-    setMessages(prev => [...prev, userMessage]);
-    setInput("");
-    setIsLoading(true);
+        const response = await fetch("http://localhost:8000/api/chat/general", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: input,
+            sessionId: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+          })
+        });
 
-    try {
-      const response = await fetch("http://localhost:3000/api/chat/general", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [...messages, userMessage],
-          chat_name: chatName
-        })
-      });
+        if (!response.ok) throw new Error("Failed to get response");
 
-      if (!response.ok) throw new Error("Failed to get response");
+        const data: APIResponse = await response.json();
+        const assistantMessage: Message = { 
+          role: "assistant", 
+          content: data.response 
+        };
+        setMessages((prev: Message[]) => [...prev, assistantMessage] as Message[]);
 
-      const data = await response.json();
-      setMessages(prev => [...prev, { role: "assistant", content: data.message }]);
-    } catch (error) {
-      console.error("Error:", error);
-    } finally {
-      setIsLoading(false);
+        // Save messages to history
+        await fetch("http://localhost:3000/api/chat/history", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_name: chatName,
+            role: "user",
+            content: input
+          })
+        });
+
+        await fetch("http://localhost:3000/api/chat/history", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_name: chatName,
+            role: "assistant",
+            content: data.response
+          })
+        });
+
+      } catch (error) {
+        console.error("Error:", error);
+        const errorMessage: Message = { 
+          role: "assistant", 
+          content: t("errorMessage") 
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -359,7 +425,7 @@ export default function GeneralAPIChatBox() {
           )}
           {isLoading && (
             <div className="text-center text-gray-500 dark:text-gray-400">
-              <div className="animate-pulse">{t("messages.loading")}</div>
+              <div className="animate-pulse">{t("thinking")}</div>
             </div>
           )}
         </div>

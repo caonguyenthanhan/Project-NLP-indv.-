@@ -1,25 +1,11 @@
 "use client"
 
-import React, { useState, useRef, useEffect } from "react"
+import React from "react"
 import { useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { cn } from "@/lib/utils"
-import { useTheme } from "next-themes"
-import { Plus, Save, Trash2, Loader2, Send } from "lucide-react"
 import Link from "next/link"
-
-interface Message {
-  role: "user" | "assistant" | "system"
-  content: string
-}
-
-interface ChatHistory {
-  chat_name: string
-  messages: Message[]
-}
+import styles from "./styles.module.css"
 
 export default function ChatBoxPage() {
   const t = useTranslations("chatBox")
@@ -31,64 +17,85 @@ export default function ChatBoxPage() {
         <p className="text-xl text-muted-foreground">{t("description")}</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className={`grid grid-cols-1 gap-6 max-w-7xl mx-auto ${styles.cardGrid}`}>
         {/* Context API Card */}
-        <Card className="flex flex-col">
+        <Card className="flex flex-col h-full">
           <CardHeader>
             <CardTitle>{t("contextApi.title")}</CardTitle>
-            <CardDescription>{t("contextApi.description")}</CardDescription>
+            <CardDescription className="text-lg font-semibold text-primary">
+              {t("contextApi.subtitle")}
+            </CardDescription>
+            <p className="text-sm text-muted-foreground mt-2">
+              {t("contextApi.description")}
+            </p>
           </CardHeader>
-          <CardContent className="flex-1">
+          <CardContent className="flex-1 flex flex-col">
             <ul className="list-disc list-inside space-y-2 mb-4">
               <li>{t("contextApi.features.1")}</li>
               <li>{t("contextApi.features.2")}</li>
               <li>{t("contextApi.features.3")}</li>
             </ul>
-            <Link href="/chat-box/context-api" className="w-full">
-              <Button className="w-full">
-                {t("tryNow")}
-              </Button>
-            </Link>
+            <div className="mt-auto">
+              <Link href="/chat-box/context-api" className="w-full">
+                <Button className="w-full">
+                  {t("tryNow")}
+                </Button>
+              </Link>
+            </div>
           </CardContent>
         </Card>
 
         {/* Fine-tuned Card */}
-        <Card className="flex flex-col">
+        <Card className="flex flex-col h-full">
           <CardHeader>
             <CardTitle>{t("fineTuned.title")}</CardTitle>
-            <CardDescription>{t("fineTuned.description")}</CardDescription>
+            <CardDescription className="text-lg font-semibold text-primary">
+              {t("fineTuned.subtitle")}
+            </CardDescription>
+            <p className="text-sm text-muted-foreground mt-2">
+              {t("fineTuned.description")}
+            </p>
           </CardHeader>
-          <CardContent className="flex-1">
+          <CardContent className="flex-1 flex flex-col">
             <ul className="list-disc list-inside space-y-2 mb-4">
               <li>{t("fineTuned.features.1")}</li>
               <li>{t("fineTuned.features.2")}</li>
               <li>{t("fineTuned.features.3")}</li>
             </ul>
-            <Link href="/chat-box/fine-tuned" className="w-full">
-              <Button className="w-full">
-                {t("tryNow")}
-              </Button>
-            </Link>
+            <div className="mt-auto">
+              <Link href="/chat-box/fine-tuned" className="w-full">
+                <Button className="w-full">
+                  {t("tryNow")}
+                </Button>
+              </Link>
+            </div>
           </CardContent>
         </Card>
 
         {/* General API Card */}
-        <Card className="flex flex-col">
+        <Card className="flex flex-col h-full">
           <CardHeader>
             <CardTitle>{t("generalApi.title")}</CardTitle>
-            <CardDescription>{t("generalApi.description")}</CardDescription>
+            <CardDescription className="text-lg font-semibold text-primary">
+              {t("generalApi.subtitle")}
+            </CardDescription>
+            <p className="text-sm text-muted-foreground mt-2">
+              {t("generalApi.description")}
+            </p>
           </CardHeader>
-          <CardContent className="flex-1">
+          <CardContent className="flex-1 flex flex-col">
             <ul className="list-disc list-inside space-y-2 mb-4">
               <li>{t("generalApi.features.1")}</li>
               <li>{t("generalApi.features.2")}</li>
               <li>{t("generalApi.features.3")}</li>
             </ul>
-            <Link href="/chat-box/general-api" className="w-full">
-              <Button className="w-full">
-                {t("tryNow")}
-              </Button>
-            </Link>
+            <div className="mt-auto">
+              <Link href="/chat-box/general-api" className="w-full">
+                <Button className="w-full">
+                  {t("tryNow")}
+                </Button>
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </div>

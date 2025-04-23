@@ -1,0 +1,18 @@
+.cardGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (orientation: landscape) {
+  .cardGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* For very narrow screens in landscape mode, fallback to single column */
+@media (orientation: landscape) and (max-height: 500px) {
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+} 

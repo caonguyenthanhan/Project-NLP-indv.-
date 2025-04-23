@@ -1,0 +1,53 @@
+.tabsList {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  width: 100%;
+  margin-bottom: 2rem;
+  position: relative;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.tabsList::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: hsl(var(--border));
+}
+
+@media (orientation: portrait) {
+  .tabsList {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    padding: 0 0.5rem 1px;
+    border-bottom: none;
+    background: linear-gradient(to right, hsl(var(--border)) 0%, hsl(var(--border)) 100%) bottom/100% 1px no-repeat;
+  }
+
+  .tabsList::after {
+    bottom: -1px;
+  }
+
+  .tabsList :global(.text-xs) {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    white-space: normal;
+    height: auto;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* For very small screens in portrait mode */
+@media (orientation: portrait) and (max-width: 360px) {
+  .tabsList {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, auto);
+    margin-bottom: 4rem;
+    padding: 0 0.75rem 1px;
+  }
+} 

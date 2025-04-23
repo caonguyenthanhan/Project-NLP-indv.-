@@ -9,6 +9,7 @@ import TextRepresentation from "@/components/text-representation"
 import DataAugmentation from "@/components/data-augmentation"
 import TextClassification from "@/components/text-classification"
 import { WorkflowProvider, useWorkflow } from "@/context/workflow-context"
+import styles from "./styles.module.css"
 
 function ClientPageContent() {
   const t = useTranslations()
@@ -46,8 +47,8 @@ function ClientPageContent() {
     <>
       <StepIndicator currentStep={currentStep} steps={steps} />
 
-      <Tabs value={getTabValue()} className="w-full" onValueChange={handleTabChange}>
-        <TabsList className="grid w-full grid-cols-6">
+      <Tabs value={getTabValue()} className="w-full mt-6" onValueChange={handleTabChange}>
+        <TabsList className={styles.tabsList}>
           <TabsTrigger value="collection" className="text-xs md:text-sm">
             1. {nav("dataCollection")}
           </TabsTrigger>
@@ -68,29 +69,31 @@ function ClientPageContent() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="collection">
-          <DataCollection />
-        </TabsContent>
+        <div className="mt-6">
+          <TabsContent value="collection">
+            <DataCollection />
+          </TabsContent>
 
-        <TabsContent value="augmentation">
-          <DataAugmentation />
-        </TabsContent>
+          <TabsContent value="augmentation">
+            <DataAugmentation />
+          </TabsContent>
 
-        <TabsContent value="cleaning">
-          <DataCleaning />
-        </TabsContent>
+          <TabsContent value="cleaning">
+            <DataCleaning />
+          </TabsContent>
 
-        <TabsContent value="preprocessing">
-          <DataPreprocessing />
-        </TabsContent>
+          <TabsContent value="preprocessing">
+            <DataPreprocessing />
+          </TabsContent>
 
-        <TabsContent value="representation">
-          <TextRepresentation />
-        </TabsContent>
+          <TabsContent value="representation">
+            <TextRepresentation />
+          </TabsContent>
 
-        <TabsContent value="classification">
-          <TextClassification />
-        </TabsContent>
+          <TabsContent value="classification">
+            <TextClassification />
+          </TabsContent>
+        </div>
       </Tabs>
     </>
   )

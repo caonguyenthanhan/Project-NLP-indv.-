@@ -384,7 +384,7 @@ export default function ContextAPIChatBox() {
           )}
           {isLoading && (
             <div className="text-center text-gray-500 dark:text-gray-400">
-              <div className="animate-pulse">{t("messages.loading")}</div>
+              <div className="animate-pulse">{t("thinking")}</div>
             </div>
           )}
         </div>

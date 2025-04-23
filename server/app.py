@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 import ssl
 from typing import List, Dict, Any, Optional
 import torch
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline, AutoModelForQuestionAnswering
 from sentence_transformers import SentenceTransformer
 from pydantic import BaseModel
 import json
@@ -36,6 +36,11 @@ from sklearn.svm import LinearSVC
 import joblib
 from pathlib import Path
 import asyncio
+import pandas as pd
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -45,7 +50,9 @@ logger = logging.getLogger(__name__)
 BASE_DIR = Path(__file__).parent
 MODEL_SCRIPT_NAME = "project_nlp_model.py"
 SCRIPT_TIMEOUT = 600  # 10 phút
-MODELS_DIR = BASE_DIR / "server" / "models"
+MODELS_DIR = BASE_DIR / "models"
+FINE_TUNED_MODEL_DIR = BASE_DIR / "phobert-finetuned-viquad2"
+KNOWLEDGE_BASE_PATH = BASE_DIR / "knowledge_base.csv"
 
 # Ensure models directory exists
 if not os.path.exists(MODELS_DIR):
@@ -916,6 +923,204 @@ async def classify_text(request: Request):
         logger.error(f"Error in classify_text: {str(e)}")
         logger.error(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))
+
+# Initialize QA pipeline and knowledge base
+qa_pipeline = None
+knowledge_base_df = None
+
+def load_qa_model_and_data():
+    """Load the QA model and knowledge base data"""
+    global qa_pipeline, knowledge_base_df
+    
+    try:
+        # Load QA model
+        if os.path.exists(FINE_TUNED_MODEL_DIR):
+            qa_pipeline = pipeline(
+                "question-answering",
+                model=str(FINE_TUNED_MODEL_DIR),
+                tokenizer=str(FINE_TUNED_MODEL_DIR)
+            )
+            logger.info("QA model loaded successfully")
+        else:
+            logger.error(f"QA model directory not found at {FINE_TUNED_MODEL_DIR}")
+            
+        # Load knowledge base
+        if os.path.exists(KNOWLEDGE_BASE_PATH):
+            knowledge_base_df = pd.read_csv(KNOWLEDGE_BASE_PATH)
+            logger.info("Knowledge base loaded successfully")
+        else:
+            logger.error(f"Knowledge base file not found at {KNOWLEDGE_BASE_PATH}")
+            
+    except Exception as e:
+        logger.error(f"Error loading QA model or knowledge base: {str(e)}")
+        raise
+
+def classify_question(question: str) -> str:
+    """Classify a question into FAQ, SP, or EVEN categories"""
+    question = question.lower()
+    
+    # Keywords for SP category
+    sp_keywords = ["ngành", "môn học", "học phần", "học phí", "tín chỉ", "chuyên ngành", "chương trình đào tạo"]
+    if any(keyword in question for keyword in sp_keywords):
+        return "SP"
+        
+    # Keywords for EVEN category
+    even_keywords = ["sự kiện", "lịch thi", "lịch nghỉ", "lịch học", "hạn chót", "khi nào", "bao giờ", "ngày mấy"]
+    if any(keyword in question for keyword in even_keywords):
+        return "EVEN"
+        
+    # Default to FAQ
+    return "FAQ"
+
+def get_context_from_kb(category: str, df: pd.DataFrame) -> str:
+    """Get context from knowledge base based on category"""
+    if df is None or category not in df['Category'].unique():
+        return ""
+        
+    # Filter by category and get answers
+    filtered_df = df[df['Category'] == category]
+    if filtered_df.empty:
+        return ""
+        
+    # Get up to 5 answers to form context
+    answers = filtered_df['Answer'].head(5).tolist()
+    return " ".join(answers)
+
+class FineTunedQARequest(BaseModel):
+    message: str
+    sessionId: str
+
+@app.post("/api/fine-tuned-qa")
+async def fine_tuned_qa_endpoint(request: FineTunedQARequest):
+    """Endpoint for fine-tuned QA with knowledge base"""
+    try:
+        # Check if model and knowledge base are loaded
+        if qa_pipeline is None or knowledge_base_df is None:
+            load_qa_model_and_data()
+            if qa_pipeline is None or knowledge_base_df is None:
+                raise HTTPException(
+                    status_code=500,
+                    detail="QA model or knowledge base not available"
+                )
+        
+        # Get question and classify it
+        question = request.message
+        category = classify_question(question)
+        
+        # Get context from knowledge base
+        context = get_context_from_kb(category, knowledge_base_df)
+        if not context:
+            return {
+                "response": "Xin lỗi, tôi không tìm thấy thông tin phù hợp để trả lời câu hỏi của bạn."
+            }
+        
+        # Get answer from QA model
+        result = qa_pipeline(
+            question=question,
+            context=context,
+            max_answer_len=100
+        )
+        
+        # Save chat history
+        await save_chat_history(request.sessionId, "user", question)
+        await save_chat_history(request.sessionId, "assistant", result['answer'])
+        
+        return {
+            "response": result['answer'],
+            "confidence": result['score'],
+            "category": category
+        }
+        
+    except Exception as e:
+        logger.error(f"Error in fine-tuned QA: {str(e)}")
+        logger.error(traceback.format_exc())
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error processing question: {str(e)}"
+        )
+
+class GeneralChatRequest(BaseModel):
+    message: str
+    sessionId: str
+
+@app.post("/api/chat/general")
+async def general_chat_endpoint(request: GeneralChatRequest):
+    try:
+        # Lấy message và sessionId từ request
+        message = request.message
+        session_id = request.sessionId
+
+        # Cấu hình API endpoint và headers
+        api_url = "https://api.aimlapi.com/v1/chat/completions"
+        
+        # Đọc API key từ environment variable hoặc sử dụng giá trị mặc định
+        api_key = os.getenv("AIMLAPI_KEY", "80cb94678b314067a4d33830c616aa62")
+        
+        logger.info(f"Using API key: {api_key[:8]}...")  # Log only first 8 characters for security
+
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+
+        # Chuẩn bị payload
+        payload = {
+            "model": "gpt-3.5-turbo",
+            "messages": [{"role": "user", "content": message}],
+            "temperature": 0.7,
+            "max_tokens": 1000
+        }
+
+        logger.info(f"Sending request to AIMLAPI with payload: {payload}")
+
+        # Gửi request tới AIML API
+        response = requests.post(api_url, headers=headers, json=payload)
+        
+        # Log response để debug
+        if not response.ok:
+            logger.error(f"AIMLAPI Error Response: Status {response.status_code}, {response.text}")
+            raise HTTPException(
+                status_code=response.status_code,
+                detail=f"AIMLAPI request failed: {response.text}"
+            )
+
+        result = response.json()
+        logger.info(f"AIMLAPI Response: {result}")
+        
+        ai_response = result["choices"][0]["message"]["content"]
+
+        # Lưu chat history vào CSV
+        now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        csv_line = f'"{message.replace("`", "``")}","{ai_response.replace("`", "``")}","{now}"\n\n'
+        
+        # Đảm bảo thư mục data tồn tại
+        data_dir = os.path.join(os.getcwd(), "data")
+        if not os.path.exists(data_dir):
+            os.makedirs(data_dir)
+            
+        # Ghi vào file CSV
+        csv_path = os.path.join(data_dir, "chat_history.csv")
+        with open(csv_path, "a", encoding="utf-8") as f:
+            f.write(csv_line)
+            
+        logger.info(f"Chat history saved to {csv_path}")
+
+        # Trả về response
+        return {
+            "response": ai_response,
+            "confidence": 1.0,
+            "category": "general"
+        }
+
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        logger.error(f"Error in chat endpoint: {str(e)}")
+        logger.error(traceback.format_exc())
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Failed to process your request: {str(e)}"
+        )
 
 if __name__ == "__main__":
     import uvicorn

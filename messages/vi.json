@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "Bộ công cụ NLP",
-    "description": "Bộ công cụ toàn diện cho Xử lý Ngôn ngữ Tự nhiên",
+    "description": "Bộ công cụ toàn diện cho xử lý ngôn ngữ tự nhiên",
     "footer": "© {year} Khóa học NLP - Đã đăng ký bản quyền"
   },
   "Header": {
@@ -34,12 +34,17 @@
     "skip": "Bỏ qua",
     "loading": "Đang tải...",
     "error": "Đã xảy ra lỗi",
-    "success": "Thành công",
+    "success": "Thành công!",
     "changeLanguage": "Thay đổi ngôn ngữ",
     "switchingToPreTranslated": "Đang chuyển sang {language}",
     "switchingLanguage": "Đang chuyển từ {from} sang {to}",
     "translationComplete": "Đã hoàn thành dịch từ {from} sang {to}",
-    "languageSwitchError": "Lỗi khi chuyển đổi ngôn ngữ"
+    "languageSwitchError": "Lỗi khi chuyển đổi ngôn ngữ",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "create": "Tạo mới",
+    "submit": "Gửi",
+    "noData": "Không có dữ liệu"
   },
   "workflow": {
     "currentDataset": "Tập dữ liệu hiện tại",
@@ -195,29 +200,14 @@
   },
   "textClassification": {
     "title": "Phân loại văn bản",
-    "description": "Phân loại văn bản vào các nhóm khác nhau",
-    "classifyText": "Phân loại văn bản",
-    "classifyDescription": "Chọn nhiệm vụ và mô hình để phân loại văn bản",
-    "selectTask": "Chọn nhiệm vụ",
+    "description": "Phân loại văn bản thành các danh mục khác nhau",
+    "selectTask": "Chọn tác vụ",
     "selectModel": "Chọn mô hình",
-    "classify": "Phân loại",
-    "processing": "Đang phân loại...",
+    "classifyText": "Phân loại văn bản",
+    "classifyDescription": "Nhập văn bản cần phân loại",
     "comparing": "Đang so sánh...",
-    "success": "Phân loại thành công!",
-    "error": "Lỗi khi phân loại",
-    "noData": "Không có dữ liệu để phân loại",
-    "datasetSize": "Kích thước bộ dữ liệu: {size} mẫu",
-    "showComparisonChart": "Hiển thị biểu đồ so sánh",
-    "hideComparisonChart": "Ẩn biểu đồ so sánh",
-    "retrain": "Huấn luyện lại",
     "retraining": "Đang huấn luyện lại...",
-    "predictedUsing": "Dự đoán bằng",
-    "predictedClass": "Lớp dự đoán",
-    "inputText": "Văn bản đầu vào",
-    "predictions": "Kết quả dự đoán",
-    "tryDifferentTask": "Thử với nhiệm vụ khác",
-    "rawPrediction": "Kết quả dự đoán gốc",
-    "tryAgain": "Thử lại"
+    "hideComparisonChart": "Ẩn biểu đồ so sánh"
   },
   "datasetSelector": {
     "selectDataset": "Chọn bộ dữ liệu",
@@ -226,7 +216,12 @@
   "navigation": {
     "textClassification": "Phân loại văn bản",
     "nlpFiltering": "Lọc văn bản",
-    "chatBox": "Hộp thoại"
+    "chatBox": "Hộp thoại",
+    "home": "Trang chủ",
+    "about": "Giới thiệu",
+    "settings": "Cài đặt",
+    "profile": "Hồ sơ",
+    "logout": "Đăng xuất"
   },
   "theme": {
     "title": "Chủ đề",
@@ -284,52 +279,29 @@
     }
   },
   "chatBox": {
-    "title": "Hệ Thống Chatbot Hỗ Trợ Sinh Viên",
-    "description": "Khám phá các tính năng chatbot khác nhau được thiết kế để hỗ trợ sinh viên",
-    "welcomeMessage": "Chào mừng đến với cuộc trò chuyện mới!",
-    "startConversation": "Bắt đầu cuộc trò chuyện",
-    "inputPlaceholder": "Nhập tin nhắn của bạn...",
-    "sendButton": "Gửi",
-    "fetchError": "Không thể kết nối với trợ lý AI",
-    "errorMessage": "Xin lỗi, đã có lỗi xảy ra khi xử lý yêu cầu của bạn.",
-    "newChat": "Tạo cuộc trò chuyện mới",
+    "title": "Hộp Thoại",
+    "description": "Giao diện trò chuyện tương tác cho xử lý ngôn ngữ tự nhiên",
+    "sendMessage": "Gửi tin nhắn",
+    "enterMessage": "Nhập tin nhắn...",
+    "clearChat": "Xóa cuộc trò chuyện",
+    "copyResponse": "Sao chép phản hồi",
+    "chatHistory": "Lịch sử trò chuyện",
+    "newChat": "Cuộc trò chuyện mới",
     "deleteChat": "Xóa cuộc trò chuyện",
-    "save": "Lưu",
-    "cancel": "Hủy",
     "enterNewName": "Nhập tên mới",
+    "welcomeMessage": "Xin chào! Tôi có thể giúp gì cho bạn?",
+    "errorMessage": "Xin lỗi, đã xảy ra lỗi. Vui lòng thử lại.",
+    "thinking": "Đang suy nghĩ...",
+    "startConversation": "Bắt đầu cuộc trò chuyện của bạn",
+    "inputPlaceholder": "Nhập câu hỏi của bạn...",
+    "confidence": "Độ tin cậy",
+    "category": "Danh mục",
     "messages": {
       "user": "Bạn",
       "assistant": "Trợ lý",
       "system": "Hệ thống",
-      "loading": "Đang suy nghĩ..."
-    },
-    "tryNow": "Thử ngay",
-    "contextApi": {
-      "title": "Context API",
-      "description": "Chatbot sử dụng API có ngữ cảnh để hiểu và trả lời các câu hỏi liên quan đến trường học",
-      "features": {
-        "1": "Hiểu ngữ cảnh từ các câu hỏi trước",
-        "2": "Trả lời chính xác các câu hỏi về trường học",
-        "3": "Duy trì cuộc trò chuyện tự nhiên"
-      }
-    },
-    "fineTuned": {
-      "title": "Fine-tuned",
-      "description": "Chatbot được huấn luyện đặc biệt cho các tình huống hỗ trợ sinh viên",
-      "features": {
-        "1": "Kiến thức chuyên sâu về trường học",
-        "2": "Xử lý các tình huống phức tạp",
-        "3": "Cung cấp thông tin chi tiết và chính xác"
-      }
-    },
-    "generalApi": {
-      "title": "General API",
-      "description": "Chatbot đa năng có thể trả lời nhiều loại câu hỏi khác nhau",
-      "features": {
-        "1": "Trả lời các câu hỏi chung",
-        "2": "Hỗ trợ nhiều chủ đề",
-        "3": "Tương tác linh hoạt"
-      }
+      "error": "Đã xảy ra lỗi",
+      "loading": "Đang xử lý..."
     }
   },
   "nlpFiltering": {
@@ -349,19 +321,19 @@
       "removePunctuation": "Xóa dấu câu",
       "removeNumbers": "Xóa số",
       "removeExtraSpaces": "Xóa khoảng trắng thừa",
-      "removeSymbols": "Xóa ký tự đặc biệt",
-      "removeStopwords": "Xóa từ dừng",
+      "removeSymbols": "Xóa ký hiệu",
+      "removeStopwords": "Xóa stopwords",
       "lowercase": "Chuyển thành chữ thường",
       "stem": "Tách từ gốc",
-      "lemmatize": "Chuẩn hóa từ",
-      "expandContractions": "Mở rộng từ viết tắt",
+      "lemmatize": "Lemmatize từ",
+      "expandContractions": "Mở rộng viết tắt",
       "correctSpelling": "Sửa lỗi chính tả"
     },
     "results": {
       "title": "Kết quả lọc",
       "originalText": "Văn bản gốc",
       "processedText": "Văn bản đã xử lý",
-      "whatWasRemoved": "Đã xóa những gì",
+      "whatWasRemoved": "Những gì đã bị xóa",
       "downloadResults": "Tải kết quả"
     },
     "workflow": {

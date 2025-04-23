@@ -1,0 +1,26 @@
+link:
+github:
+https://github.com/caonguyenthanhan/Project-NLP-indv.-
+
+project_nlp_model.ipynb:
+https://colab.research.google.com/drive/1q3WmzoLTQc6dSEmsBGwODxTHCpF8wsih?usp=drive_open#scrollTo=mXTJ00yWzGRv
+
+PhoBERT_nlp.ipynb: sử dụng xlm-roberta-base vì PhoBERT không có Tải tokenizer đượ.
+https://colab.research.google.com/drive/1ICgTAplHjoAuU9P-waQ4DQ6M5kfj9xmh#scrollTo=JHyf-l7c2s-t
+
+data aggregation:
+https://colab.research.google.com/drive/1emzatN7znr_z8FITv9aAiy20_ulQz0zc#scrollTo=PkycASF9M0Fo
+
+api_ dịch tự động
+https://console.cloud.google.com/apis/credentials?project=translationapp-457311
+
+AI/ML API: 
+https://aimlapi.com/app/dashboard/
+
+General API api cho n8n
+https://console.cloud.google.com/apis/credentials?project=project-nlp-457421
+
+n8n_ api: Context API
+https://caonguyenthanhan.app.n8n.cloud/workflow/EB90oBFkQtTN6TnW
+test: 
+https://caonguyenthanhan.app.n8n.cloud/webhook-test/chatbot-response?message=toi+can+thong+tin+ve+truong&sessionId=USER123_SESSION_ABC

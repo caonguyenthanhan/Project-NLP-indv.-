@@ -132,3 +132,28 @@ server/models/*.h5
 server/models/*.model
 server/models/*.bin
 server/data/training/*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+
+# Data
+data/
+*.csv
+*.json
+
+# Logs
+*.log
+
+# Dependencies
+node_modules/

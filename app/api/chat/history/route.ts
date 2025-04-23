@@ -27,7 +27,11 @@ function readChatHistory(): ChatMessage[] {
     const fileContent = fs.readFileSync(CHAT_HISTORY_FILE, 'utf-8');
     const records = parse(fileContent, {
       columns: true,
-      skip_empty_lines: true
+      skip_empty_lines: true,
+      quote: '"',
+      escape: '\\',
+      relax_column_count: true,
+      trim: true
     });
 
     return records as ChatMessage[];
@@ -41,7 +45,11 @@ function writeChatHistory(messages: ChatMessage[]) {
   try {
     const csvContent = stringify(messages, {
       header: true,
-      columns: ['chat_name', 'role', 'content', 'timestamp']
+      columns: ['chat_name', 'role', 'content', 'timestamp'],
+      quote: true,
+      escape: '\\',
+      quoted: true,
+      quoted_empty: true
     });
     fs.writeFileSync(CHAT_HISTORY_FILE, csvContent);
   } catch (error) {

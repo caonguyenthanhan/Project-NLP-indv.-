@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "NLP Toolkit",
-    "description": "A comprehensive toolkit for Natural Language Processing",
+    "description": "A comprehensive toolkit for natural language processing tasks",
     "footer": "© {year} NLP Course - All Rights Reserved"
   },
   "Header": {
@@ -33,13 +33,18 @@
     "saveAndContinue": "Save & Continue",
     "skip": "Skip",
     "loading": "Loading...",
-    "error": "An error occurred",
-    "success": "Success",
+    "error": "Error occurred",
+    "success": "Success!",
     "changeLanguage": "Change Language",
     "switchingToPreTranslated": "Switching to {language}",
     "switchingLanguage": "Switching from {from} to {to}",
     "translationComplete": "Translation completed from {from} to {to}",
-    "languageSwitchError": "Error switching language"
+    "languageSwitchError": "Error switching language",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "submit": "Submit",
+    "noData": "No data available"
   },
   "workflow": {
     "currentDataset": "Current Dataset",
@@ -245,21 +250,19 @@
   "textClassification": {
     "title": "Text Classification",
     "description": "Classify text into different categories",
-    "classifyText": "Classify text",
-    "classifyDescription": "Select task and model for text classification",
-    "selectTask": "Select task",
-    "selectModel": "Select model",
-    "classify": "Classify",
-    "processing": "Classifying...",
+    "selectTask": "Select Task",
+    "selectModel": "Select Model",
+    "classifyText": "Classify Text",
+    "classifyDescription": "Enter text to classify",
     "comparing": "Comparing...",
+    "retraining": "Retraining...",
+    "hideComparisonChart": "Hide Comparison Chart",
     "success": "Classification successful!",
     "error": "Error during classification",
     "noData": "No data to classify",
     "datasetSize": "Dataset size: {size} samples",
     "showComparisonChart": "Show comparison chart",
-    "hideComparisonChart": "Hide comparison chart",
     "retrain": "Retrain",
-    "retraining": "Retraining...",
     "predictedUsing": "Predicted using",
     "predictedClass": "Predicted class",
     "inputText": "Input text",
@@ -275,7 +278,12 @@
   "navigation": {
     "textClassification": "Text Classification",
     "nlpFiltering": "NLP Filtering",
-    "chatBox": "Chat Box"
+    "chatBox": "Chat Box",
+    "home": "Home",
+    "about": "About",
+    "settings": "Settings",
+    "profile": "Profile",
+    "logout": "Logout"
   },
   "theme": {
     "title": "Theme",
@@ -333,52 +341,29 @@
     }
   },
   "chatBox": {
-    "title": "Student Support Chatbot System",
-    "description": "Explore different chatbot features designed to support students",
-    "welcomeMessage": "Welcome to a new conversation!",
-    "startConversation": "Start conversation",
-    "inputPlaceholder": "Type your message...",
-    "sendButton": "Send",
-    "fetchError": "Unable to connect to AI assistant",
-    "errorMessage": "Sorry, an error occurred while processing your request.",
-    "newChat": "Create new chat",
-    "deleteChat": "Delete chat",
-    "save": "Save",
-    "cancel": "Cancel",
+    "title": "Chat Box",
+    "description": "Interactive chat interface for natural language processing",
+    "sendMessage": "Send Message",
+    "enterMessage": "Enter your message...",
+    "clearChat": "Clear Chat",
+    "copyResponse": "Copy Response",
+    "chatHistory": "Chat History",
+    "newChat": "New Chat",
+    "deleteChat": "Delete Chat",
     "enterNewName": "Enter new name",
+    "welcomeMessage": "Hello! How can I help you today?",
+    "errorMessage": "Sorry, an error occurred. Please try again.",
+    "thinking": "Thinking...",
+    "startConversation": "Start your conversation",
+    "inputPlaceholder": "Type your question...",
+    "confidence": "Confidence",
+    "category": "Category",
     "messages": {
       "user": "You",
       "assistant": "Assistant",
       "system": "System",
-      "loading": "Thinking..."
-    },
-    "tryNow": "Try Now",
-    "contextApi": {
-      "title": "Context API",
-      "description": "Chatbot using contextual API to understand and answer school-related questions",
-      "features": {
-        "1": "Understand context from previous questions",
-        "2": "Accurately answer school-related questions",
-        "3": "Maintain natural conversation flow"
-      }
-    },
-    "fineTuned": {
-      "title": "Fine-tuned",
-      "description": "Chatbot specially trained for student support scenarios",
-      "features": {
-        "1": "In-depth knowledge about school matters",
-        "2": "Handle complex situations",
-        "3": "Provide detailed and accurate information"
-      }
-    },
-    "generalApi": {
-      "title": "General API",
-      "description": "Versatile chatbot that can answer various types of questions",
-      "features": {
-        "1": "Answer general questions",
-        "2": "Support multiple topics",
-        "3": "Flexible interaction"
-      }
+      "error": "Error occurred",
+      "loading": "Loading..."
     }
   },
   "nlpFiltering": {
