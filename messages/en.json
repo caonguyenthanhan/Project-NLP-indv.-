@@ -8,7 +8,7 @@
     "title": "NLP Toolkit",
     "navigation": {
       "textClassification": "Text Classification",
-      "nlpFiltering": "NLP Filtering",
+      "RecSys": "Recommendation System",
       "chatBox": "Chat Box"
     }
   },
@@ -277,7 +277,7 @@
   },
   "navigation": {
     "textClassification": "Text Classification",
-    "nlpFiltering": "NLP Filtering",
+    "RecSys": "Recommendation System",
     "chatBox": "Chat Box",
     "home": "Home",
     "about": "About",
@@ -311,9 +311,9 @@
         "title": "Text Classification",
         "description": "Classify text into predefined categories using machine learning"
       },
-      "nlpFiltering": {
-        "title": "NLP Filtering",
-        "description": "Filter and process text using natural language processing techniques"
+      "RecSys": {
+        "title": "Recommendation System",
+        "description": "Intelligent recommendation system based on natural language processing"
       },
       "chatBox": {
         "title": "Chat Box",
@@ -343,6 +343,16 @@
   "chatBox": {
     "title": "Chat Box",
     "description": "Interactive chat interface for natural language processing",
+    "domainBasedApi": {
+      "title": "Domain Based API",
+      "subtitle": "Domain-Specific Chat",
+      "description": "Chatbot specialized for specific domains with predefined knowledge",
+      "features": {
+        "1": "Domain-specific responses",
+        "2": "Predefined knowledge base",
+        "3": "Limited to specific topics"
+      }
+    },
     "sendMessage": "Send Message",
     "enterMessage": "Enter your message...",
     "clearChat": "Clear Chat",
@@ -366,19 +376,19 @@
       "loading": "Loading..."
     }
   },
-  "nlpFiltering": {
-    "title": "NLP Filtering",
-    "description": "Filter and process text using natural language processing techniques",
-    "filterText": "Filter Text",
-    "filterDescription": "Enter text to filter",
-    "filterOptions": "Filter Options",
-    "applyFilters": "Apply Filters",
-    "inputText": "Input Text",
-    "filteredText": "Filtered Text",
+  "RecSys": {
+    "title": "Recommendation System",
+    "description": "Intelligent recommendation system based on natural language processing",
+    "filterText": "Enter content",
+    "filterDescription": "Enter content to get recommendations",
+    "filterOptions": "Recommendation options",
+    "applyFilters": "Apply recommendations",
+    "inputText": "Input content",
+    "filteredText": "Recommendation results",
     "processing": "Processing...",
-    "success": "Filtering successful!",
-    "error": "Error during filtering",
-    "noData": "No text to filter",
+    "success": "Recommendation successful!",
+    "error": "Error during recommendation",
+    "noData": "No content to recommend",
     "filters": {
       "removePunctuation": "Remove Punctuation",
       "removeNumbers": "Remove Numbers",
@@ -392,17 +402,17 @@
       "correctSpelling": "Correct Spelling"
     },
     "results": {
-      "title": "Filtering Results",
-      "originalText": "Original Text",
-      "processedText": "Processed Text",
+      "title": "Recommendation Results",
+      "originalText": "Original content",
+      "processedText": "Processed content",
       "whatWasRemoved": "What was removed",
       "downloadResults": "Download Results"
     },
     "workflow": {
-      "currentText": "Current Text",
+      "currentText": "Current content",
       "textInfo": "Processing: {length} characters",
-      "noText": "No text selected",
-      "selectText": "Select text to filter"
+      "noText": "No content selected",
+      "selectText": "Select content to recommend"
     }
   }
 }

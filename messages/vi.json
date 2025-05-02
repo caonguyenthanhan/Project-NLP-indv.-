@@ -8,7 +8,7 @@
     "title": "Bộ công cụ NLP",
     "navigation": {
       "textClassification": "Phân loại văn bản",
-      "nlpFiltering": "Lọc NLP",
+      "RecSys": "Hệ thống gợi ý",
       "chatBox": "Hộp thoại"
     }
   },
@@ -215,7 +215,7 @@
   },
   "navigation": {
     "textClassification": "Phân loại văn bản",
-    "nlpFiltering": "Lọc văn bản",
+    "RecSys": "Hệ thống gợi ý",
     "chatBox": "Hộp thoại",
     "home": "Trang chủ",
     "about": "Giới thiệu",
@@ -249,9 +249,9 @@
         "title": "Phân loại Văn bản",
         "description": "Phân loại văn bản thành các danh mục định sẵn bằng mô hình học máy tiên tiến"
       },
-      "nlpFiltering": {
-        "title": "Lọc Văn bản",
-        "description": "Lọc và xử lý văn bản bằng các kỹ thuật xử lý ngôn ngữ tự nhiên"
+      "RecSys": {
+        "title": "Hệ thống Gợi ý",
+        "description": "Hệ thống gợi ý thông minh dựa trên sở thích và hành vi người dùng"
       },
       "chatBox": {
         "title": "Hộp Thoại",
@@ -279,10 +279,12 @@
     }
   },
   "chatBox": {
-    "title": "Hộp Thoại",
-    "description": "Giao diện trò chuyện tương tác cho xử lý ngôn ngữ tự nhiên",
+    "title": "Trợ lý AI",
+    "description": "Trợ lý thông minh hỗ trợ tương tác và trả lời câu hỏi",
     "sendMessage": "Gửi tin nhắn",
     "enterMessage": "Nhập tin nhắn...",
+    "typeMessage": "Nhập tin nhắn của bạn...",
+    "send": "Gửi",
     "clearChat": "Xóa cuộc trò chuyện",
     "copyResponse": "Sao chép phản hồi",
     "chatHistory": "Lịch sử trò chuyện",
@@ -296,51 +298,81 @@
     "inputPlaceholder": "Nhập câu hỏi của bạn...",
     "confidence": "Độ tin cậy",
     "category": "Danh mục",
+    "tryNow": "Thử ngay",
+    "save": "Lưu",
+    "cancel": "Hủy",
     "messages": {
       "user": "Bạn",
       "assistant": "Trợ lý",
       "system": "Hệ thống",
       "error": "Đã xảy ra lỗi",
       "loading": "Đang xử lý..."
+    },
+    "navigation": {
+      "domain-based-api": "Chuyên ngành",
+      "fine-tuned": "Tùy chỉnh",
+      "general-api": "Đa năng"
+    },
+    "domainBasedApi": {
+      "title": "Trợ lý Chuyên Ngành",
+      "subtitle": "Hỗ trợ Chuyên Sâu",
+      "description": "Trợ lý thông minh với kiến thức chuyên sâu trong từng lĩnh vực",
+      "features": {
+        "1": "Tư vấn chuyên môn theo ngành",
+        "2": "Kiến thức chuyên sâu theo lĩnh vực",
+        "3": "Tập trung vào chuyên môn cụ thể"
+      }
+    },
+    "fineTuned": {
+      "title": "Trợ lý Tùy Chỉnh",
+      "subtitle": "Hỗ trợ Cá Nhân Hóa",
+      "description": "Trợ lý thông minh được huấn luyện theo nhu cầu riêng của bạn",
+      "features": {
+        "1": "Hiểu rõ nhu cầu cá nhân",
+        "2": "Tùy chỉnh theo yêu cầu",
+        "3": "Phản hồi phù hợp với từng người dùng"
+      }
+    },
+    "generalApi": {
+      "title": "Trợ lý Đa Năng",
+      "subtitle": "Hỗ trợ Toàn Diện",
+      "description": "Trợ lý thông minh có thể hỗ trợ đa dạng chủ đề",
+      "features": {
+        "1": "Tư vấn nhiều lĩnh vực",
+        "2": "Kiến thức tổng hợp",
+        "3": "Linh hoạt theo chủ đề"
+      }
+    },
+    "chatManagement": {
+      "editName": "Đổi tên",
+      "saveName": "Lưu tên",
+      "cancelEdit": "Hủy đổi tên",
+      "selectChat": "Chọn cuộc trò chuyện",
+      "noChats": "Chưa có cuộc trò chuyện nào",
+      "createFirstChat": "Tạo cuộc trò chuyện đầu tiên",
+      "confirmDelete": "Bạn có chắc muốn xóa cuộc trò chuyện này?",
+      "defaultChatName": "Cuộc trò chuyện mới"
     }
   },
-  "nlpFiltering": {
-    "title": "Lọc NLP",
-    "description": "Lọc và xử lý văn bản bằng kỹ thuật xử lý ngôn ngữ tự nhiên",
-    "filterText": "Lọc văn bản",
-    "filterDescription": "Nhập văn bản cần lọc",
-    "filterOptions": "Tùy chọn lọc",
-    "applyFilters": "Áp dụng bộ lọc",
-    "inputText": "Văn bản đầu vào",
-    "filteredText": "Văn bản đã lọc",
-    "processing": "Đang xử lý...",
-    "success": "Lọc thành công!",
-    "error": "Lỗi trong quá trình lọc",
-    "noData": "Không có văn bản để lọc",
-    "filters": {
-      "removePunctuation": "Xóa dấu câu",
-      "removeNumbers": "Xóa số",
-      "removeExtraSpaces": "Xóa khoảng trắng thừa",
-      "removeSymbols": "Xóa ký hiệu",
-      "removeStopwords": "Xóa stopwords",
-      "lowercase": "Chuyển thành chữ thường",
-      "stem": "Tách từ gốc",
-      "lemmatize": "Lemmatize từ",
-      "expandContractions": "Mở rộng viết tắt",
-      "correctSpelling": "Sửa lỗi chính tả"
-    },
+  "RecSys": {
+    "title": "Hệ thống gợi ý",
+    "description": "Hệ thống gợi ý thông minh dựa trên sở thích và hành vi người dùng",
+    "inputText": "Thông tin người dùng",
+    "processing": "Đang phân tích...",
+    "success": "Đã tạo gợi ý!",
+    "error": "Lỗi trong quá trình tạo gợi ý",
+    "noData": "Chưa có thông tin người dùng",
     "results": {
-      "title": "Kết quả lọc",
-      "originalText": "Văn bản gốc",
-      "processedText": "Văn bản đã xử lý",
-      "whatWasRemoved": "Những gì đã bị xóa",
-      "downloadResults": "Tải kết quả"
+      "title": "Danh sách gợi ý",
+      "originalText": "Thông tin ban đầu",
+      "processedText": "Kết quả phân tích",
+      "downloadResults": "Tải danh sách gợi ý"
     },
     "workflow": {
-      "currentText": "Văn bản hiện tại",
-      "textInfo": "Đang xử lý: {length} ký tự",
-      "noText": "Chưa chọn văn bản",
-      "selectText": "Chọn văn bản để lọc"
+      "currentText": "Thông tin hiện tại",
+      "textInfo": "Đang phân tích: {length} mục",
+      "noText": "Chưa có thông tin",
+      "selectText": "Chọn thông tin để nhận gợi ý"
     }
   }
 }

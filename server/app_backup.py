@@ -38,7 +38,6 @@ from pathlib import Path
 import asyncio
 import pandas as pd
 from dotenv import load_dotenv
-from openai import OpenAI
 
 # Load environment variables from .env file
 load_dotenv()
@@ -1047,56 +1046,40 @@ class DomainChatRequest(BaseModel):
 @app.post("/api/chat/domain")
 async def domain_chat_endpoint(request: DomainChatRequest):
     try:
-        # Lấy tin nhắn từ người dùng
-        user_message = request.message
+        # Load the domain-specific model and knowledge base
+        df = pd.read_csv(KNOWLEDGE_BASE_PATH)
         
-        # Chuẩn bị tham số cho yêu cầu GET
-        params = {
-            "message": user_message,
-            "sessionId": request.sessionId
+        # Classify the question to determine the domain
+        category = classify_question(request.message)
+        
+        # Get relevant context from knowledge base
+        context = get_context_from_kb(category, df)
+        
+        # Use the fine-tuned model for answering
+        model = AutoModelForQuestionAnswering.from_pretrained(FINE_TUNED_MODEL_DIR)
+        tokenizer = AutoTokenizer.from_pretrained(FINE_TUNED_MODEL_DIR)
+        
+        # Create QA pipeline
+        qa_pipeline = pipeline(
+            "question-answering",
+            model=model,
+            tokenizer=tokenizer
+        )
+        
+        # Get answer using the pipeline
+        result = qa_pipeline({
+            'question': request.message,
+            'context': context
+        })
+        
+        response = {
+            'response': result['answer'],
+            'confidence': float(result['score']),
+            'category': category
         }
-
-        logger.info(f"[*] Đang gửi yêu cầu tới: https://caonguyenthanhan.app.n8n.cloud/webhook/chatbot-response")
-        logger.info(f"[*] Tham số: {params}")
-
-        try:
-            # Thực hiện yêu cầu GET với timeout 30 giây
-            response = requests.get(
-                "https://caonguyenthanhan.app.n8n.cloud/webhook/chatbot-response",
-                params=params,
-                timeout=30
-            )
-
-            # In ra mã trạng thái HTTP
-            logger.info(f"\n[*] Mã trạng thái HTTP: {response.status_code}")
-
-            # Kiểm tra xem yêu cầu có thành công không (mã 200 OK)
-            if response.status_code == 200:
-                # Lưu tin nhắn vào lịch sử
-                await save_chat_history(request.sessionId, "user", user_message)
-                await save_chat_history(request.sessionId, "assistant", response.text)
-                
-                return {"message": response.text}
-            else:
-                # In ra lỗi nếu mã trạng thái không phải 200
-                error_msg = f"[!] Lỗi: Yêu cầu thất bại với mã trạng thái {response.status_code}"
-                logger.error(error_msg)
-                logger.error(f"[*] Nội dung phản hồi: {response.text}")
-                raise HTTPException(status_code=response.status_code, detail=error_msg)
-
-        except requests.exceptions.Timeout:
-            error_msg = "[!] Lỗi: Yêu cầu bị hết thời gian chờ (timeout)."
-            logger.error(error_msg)
-            raise HTTPException(status_code=408, detail=error_msg)
-        except requests.exceptions.RequestException as e:
-            error_msg = f"[!] Lỗi trong quá trình gửi yêu cầu: {e}"
-            logger.error(error_msg)
-            raise HTTPException(status_code=500, detail=error_msg)
-        except Exception as e:
-            error_msg = f"[!] Có lỗi không mong muốn xảy ra: {e}"
-            logger.error(error_msg)
-            raise HTTPException(status_code=500, detail=error_msg)
-            
+        
+        return JSONResponse(content=response)
+        
     except Exception as e:
         logger.error(f"Error in domain chat: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -1139,10 +1122,6 @@ async def fine_tuned_chat_endpoint(request: FineTunedRequest):
             'context': context
         })
         
-        # Save chat history
-        await save_chat_history(request.sessionId, "user", request.message)
-        await save_chat_history(request.sessionId, "assistant", result['answer'])
-        
         response = {
             'response': result['answer'],
             'confidence': float(result['score']),
@@ -1155,51 +1134,47 @@ async def fine_tuned_chat_endpoint(request: FineTunedRequest):
         logger.error(f"Error in fine-tuned chat: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# Initialize OpenAI client for aimlapi.com
-aiml_client = OpenAI(
-    base_url=os.getenv("AIMLAPI_BASE_URL", "https://api.aimlapi.com/v1"),
-    api_key=os.getenv("AIMLAPI_KEY", "726fbcd05d824ddab7bb770de05dc1d6")
-)
-
-class ChatMessage(BaseModel):
-    role: str
-    content: str
-
-class AimlChatRequest(BaseModel):
-    messages: List[ChatMessage]
-    chat_name: str
+class GeneralChatRequest(BaseModel):
+    message: str
+    sessionId: str
 
 @app.post("/api/chat/general")
-async def general_chat_endpoint(request: AimlChatRequest):
+async def general_chat_endpoint(request: GeneralChatRequest):
     try:
-        # Format messages for the API
-        formatted_messages = [{"role": msg.role, "content": msg.content} for msg in request.messages]
+        # Load GPT-2 model correctly
+        model_name = "gpt2"
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        model = AutoModelForCausalLM.from_pretrained(model_name)
         
-        # Add system message if not present
-        if not any(msg["role"] == "system" for msg in formatted_messages):
-            formatted_messages.insert(0, {
-                "role": "system",
-                "content": "You are a helpful AI assistant."
-            })
-
-        # Call aimlapi.com
-        response = aiml_client.chat.completions.create(
-            model=os.getenv("AIMLAPI_MODEL", "gpt-3.5-turbo"),
-            messages=formatted_messages,
-            temperature=0.7,
-            max_tokens=1000
+        # Create text generation pipeline
+        generator = pipeline(
+            "text-generation",
+            model=model,
+            tokenizer=tokenizer
         )
-
-        # Get the response content
-        ai_response = response.choices[0].message.content
-
-        # Save to chat history
-        await save_chat_history(request.chat_name, "assistant", ai_response)
         
-        return {"message": ai_response}
+        # Generate response
+        result = generator(
+            request.message,
+            max_length=100,
+            num_return_sequences=1,
+            pad_token_id=tokenizer.eos_token_id
+        )
+        
+        # Extract generated text and remove the input prompt
+        generated_text = result[0]['generated_text']
+        response_text = generated_text[len(request.message):].strip()
+        
+        response = {
+            'response': response_text if response_text else "I apologize, but I couldn't generate a meaningful response.",
+            'confidence': 0.8,  # Placeholder confidence
+            'category': 'general'  # Placeholder category
+        }
+        
+        return JSONResponse(content=response)
         
     except Exception as e:
-        logger.error(f"Error in AIML chat: {str(e)}")
+        logger.error(f"Error in general chat: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":

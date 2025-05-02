@@ -24,9 +24,9 @@ export default function HomePage() {
     },
     {
       icon: <Filter className="h-8 w-8" />,
-      title: t("features.nlpFiltering.title"),
-      description: t("features.nlpFiltering.description"),
-      href: "/nlp-filtering"
+      title: t("features.RecSys.title"),
+      description: t("features.RecSys.description"),
+      href: "/RecSys"
     },
     {
       icon: <MessageSquare className="h-8 w-8" />,

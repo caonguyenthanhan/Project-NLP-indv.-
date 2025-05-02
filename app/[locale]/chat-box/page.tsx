@@ -18,25 +18,25 @@ export default function ChatBoxPage() {
       </div>
 
       <div className={`grid grid-cols-1 gap-6 max-w-7xl mx-auto ${styles.cardGrid}`}>
-        {/* Context API Card */}
+        {/* Domain Based API Card */}
         <Card className="flex flex-col h-full">
           <CardHeader>
-            <CardTitle>{t("contextApi.title")}</CardTitle>
+            <CardTitle>{t("domainBasedApi.title")}</CardTitle>
             <CardDescription className="text-lg font-semibold text-primary">
-              {t("contextApi.subtitle")}
+              {t("domainBasedApi.subtitle")}
             </CardDescription>
             <p className="text-sm text-muted-foreground mt-2">
-              {t("contextApi.description")}
+              {t("domainBasedApi.description")}
             </p>
           </CardHeader>
           <CardContent className="flex-1 flex flex-col">
             <ul className="list-disc list-inside space-y-2 mb-4">
-              <li>{t("contextApi.features.1")}</li>
-              <li>{t("contextApi.features.2")}</li>
-              <li>{t("contextApi.features.3")}</li>
+              <li>{t("domainBasedApi.features.1")}</li>
+              <li>{t("domainBasedApi.features.2")}</li>
+              <li>{t("domainBasedApi.features.3")}</li>
             </ul>
             <div className="mt-auto">
-              <Link href="/chat-box/context-api" className="w-full">
+              <Link href="/chat-box/domain-based-api" className="w-full">
                 <Button className="w-full">
                   {t("tryNow")}
                 </Button>

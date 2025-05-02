@@ -156,145 +156,62 @@ export default function GeneralAPIChatBox() {
     e.preventDefault()
     if (!input.trim() || isLoading) return
 
-    if (!chatName || chatName === "Default Chat") {
-      try {
-        const timestamp = new Date().toLocaleString('vi-VN', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
-        const newChatName = `General API Chat ${timestamp}`;
+    try {
+      const userMessage: Message = { role: "user", content: input }
+      setMessages((prev: Message[]) => [...prev, userMessage] as Message[])
+      setInput("")
+      setIsLoading(true)
 
-        const welcomeMessage: Message = { role: "system", content: t("welcomeMessage") };
-        setMessages([welcomeMessage]);
+      const response = await fetch("http://localhost:8000/api/chat/general", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [...messages, userMessage],
+          chat_name: chatName
+        })
+      })
 
-        await fetch("http://localhost:3000/api/chat/history", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_name: newChatName,
-            role: "system",
-            content: t("welcomeMessage")
-          })
-        });
+      if (!response.ok) throw new Error("Failed to get response")
 
-        setChatName(newChatName);
-        await fetchAvailableChats();
-        
-        const userMessage: Message = { role: "user", content: input };
-        setMessages((prev: Message[]) => [...prev, userMessage] as Message[]);
-        setInput("");
-        setIsLoading(true);
-
-        const response = await fetch("http://localhost:8000/api/chat/general", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: input,
-            sessionId: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-          })
-        });
-
-        if (!response.ok) throw new Error("Failed to get response");
-
-        const data: APIResponse = await response.json();
-        const assistantMessage: Message = { 
-          role: "assistant", 
-          content: data.response 
-        };
-        setMessages((prev: Message[]) => [...prev, assistantMessage] as Message[]);
-
-        // Save messages to history
-        await fetch("http://localhost:3000/api/chat/history", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_name: newChatName,
-            role: "user",
-            content: input
-          })
-        });
-
-        await fetch("http://localhost:3000/api/chat/history", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_name: newChatName,
-            role: "assistant",
-            content: data.response
-          })
-        });
-
-      } catch (error) {
-        console.error("Error:", error);
-        const errorMessage: Message = { 
-          role: "assistant", 
-          content: t("errorMessage") 
-        };
-        setMessages(prev => [...prev, errorMessage]);
-      } finally {
-        setIsLoading(false);
+      const data = await response.json()
+      const assistantMessage: Message = { 
+        role: "assistant", 
+        content: data.message 
       }
-    } else {
-      try {
-        const userMessage: Message = { role: "user", content: input };
-        setMessages((prev: Message[]) => [...prev, userMessage] as Message[]);
-        setInput("");
-        setIsLoading(true);
+      setMessages((prev: Message[]) => [...prev, assistantMessage] as Message[])
 
-        const response = await fetch("http://localhost:8000/api/chat/general", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: input,
-            sessionId: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-          })
-        });
+      // Save messages to history
+      await fetch("http://localhost:3000/api/chat/history", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_name: chatName,
+          role: "user",
+          content: input
+        })
+      })
 
-        if (!response.ok) throw new Error("Failed to get response");
+      await fetch("http://localhost:3000/api/chat/history", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_name: chatName,
+          role: "assistant",
+          content: data.message
+        })
+      })
 
-        const data: APIResponse = await response.json();
-        const assistantMessage: Message = { 
-          role: "assistant", 
-          content: data.response 
-        };
-        setMessages((prev: Message[]) => [...prev, assistantMessage] as Message[]);
-
-        // Save messages to history
-        await fetch("http://localhost:3000/api/chat/history", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_name: chatName,
-            role: "user",
-            content: input
-          })
-        });
-
-        await fetch("http://localhost:3000/api/chat/history", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_name: chatName,
-            role: "assistant",
-            content: data.response
-          })
-        });
-
-      } catch (error) {
-        console.error("Error:", error);
-        const errorMessage: Message = { 
-          role: "assistant", 
-          content: t("errorMessage") 
-        };
-        setMessages(prev => [...prev, errorMessage]);
-      } finally {
-        setIsLoading(false);
+    } catch (error) {
+      console.error("Error:", error)
+      const errorMessage: Message = { 
+        role: "assistant", 
+        content: t("errorMessage") 
       }
+      setMessages(prev => [...prev, errorMessage])
+    } finally {
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="flex flex-col h-screen max-w-3xl mx-auto">
@@ -302,16 +219,16 @@ export default function GeneralAPIChatBox() {
         {/* Navigation Bar */}
         <div className="flex items-center justify-center gap-4 mb-4">
           <Link 
-            href="/chat-box/context-api"
+            href="/chat-box/domain-based-api"
             className="px-4 py-2 rounded-md bg-primary/10 hover:bg-primary/20 transition-colors"
           >
-            Context API
+            {t("navigation.domain-based-api")}
           </Link>
           <Link 
             href="/chat-box/fine-tuned"
             className="px-4 py-2 rounded-md bg-primary/10 hover:bg-primary/20 transition-colors"
           >
-            Fine-tuned
+            {t("navigation.fine-tuned")}
           </Link>
           <Link 
             href="/chat-box/general-api"
@@ -320,7 +237,7 @@ export default function GeneralAPIChatBox() {
               "bg-primary text-primary-foreground hover:bg-primary/90"
             )}
           >
-            General API
+            {t("navigation.general-api")}
           </Link>
         </div>
 

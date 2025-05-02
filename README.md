@@ -82,7 +82,7 @@ proj-nlp/
 ├── app/
 │   ├── [locale]/
 │   │   ├── chat-box/
-│   │   ├── nlp-filtering/
+│   │   ├── RecSys/
 │   │   └── text-classification/
 │   ├── api/
 │   │   └── chat/
@@ -123,10 +123,10 @@ A comprehensive Natural Language Processing (NLP) toolbox for text processing an
 
 The application provides three different types of chatbot implementations:
 
-1. **Context API Chatbot** (`/chat-box/context-api`)
-   - Uses a simple API with context limitations
-   - Ideal for specific use cases where context is predefined
-   - Limited by the provided context scope
+1. **Domain Based API Chatbot** (`/chat-box/domain-based-api`)
+   - Uses a simple API with domain limitations
+   - Ideal for specific use cases where domain is predefined
+   - Limited by the provided domain scope
 
 2. **Fine-tuned Chatbot** (`/chat-box/fine-tuned`)
    - Custom-trained using BERT/RoBERTa models

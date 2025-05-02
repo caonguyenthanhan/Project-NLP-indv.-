@@ -8,7 +8,7 @@
     "title": "Tú công cụ NLP",
     "navigation": {
       "textClassification": "Phân loại slư",
-      "nlpFiltering": "Chắt lọc NLP",
+      "RecSys": "Hệ thống gợi ý",
       "chatBox": "Hộp cần"
     }
   },
@@ -216,7 +216,8 @@
     "inputText": "Slư nhập",
     "predictions": "Kết quả đoán",
     "tryDifferentTask": "Thử với nhiệm vụ khác",
-    "rawPrediction": "Kết quả đoán gốc"
+    "rawPrediction": "Kết quả đoán gốc",
+    "tryAgain": "Thử lại"
   },
   "datasetSelector": {
     "selectDataset": "Sle \"bộ cần sl liệu\"",
@@ -224,7 +225,7 @@
   },
   "navigation": {
     "textClassification": "Phân loại slư",
-    "nlpFiltering": "Chắt lọc slư",
+    "RecSys": "Hệ thống gợi ý",
     "chatBox": "Hộp cần"
   },
   "theme": {
@@ -253,7 +254,7 @@
         "title": "Phân loại slư",
         "description": "Phân loại slư pây pạng nưa dú sẵn bằng mô hình máy học cao cấp" 
       },
-      "nlpFiltering": {
+      "RecSys": {
         "title": "Chắt lọc slư",
         "description": "Chắt lọc vạ pặt slư bằng kỹ thuật pặt eng tự nhiên" 
       },
@@ -331,43 +332,8 @@
       }
     }
   },
-  "nlpFiltering": {
-    "title": "Chắt lọc NLP",
-    "description": "Chắt lọc vạ pặt slư bằng kỹ thuật pặt eng tự nhiên",
-    "filterText": "Chắt lọc slư",
-    "filterDescription": "Nhập slư cần chắt lọc",
-    "filterOptions": "Tùy chọn chắt lọc", 
-    "applyFilters": "Áp dụng bộ lọc", 
-    "inputText": "Slư nhập",
-    "filteredText": "Slư đạ chắt lọc",
-    "processing": "Đang pặt...", 
-    "success": "Chắt lọc pền công!",
-    "error": "Phjọoc khă chắt lọc",
-    "noData": "Bó dú slư tái chắt lọc",
-    "filters": {
-      "removePunctuation": "Pác slấu câu",
-      "removeNumbers": "Pác số",
-      "removeExtraSpaces": "Pác khoảng dú thừa",
-      "removeSymbols": "Pác ký tự đặc biệt", 
-      "removeStopwords": "Pác eng dừng",
-      "lowercase": "Piển pền slư halus",
-      "stem": "Tách hắc eng",
-      "lemmatize": "Pặt eng pền chuẩn",
-      "expandContractions": "Phey eng tắt",
-      "correctSpelling": "Sửa lỗi chính tả" 
-    },
-    "results": {
-      "title": "Kết quả chắt lọc",
-      "originalText": "Slư gốc",
-      "processedText": "Slư đạ pặt xong",
-      "whatWasRemoved": "Đạ pác cái gì",
-      "downloadResults": "Tải kết quả" 
-    },
-    "workflow": {
-      "currentText": "Slư đang pặt",
-      "textInfo": "Đang pặt: {length} ký tự", 
-      "noText": "Chưa sle slư",
-      "selectText": "Sle slư tái chắt lọc"
-    }
+  "RecSys": {
+    "title": "Hệ thống gợi ý",
+    "description": "Gợi ý nội dung phù hợp dựa trên sở thích và hành vi người dùng"
   }
 }

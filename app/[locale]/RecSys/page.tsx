@@ -2,8 +2,8 @@
 
 import { useTranslations } from "next-intl"
 
-export default function NLPFiltering() {
-  const t = useTranslations("nlpFiltering")
+export default function RecSys() {
+  const t = useTranslations("RecSys")
 
   return (
     <div className="container mx-auto py-8">

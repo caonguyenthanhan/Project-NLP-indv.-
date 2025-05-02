@@ -118,8 +118,7 @@ messages/*.json
 !messages/en.json
 !messages/vi.json
 !messages/chat-box.json
-!messages/nlp-filtering.json
-!messages/text-classification.json
+!messages/RecSys.json
 !messages/vi_mien_tay.json
 !messages/vi_genz.json
 !messages/vi_khmer.json
@@ -134,6 +133,7 @@ server/models/*.bin
 server/data/training/*
 
 # Environment variables
+server/.env
 .env
 .env.local
 .env.*.local
@@ -180,3 +180,16 @@ server/data/*.csv
 # Temporary files
 *.tmp
 *.temp
+
+# Unused files
+server/project_nlp_model.*
+server/translate.py
+server/download_nltk.py
+server/install_requirements.py
+server/models/Yelp_Reviews_*.pkl
+server/models/BBC_News_*.pkl
+server/models/SMS_Spam_*.pkl
+server/models/Twitter_Sentiment_*.pkl
+server/models/AG_News_*.pkl
+server/models/IMDB_Reviews_*.pkl
+server/models/model_comparison.png

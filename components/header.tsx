@@ -39,13 +39,13 @@ export default function Header() {
               {t("navigation.textClassification")}
             </Link>
             <Link
-              href="/nlp-filtering"
+              href="/RecSys"
               className={cn(
-                "transition-colors hover:text-foreground/80",
-                isActive("/nlp-filtering") ? "text-foreground" : "text-foreground/60"
+                "text-sm font-medium transition-colors hover:text-primary",
+                isActive("/RecSys") ? "text-foreground" : "text-foreground/60"
               )}
             >
-              {t("navigation.nlpFiltering")}
+              {t("navigation.RecSys")}
             </Link>
             <Link
               href="/chat-box"

@@ -21,7 +21,13 @@ interface ChatHistory {
   messages: Message[]
 }
 
-export default function ContextAPIChatBox() {
+interface APIResponse {
+  message: string;
+  confidence?: number;
+  category?: string;
+}
+
+export default function DomainBasedAPIChatBox() {
   const t = useTranslations("chatBox")
   const { theme } = useTheme()
   const [messages, setMessages] = useState<Message[]>([])
@@ -31,7 +37,6 @@ export default function ContextAPIChatBox() {
   const [availableChats, setAvailableChats] = useState<string[]>([])
   const [isEditingName, setIsEditingName] = useState(false)
   const [editedName, setEditedName] = useState("")
-  const [sessionId, setSessionId] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -43,8 +48,6 @@ export default function ContextAPIChatBox() {
   }, [messages])
 
   useEffect(() => {
-    // Tạo sessionId mới khi component mount
-    setSessionId(`session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`)
     fetchAvailableChats()
   }, [])
 
@@ -83,10 +86,7 @@ export default function ContextAPIChatBox() {
         hour: '2-digit',
         minute: '2-digit'
       });
-      const newChatName = `Context API Chat ${timestamp}`;
-
-      const welcomeMessage = { role: "system" as const, content: t("welcomeMessage") };
-      setMessages([welcomeMessage]);
+      const newChatName = `Domain API Chat ${timestamp}`;
 
       await fetch("http://localhost:3000/api/chat/history", {
         method: "POST",
@@ -152,43 +152,12 @@ export default function ContextAPIChatBox() {
     }
   }
 
-  const sendMessageToChatbot = async (message: string) => {
-    try {
-      const response = await fetch("http://localhost:8000/api/chat/context", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [
-            {
-              role: "user",
-              content: message
-            }
-          ],
-          chat_name: chatName
-        })
-      });
-
-      if (!response.ok) throw new Error("Failed to get response from chatbot");
-
-      const data = await response.json();
-      return data.message;
-    } catch (error) {
-      console.error("Error sending message to chatbot:", error);
-      throw error;
-    }
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!input.trim() || isLoading) return
 
-    const userMessage = { role: "user" as const, content: input };
-    setMessages(prev => [...prev, userMessage]);
-    setInput("");
-    setIsLoading(true);
-
-    try {
-      if (!chatName || chatName === "Default Chat") {
+    if (!chatName || chatName === "Default Chat") {
+      try {
         const timestamp = new Date().toLocaleString('vi-VN', {
           year: 'numeric',
           month: '2-digit',
@@ -196,12 +165,11 @@ export default function ContextAPIChatBox() {
           hour: '2-digit',
           minute: '2-digit'
         });
-        const newChatName = `Context API Chat ${timestamp}`;
+        const newChatName = `Domain API Chat ${timestamp}`;
 
-        const welcomeMessage = { role: "system" as const, content: t("welcomeMessage") };
-        setMessages([welcomeMessage, userMessage]);
+        const welcomeMessage: Message = { role: "system", content: t("welcomeMessage") };
+        setMessages([welcomeMessage]);
 
-        // Lưu tin nhắn chào mừng
         await fetch("http://localhost:3000/api/chat/history", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -214,44 +182,75 @@ export default function ContextAPIChatBox() {
 
         setChatName(newChatName);
         await fetchAvailableChats();
+        
+        const userMessage: Message = { role: "user", content: input };
+        setMessages((prev: Message[]) => [...prev, userMessage] as Message[]);
+        setInput("");
+        setIsLoading(true);
+
+        const response = await fetch("http://localhost:8000/api/chat/domain", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: input,
+            sessionId: chatName
+          })
+        });
+
+        if (!response.ok) throw new Error("Failed to get response");
+
+        const data: APIResponse = await response.json();
+        const assistantMessage: Message = { 
+          role: "assistant", 
+          content: data.message 
+        };
+        setMessages((prev: Message[]) => [...prev, assistantMessage] as Message[]);
+
+      } catch (error) {
+        console.error("Error:", error);
+        const errorMessage: Message = { 
+          role: "assistant", 
+          content: t("errorMessage") 
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      } finally {
+        setIsLoading(false);
       }
+    } else {
+      try {
+        const userMessage: Message = { role: "user", content: input };
+        setMessages((prev: Message[]) => [...prev, userMessage] as Message[]);
+        setInput("");
+        setIsLoading(true);
 
-      // Gọi API chatbot
-      const botResponse = await sendMessageToChatbot(input);
-      const assistantMessage = { role: "assistant" as const, content: botResponse };
-      setMessages(prev => [...prev, assistantMessage]);
+        const response = await fetch("http://localhost:8000/api/chat/domain", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: input,
+            sessionId: chatName
+          })
+        });
 
-      // Lưu tin nhắn người dùng
-      await fetch("http://localhost:3000/api/chat/history", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_name: chatName,
-          role: "user",
-          content: input
-        })
-      });
+        if (!response.ok) throw new Error("Failed to get response");
 
-      // Lưu phản hồi của bot
-      await fetch("http://localhost:3000/api/chat/history", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_name: chatName,
-          role: "assistant",
-          content: botResponse
-        })
-      });
+        const data: APIResponse = await response.json();
+        const assistantMessage: Message = { 
+          role: "assistant", 
+          content: data.message 
+        };
+        setMessages((prev: Message[]) => [...prev, assistantMessage] as Message[]);
 
-    } catch (error) {
-      console.error("Error in handleSubmit:", error);
-      // Hiển thị thông báo lỗi cho người dùng
-      setMessages(prev => [...prev, { 
-        role: "assistant", 
-        content: t("errorMessage") 
-      }]);
-    } finally {
-      setIsLoading(false);
+      } catch (error) {
+        console.error("Error:", error);
+        const errorMessage: Message = { 
+          role: "assistant", 
+          content: t("errorMessage") 
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -261,25 +260,25 @@ export default function ContextAPIChatBox() {
         {/* Navigation Bar */}
         <div className="flex items-center justify-center gap-4 mb-4">
           <Link 
-            href="/chat-box/context-api"
+            href="/chat-box/domain-based-api"
             className={cn(
               "px-4 py-2 rounded-md transition-colors",
               "bg-primary text-primary-foreground hover:bg-primary/90"
             )}
           >
-            Context API
+            {t("navigation.domain-based-api")}
           </Link>
           <Link 
             href="/chat-box/fine-tuned"
             className="px-4 py-2 rounded-md bg-primary/10 hover:bg-primary/20 transition-colors"
           >
-            Fine-tuned
+            {t("navigation.fine-tuned")}
           </Link>
           <Link 
             href="/chat-box/general-api"
             className="px-4 py-2 rounded-md bg-primary/10 hover:bg-primary/20 transition-colors"
           >
-            General API
+            {t("navigation.general-api")}
           </Link>
         </div>
 

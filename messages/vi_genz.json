@@ -8,7 +8,7 @@
     "title": "Tool NLP xịn sò",
     "navigation": {
       "textClassification": "Phân loại text",
-      "nlpFiltering": "Lọc NLP",
+      "RecSys": "Hệ thống gợi ý",
       "chatBox": "Box chat"
     }
   },
@@ -216,7 +216,8 @@
     "inputText": "Text nhập",
     "predictions": "Sự thật chỉ có 1 đó chính là: ",
     "tryDifferentTask": "Thử cái khác liền!",
-    "rawPrediction": "Kết quả dự đoán gốc"
+    "rawPrediction": "Kết quả dự đoán gốc",
+    "tryAgain": "Thử lại"
   },
   "datasetSelector": {
     "selectDataset": "Chọn dataset",
@@ -224,7 +225,7 @@
   },
   "navigation": {
     "textClassification": "Phân loại text",
-    "nlpFiltering": "Lọc text",
+    "RecSys": "Hệ thống gợi ý",
     "chatBox": "Box chat"
   },
   "theme": {
@@ -253,7 +254,7 @@
         "title": "Phân loại text",
         "description": "Phân text thành các nhóm cố định bằng mô hình ML xịn"
       },
-      "nlpFiltering": {
+      "RecSys": {
         "title": "Lọc text",
         "description": "Lọc và process text bằng kỹ thuật NLP"
       },
@@ -331,43 +332,8 @@
       }
     }
   },
-  "nlpFiltering": {
-    "title": "Lọc NLP",
-    "description": "Lọc và process text bằng kỹ thuật NLP",
-    "filterText": "Lọc text",
-    "filterDescription": "Nhập text cần lọc",
-    "filterOptions": "Tùy chọn lọc",
-    "applyFilters": "Áp dụng filter",
-    "inputText": "Text nhập",
-    "filteredText": "Text đã lọc",
-    "processing": "Processing...",
-    "success": "Lọc xong!",
-    "error": "Lỗi lúc lọc",
-    "noData": "No text để lọc",
-    "filters": {
-      "removePunctuation": "Clear dấu câu",
-      "removeNumbers": "Clear số",
-      "removeExtraSpaces": "Clear khoảng trắng thừa",
-      "removeSymbols": "Clear ký tự đặc biệt",
-      "removeStopwords": "Clear từ dừng",
-      "lowercase": "Chuyển chữ thường",
-      "stem": "Tách từ gốc",
-      "lemmatize": "Chuẩn hóa từ",
-      "expandContractions": "Mở rộng từ tắt",
-      "correctSpelling": "Fix lỗi chính tả"
-    },
-    "results": {
-      "title": "Kết quả lọc",
-      "originalText": "Text gốc",
-      "processedText": "Text đã process",
-      "whatWasRemoved": "Đã clear cái gì",
-      "downloadResults": "Down kết quả"
-    },
-    "workflow": {
-      "currentText": "Text hiện tại",
-      "textInfo": "Processing: {length} ký tự",
-      "noText": "Chưa chọn text",
-      "selectText": "Chọn text để lọc"
-    }
+  "RecSys": {
+    "title": "Hệ thống gợi ý",
+    "description": "Gợi ý nội dung phù hợp dựa trên sở thích và hành vi người dùng"
   }
 }
