@@ -159,14 +159,18 @@ data/
 node_modules/
 
 # Large model files
+server/phobert-finetuned-viquad2/optimizer.pt
 server/phobert-finetuned-viquad2/model.safetensors
 server/phobert-finetuned-viquad2/tokenizer.json
-server/phobert-finetuned-viqued2/sentencepiece.bpe.model
-server/phobert-finetuned-viquad2/checkpoint-*/
-server/phobert-finetuned-viquad2/runs/
+server/phobert-finetuned-viquad2/sentencepiece.bpe.model
+server/phobert-finetuned-viquad2/*.pt
+server/phobert-finetuned-viquad2/*.safetensors
+server/phobert-finetuned-viquad2/*.json
+server/phobert-finetuned-viquad2/*.model
 
 # Jupyter notebooks
 *.ipynb
+.ipynb_checkpoints/
 
 # Python cache
 server/__pycache__/
@@ -193,3 +197,15 @@ server/models/Twitter_Sentiment_*.pkl
 server/models/AG_News_*.pkl
 server/models/IMDB_Reviews_*.pkl
 server/models/model_comparison.png
+
+# Large datasets and backups
+components/backup/
+components/datasets/
+server/data/training/
+server/data/raw/
+server/data/processed/
+
+# Backup files
+*_backup.py
+*.bak
+*.backup
