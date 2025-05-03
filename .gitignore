@@ -131,6 +131,22 @@ server/models/*.h5
 server/models/*.model
 server/models/*.bin
 server/data/training/*
+server/phobert-finetuned-viquad2/model.safetensors
+server/phobert-finetuned-viquad2/tokenizer.json
+server/phobert-finetuned-viquad2/sentencepiece.bpe.model
+server/phobert-finetuned-viquad2/optimizer.pt
+server/phobert-finetuned-viquad2/training_args.bin
+
+# Classification models
+components/models/AG_News_*.pkl
+components/models/BBC_News_*.pkl
+components/models/IMDB_Reviews_*.pkl
+components/models/SMS_Spam_*.pkl
+components/models/Yelp_Reviews_*.pkl
+
+# Library files
+venv/Lib/site-packages/torch/lib/dnnl.lib
+venv/Lib/site-packages/torch/lib/torch_cpu.dll
 
 # Environment variables
 server/.env

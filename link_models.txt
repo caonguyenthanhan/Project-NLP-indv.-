@@ -1,0 +1,51 @@
+# Danh sách các file model đã xóa khỏi Git
+
+## 1. Model PhoBERT (server/phobert-finetuned-viquad2/)
+- model.safetensors (1.0GB)
+- tokenizer.json (16MB)
+- sentencepiece.bpe.model (4.8MB)
+- optimizer.pt (2.1GB)
+- training_args.bin (vài MB)
+
+## 2. Model phân loại (components/models/)
+### AG News
+- AG_News_Logistic Regression.pkl
+- AG_News_Naive Bayes.pkl
+- AG_News_SVM.pkl
+- AG_News_vectorizer.pkl
+
+### BBC News
+- BBC_News_Logistic Regression.pkl
+- BBC_News_Naive Bayes.pkl
+- BBC_News_SVM.pkl
+- BBC_News_vectorizer.pkl
+
+### IMDB Reviews
+- IMDB_Reviews_Logistic Regression.pkl
+- IMDB_Reviews_Naive Bayes.pkl
+- IMDB_Reviews_SVM.pkl
+- IMDB_Reviews_vectorizer.pkl
+
+### SMS Spam
+- SMS_Spam_Logistic Regression.pkl
+- SMS_Spam_Naive Bayes.pkl
+- SMS_Spam_SVM.pkl
+- SMS_Spam_vectorizer.pkl
+
+### Yelp Reviews
+- Yelp_Reviews_Logistic Regression.pkl
+- Yelp_Reviews_Naive Bayes.pkl
+- Yelp_Reviews_SVM.pkl
+- Yelp_Reviews_vectorizer.pkl
+
+## 3. File thư viện (venv/)
+- dnnl.lib (623MB)
+- torch_cpu.dll (239MB)
+
+## Hướng dẫn
+1. Tải các file model từ link bạn cung cấp
+2. Đặt vào thư mục tương ứng:
+   - Model PhoBERT: server/phobert-finetuned-viquad2/
+   - Model phân loại: components/models/
+   - File thư viện: venv/
+3. Cập nhật link tải vào file này 
