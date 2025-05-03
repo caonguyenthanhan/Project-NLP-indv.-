@@ -209,3 +209,18 @@ server/data/processed/
 *_backup.py
 *.bak
 *.backup
+
+# Additional large files
+*.dll
+*.lib
+*.exe
+*.zip
+*.tar.gz
+*.rar
+*.7z
+*.iso
+*.img
+*.vmdk
+*.vdi
+*.vhd
+*.vhdx
