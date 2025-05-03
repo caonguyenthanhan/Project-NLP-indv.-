@@ -159,14 +159,14 @@ data/
 node_modules/
 
 # Large model files
-server/phobert-finetuned-viquad2/optimizer.pt
-server/phobert-finetuned-viquad2/model.safetensors
-server/phobert-finetuned-viquad2/tokenizer.json
-server/phobert-finetuned-viquad2/sentencepiece.bpe.model
-server/phobert-finetuned-viquad2/*.pt
-server/phobert-finetuned-viquad2/*.safetensors
-server/phobert-finetuned-viquad2/*.json
-server/phobert-finetuned-viquad2/*.model
+server/phobert-finetuned-viquad2/*
+components/models/*.pkl
+models_backup/
+*.safetensors
+*.pt
+*.bin
+*.model
+*.pkl
 
 # Jupyter notebooks
 *.ipynb

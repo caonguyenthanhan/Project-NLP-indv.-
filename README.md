@@ -137,3 +137,27 @@ The application provides three different types of chatbot implementations:
    - Uses a pure API implementation
    - Provides general-purpose responses
    - Not limited by specific context or training data
+
+## Tải File Model
+
+Các file model lớn đã được tách riêng và lưu trữ ở nơi khác. Để sử dụng đầy đủ chức năng của ứng dụng, bạn cần tải các file model sau:
+
+1. **Model PhoBERT** (khoảng 4GB):
+   - `model.safetensors`
+   - `tokenizer.json`
+   - `sentencepiece.bpe.model`
+   - `optimizer.pt`
+   - `training_args.bin`
+
+2. **Model phân loại** (khoảng 500MB):
+   - `AG_News_*.pkl`
+   - `BBC_News_*.pkl`
+   - `IMDB_Reviews_*.pkl`
+   - `SMS_Spam_*.pkl`
+   - `Yelp_Reviews_*.pkl`
+
+Sau khi tải, đặt các file model vào thư mục tương ứng:
+- Model PhoBERT: `server/phobert-finetuned-viquad2/`
+- Model phân loại: `components/models/`
+
+Lưu ý: Các file model có thể được tải từ [Google Drive](https://drive.google.com/drive/folders/your-folder-id) hoặc [Dropbox](https://www.dropbox.com/sh/your-folder-id).
