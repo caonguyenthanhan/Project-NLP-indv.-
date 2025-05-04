@@ -240,3 +240,14 @@ server/data/processed/
 *.vdi
 *.vhd
 *.vhdx
+
+# Additional large directories
+.next/
+public/
+models_backup/
+server/data/
+server/models/
+components/models/
+frontend/
+node_modules/
+venv/

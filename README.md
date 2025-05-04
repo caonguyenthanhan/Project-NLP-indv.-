@@ -138,26 +138,69 @@ The application provides three different types of chatbot implementations:
    - Provides general-purpose responses
    - Not limited by specific context or training data
 
-## Tải File Model
+## Tải và Cài Đặt File Model
 
-Các file model lớn đã được tách riêng và lưu trữ ở nơi khác. Để sử dụng đầy đủ chức năng của ứng dụng, bạn cần tải các file model sau:
+Để sử dụng đầy đủ chức năng của ứng dụng, bạn cần tải các file model sau:
 
-1. **Model PhoBERT** (khoảng 4GB):
-   - `model.safetensors`
-   - `tokenizer.json`
-   - `sentencepiece.bpe.model`
-   - `optimizer.pt`
-   - `training_args.bin`
+### 1. Model PhoBERT
+- **Vị trí**: `server/phobert-finetuned-viquad2/`
+- **Các file cần tải**:
+  - `model.safetensors` (1.0GB)
+  - `tokenizer.json` (16MB)
+  - `sentencepiece.bpe.model` (4.8MB)
+  - `optimizer.pt` (2.1GB)
+  - `training_args.bin` (vài MB)
 
-2. **Model phân loại** (khoảng 500MB):
-   - `AG_News_*.pkl`
-   - `BBC_News_*.pkl`
-   - `IMDB_Reviews_*.pkl`
-   - `SMS_Spam_*.pkl`
-   - `Yelp_Reviews_*.pkl`
+### 2. Model Phân Loại
+- **Vị trí**: `components/models/`
+- **Các file cần tải**:
+  - AG News: `AG_News_*.pkl`
+  - BBC News: `BBC_News_*.pkl`
+  - IMDB Reviews: `IMDB_Reviews_*.pkl`
+  - SMS Spam: `SMS_Spam_*.pkl`
+  - Yelp Reviews: `Yelp_Reviews_*.pkl`
 
-Sau khi tải, đặt các file model vào thư mục tương ứng:
-- Model PhoBERT: `server/phobert-finetuned-viquad2/`
-- Model phân loại: `components/models/`
+### 3. File Thư Viện
+- **Vị trí**: `venv/Lib/site-packages/torch/lib/`
+- **Các file cần tải**:
+  - `dnnl.lib` (623MB)
+  - `torch_cpu.dll` (239MB)
 
-Lưu ý: Các file model có thể được tải từ [Google Drive](https://drive.google.com/drive/folders/your-folder-id) hoặc [Dropbox](https://www.dropbox.com/sh/your-folder-id).
+### Hướng Dẫn Tải và Cài Đặt
+
+1. **Tải file model**:
+   - Xem danh sách đầy đủ các file model trong `link_models.txt`
+   - Tải các file model từ link được cung cấp
+
+2. **Cài đặt file model**:
+   ```bash
+   # Tạo thư mục nếu chưa tồn tại
+   mkdir -p server/phobert-finetuned-viquad2
+   mkdir -p components/models
+   mkdir -p venv/Lib/site-packages/torch/lib
+
+   # Di chuyển file model vào thư mục tương ứng
+   # (Thay thế đường dẫn tải xuống của bạn)
+   mv ~/Downloads/model.safetensors server/phobert-finetuned-viquad2/
+   mv ~/Downloads/*.pkl components/models/
+   mv ~/Downloads/dnnl.lib venv/Lib/site-packages/torch/lib/
+   mv ~/Downloads/torch_cpu.dll venv/Lib/site-packages/torch/lib/
+   ```
+
+3. **Kiểm tra cài đặt**:
+   ```bash
+   # Kiểm tra file model PhoBERT
+   ls -lh server/phobert-finetuned-viquad2/
+
+   # Kiểm tra file model phân loại
+   ls -lh components/models/
+
+   # Kiểm tra file thư viện
+   ls -lh venv/Lib/site-packages/torch/lib/
+   ```
+
+### Lưu ý
+- Các file model không được lưu trữ trong Git repository
+- Bạn cần tự tải và cài đặt các file model
+- Đảm bảo đặt file model vào đúng thư mục để ứng dụng hoạt động bình thường
+- Cập nhật link tải trong `link_models.txt` nếu cần

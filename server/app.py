@@ -24,7 +24,7 @@ from typing import List, Dict, Any, Optional
 import torch
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline, AutoModelForQuestionAnswering, AutoModelForCausalLM
 from sentence_transformers import SentenceTransformer
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, validator
 import json
 from googletrans import Translator
 from google.cloud import translate_v2 as translate
@@ -39,6 +39,7 @@ import asyncio
 import pandas as pd
 from dotenv import load_dotenv
 from openai import OpenAI
+from sklearn.metrics.pairwise import cosine_similarity
 
 # Load environment variables from .env file
 load_dotenv()
@@ -54,6 +55,8 @@ SCRIPT_TIMEOUT = 600  # 10 phút
 MODELS_DIR = BASE_DIR / "models"
 FINE_TUNED_MODEL_DIR = BASE_DIR / "phobert-finetuned-viquad2"
 KNOWLEDGE_BASE_PATH = BASE_DIR / "knowledge_base.csv"
+SERVER_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_COMPARISON_IMAGE = os.path.join(MODELS_DIR, "model_comparison.png")
 
 # Ensure models directory exists
 if not os.path.exists(MODELS_DIR):
@@ -121,26 +124,55 @@ async def add_utf8_charset(request: Request, call_next):
 # Mount the models directory to serve static files
 app.mount("/models", StaticFiles(directory=MODELS_DIR), name="models")
 
-def create_model_comparison_image(image_path):
-    """Create a model comparison image at the specified path"""
+def create_model_comparison_image(image_path: str) -> bool:
     try:
-        # Create mock data for demonstration
-        models = ['Naive Bayes', 'Logistic Regression', 'SVM']
-        accuracies = [0.85, 0.88, 0.90]
+        # Load model performance data
+        model_performance = {
+            "Naive Bayes": {
+                "accuracy": 0.85,
+                "precision": 0.84,
+                "recall": 0.85,
+                "f1": 0.84
+            },
+            "Logistic Regression": {
+                "accuracy": 0.88,
+                "precision": 0.87,
+                "recall": 0.88,
+                "f1": 0.87
+            },
+            "SVM": {
+                "accuracy": 0.89,
+                "precision": 0.88,
+                "recall": 0.89,
+                "f1": 0.88
+            }
+        }
+
+        # Create bar chart
+        metrics = ["accuracy", "precision", "recall", "f1"]
+        x = np.arange(len(metrics))
+        width = 0.25
+
+        fig, ax = plt.subplots(figsize=(12, 6))
+        for i, (model, scores) in enumerate(model_performance.items()):
+            values = [scores[metric] for metric in metrics]
+            ax.bar(x + i * width, values, width, label=model)
+
+        ax.set_ylabel('Score')
+        ax.set_title('Model Performance Comparison')
+        ax.set_xticks(x + width)
+        ax.set_xticklabels(metrics)
+        ax.legend()
+
+        # Ensure the directory exists
+        os.makedirs(os.path.dirname(image_path), exist_ok=True)
         
-        plt.figure(figsize=(10, 6))
-        plt.bar(models, accuracies, color=['#FF9999', '#66B2FF', '#99FF99'])
-        plt.title('Model Comparison')
-        plt.xlabel('Models')
-        plt.ylabel('Accuracy')
-        plt.ylim(0, 1)
-        
-        for i, v in enumerate(accuracies):
-            plt.text(i, v + 0.02, f'{v:.2%}', ha='center')
-            
+        # Save the figure
+        plt.tight_layout()
         plt.savefig(image_path)
         plt.close()
-        logger.info(f"Created model comparison image at {image_path}")
+
+        logger.info(f"Model comparison image saved successfully at: {image_path}")
         return True
     except Exception as e:
         logger.error(f"Error creating model comparison image: {str(e)}")
@@ -503,19 +535,20 @@ async def compare_models(request: dict):
 
 @app.get("/model-comparison-image")
 async def get_model_comparison_image():
-    image_path = os.path.join(MODELS_DIR, "model_comparison.png")
-    
-    # Create image if it doesn't exist
-    if not os.path.exists(image_path):
-        if not create_model_comparison_image(image_path):
-            raise HTTPException(
-                status_code=500,
-                detail="Failed to create model comparison image"
+    try:
+        if not os.path.exists(MODEL_COMPARISON_IMAGE):
+            logger.warning(f"Model comparison image not found at: {MODEL_COMPARISON_IMAGE}")
+            return JSONResponse(
+                status_code=404,
+                content={"error": "Model comparison image not found"}
             )
-    
-    # Return relative path instead of file
-    relative_path = os.path.relpath(image_path, SERVER_DIR)
-    return {"imagePath": relative_path}
+        return FileResponse(MODEL_COMPARISON_IMAGE)
+    except Exception as e:
+        logger.error(f"Error serving model comparison image: {str(e)}")
+        return JSONResponse(
+            status_code=500,
+            content={"error": "Internal server error"}
+        )
 
 @app.post("/retrain-models")
 async def retrain_models() -> Dict[str, str]:
@@ -1161,10 +1194,6 @@ aiml_client = OpenAI(
     api_key=os.getenv("AIMLAPI_KEY", "726fbcd05d824ddab7bb770de05dc1d6")
 )
 
-class ChatMessage(BaseModel):
-    role: str
-    content: str
-
 class AimlChatRequest(BaseModel):
     messages: List[ChatMessage]
     chat_name: str
@@ -1201,6 +1230,273 @@ async def general_chat_endpoint(request: AimlChatRequest):
     except Exception as e:
         logger.error(f"Error in AIML chat: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+class MovieRating(BaseModel):
+    ratings: Dict[str, float]
+
+@app.post("/recommend/collaborative")
+async def collaborative_recommendation(request: MovieRating):
+    try:
+        # In ra màn hình để test
+        print("Received ratings:")
+        for movie_id, rating in request.ratings.items():
+            print(f"Movie ID: {movie_id}, Rating: {rating}")
+        
+        # Trả về một số phim gợi ý mẫu để test
+        recommendations = [
+            {
+                "id": "1",
+                "title": "Toy Story (1995)",
+                "genres": "Animation|Children|Comedy",
+                "score": 4.5,
+                "posterUrl": "https://example.com/posters/toy_story.jpg",
+                "watchUrl": "https://example.com/watch/toy_story",
+                "description": "Một câu chuyện về những món đồ chơi biết nói, đặc biệt là chàng cao bồi Woody và chàng phi hành gia Buzz Lightyear."
+            },
+            {
+                "id": "2",
+                "title": "Jumanji (1995)",
+                "genres": "Adventure|Children|Fantasy",
+                "score": 4.2,
+                "posterUrl": "https://example.com/posters/jumanji.jpg",
+                "watchUrl": "https://example.com/watch/jumanji",
+                "description": "Một trò chơi bảng ma thuật biến thành hiện thực, đưa hai đứa trẻ vào một cuộc phiêu lưu đầy nguy hiểm."
+            }
+        ]
+        
+        return recommendations
+    except Exception as e:
+        print(f"Error processing ratings: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Model cho request data validation
+class ContentBasedRequest(BaseModel):
+    genres: List[str] = Field(..., min_items=1, description="Danh sách thể loại phim")
+    description: str = Field(..., min_length=10, description="Mô tả nội dung phim")
+
+    @validator('genres')
+    def validate_genres(cls, v):
+        valid_genres = {
+            'Action', 'Adventure', 'Animation', 'Children', 'Comedy', 'Crime',
+            'Documentary', 'Drama', 'Fantasy', 'Film-Noir', 'Horror', 'IMAX',
+            'Musical', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'War', 'Western'
+        }
+        invalid_genres = [g for g in v if g not in valid_genres]
+        if invalid_genres:
+            raise ValueError(f"Thể loại không hợp lệ: {', '.join(invalid_genres)}")
+        return v
+
+    @validator('description')
+    def validate_description(cls, v):
+        if len(v.split()) < 5:
+            raise ValueError("Mô tả phải có ít nhất 5 từ")
+        return v
+
+# Model cho response data
+class ContentBasedResponse(BaseModel):
+    predicted_rating: float
+    suggestions: List[str]
+
+# Load pre-trained model và vectorizer (giả định)
+# model_path = "path/to/your/model.joblib"
+# vectorizer_path = "path/to/your/vectorizer.joblib"
+# model = joblib.load(model_path)
+# vectorizer = joblib.load(vectorizer_path)
+
+@app.post("/recommend/content-based", response_model=ContentBasedResponse)
+async def get_content_based_recommendation(request: ContentBasedRequest):
+    try:
+        # 1. Xử lý và chuẩn hóa input
+        genres_text = " ".join(request.genres)
+        combined_text = f"{genres_text} {request.description}"
+
+        # 2. Phân tích nội dung và dự đoán (mô phỏng)
+        # Trong thực tế, bạn sẽ sử dụng model đã train
+        # features = vectorizer.transform([combined_text])
+        # predicted_rating = model.predict(features)[0]
+        
+        # Mô phỏng dự đoán (thay bằng model thật của bạn)
+        predicted_rating = np.random.uniform(3.0, 5.0)  # Random rating between 3-5
+
+        # 3. Tạo gợi ý cải thiện dựa trên các quy tắc
+        suggestions = []
+        
+        # Kiểm tra và đưa ra gợi ý dựa trên thể loại
+        if 'Action' in request.genres and 'Romance' not in request.genres:
+            suggestions.append("Thêm yếu tố tình cảm có thể giúp thu hút khán giả nữ")
+            
+        if len(request.genres) < 3:
+            suggestions.append("Có thể thêm các thể loại phụ để tăng tính đa dạng")
+            
+        # Kiểm tra độ dài mô tả
+        if len(request.description.split()) < 20:
+            suggestions.append("Mô tả chi tiết hơn về cốt truyện và nhân vật chính")
+            
+        # Kiểm tra từ khóa trong mô tả
+        if "hành động" in request.description.lower() and "kịch tính" not in request.description.lower():
+            suggestions.append("Tăng cường các yếu tố kịch tính trong các cảnh hành động")
+
+        # 4. Trả về kết quả
+        return ContentBasedResponse(
+            predicted_rating=round(float(predicted_rating), 1),
+            suggestions=suggestions
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Context-Aware Recommendation Models and Data
+class ContextAwareRequest(BaseModel):
+    recommendationType: str = Field(..., description="Type of recommendation (travel, movie, music, food)")
+    mood: str = Field(..., description="User's current mood")
+    timeOfDay: str = Field(..., description="Time of day (morning, afternoon, evening, night)")
+    location: str = Field(..., description="User's location or area of interest")
+    companionship: str = Field(..., description="Who the user is with (alone, couple, family, friends)")
+
+# Sample recommendation data (in production, this would come from a database)
+SAMPLE_RECOMMENDATIONS = {
+    "travel": [
+        {
+            "name": "Công viên Tao Đàn",
+            "type": "Công viên",
+            "description": "Công viên rộng rãi với nhiều cây xanh, thích hợp cho hoạt động thể thao và thư giãn.",
+            "suitability": "Phù hợp mọi lứa tuổi",
+            "rating": 4.2,
+            "imageUrl": "https://images.unsplash.com/photo-1519331379826-f10be5486c6f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+        },
+        {
+            "name": "Bảo tàng Chứng tích Chiến tranh",
+            "type": "Bảo tàng",
+            "description": "Bảo tàng trưng bày các hiện vật và hình ảnh về chiến tranh Việt Nam.",
+            "suitability": "Không phù hợp trẻ nhỏ",
+            "rating": 4.5,
+            "imageUrl": "https://images.unsplash.com/photo-1569587112025-0d460e81a126?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+        }
+    ],
+    "movie": [
+        {
+            "name": "Phim Tâm Lý ABC",
+            "type": "Phim Tâm Lý",
+            "description": "Một bộ phim về tình yêu và sự trưởng thành.",
+            "suitability": "13+",
+            "rating": 4.3,
+            "imageUrl": "https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+        },
+        {
+            "name": "Phim Hành Động XYZ",
+            "type": "Phim Hành Động",
+            "description": "Phim hành động gay cấn với nhiều pha mạo hiểm.",
+            "suitability": "16+",
+            "rating": 4.1,
+            "imageUrl": "https://images.unsplash.com/photo-1542204165-65bf26472b9b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+        }
+    ],
+    "music": [
+        {
+            "name": "Playlist Acoustic Chill",
+            "type": "Acoustic",
+            "description": "Những bản acoustic nhẹ nhàng, thư giãn.",
+            "suitability": "Mọi lứa tuổi",
+            "rating": 4.4,
+            "imageUrl": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+        },
+        {
+            "name": "EDM Party Mix",
+            "type": "EDM",
+            "description": "Playlist sôi động với các bản hit EDM.",
+            "suitability": "Giới trẻ",
+            "rating": 4.6,
+            "imageUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+        }
+    ],
+    "food": [
+        {
+            "name": "Nhà hàng Việt Nam XYZ",
+            "type": "Ẩm thực Việt",
+            "description": "Nhà hàng với các món ăn Việt Nam truyền thống.",
+            "suitability": "Phù hợp gia đình",
+            "rating": 4.5,
+            "imageUrl": "https://images.unsplash.com/photo-1503764654157-72d979d9af2f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+        },
+        {
+            "name": "Quán Cafe ABC",
+            "type": "Cafe",
+            "description": "Quán cafe với không gian yên tĩnh, view đẹp.",
+            "suitability": "Phù hợp làm việc, hẹn hò",
+            "rating": 4.3,
+            "imageUrl": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+        }
+    ]
+}
+
+def filter_recommendations_by_context(context: ContextAwareRequest) -> List[Dict]:
+    """
+    Filter and sort recommendations based on user context
+    """
+    recommendations = SAMPLE_RECOMMENDATIONS.get(context.recommendationType, [])
+    
+    # Deep copy to avoid modifying original data
+    filtered_recommendations = recommendations.copy()
+    
+    # Apply mood-based filtering
+    if context.mood == "relaxing":
+        # Prefer relaxing activities/places
+        filtered_recommendations = [r for r in filtered_recommendations if "thư giãn" in r["description"].lower() 
+                                  or "yên tĩnh" in r["description"].lower()]
+    elif context.mood == "fun":
+        # Prefer fun/exciting activities
+        filtered_recommendations = [r for r in filtered_recommendations if "vui" in r["description"].lower() 
+                                  or "sôi động" in r["description"].lower()]
+    
+    # Apply time-based filtering
+    if context.timeOfDay == "night":
+        # Filter out places typically closed at night
+        filtered_recommendations = [r for r in filtered_recommendations if "bảo tàng" not in r["type"].lower()]
+    
+    # Apply companionship-based filtering
+    if context.companionship == "family":
+        # Filter for family-friendly options
+        filtered_recommendations = [r for r in filtered_recommendations if "gia đình" in r["suitability"].lower() 
+                                  or "mọi lứa tuổi" in r["suitability"].lower()]
+    elif context.companionship == "couple":
+        # Filter for date-friendly options
+        filtered_recommendations = [r for r in filtered_recommendations if "hẹn hò" in r["suitability"].lower() 
+                                  or "lãng mạn" in r["description"].lower()]
+    
+    # If no recommendations match the filters, return original recommendations
+    if not filtered_recommendations:
+        filtered_recommendations = recommendations
+    
+    # Sort by rating (highest first)
+    filtered_recommendations.sort(key=lambda x: x.get("rating", 0), reverse=True)
+    
+    return filtered_recommendations
+
+@app.post("/recommend/context-aware")
+async def get_context_aware_recommendations(context: ContextAwareRequest):
+    """
+    Get recommendations based on user context
+    """
+    try:
+        logger.info(f"Received context: {context}")
+        
+        # Get filtered recommendations
+        recommendations = filter_recommendations_by_context(context)
+        
+        if not recommendations:
+            # If no recommendations found, return empty list
+            return []
+            
+        # Return top recommendations (limit to 5)
+        return recommendations[:5]
+        
+    except Exception as e:
+        logger.error(f"Error in context-aware recommendations: {str(e)}")
+        logger.error(traceback.format_exc())
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error processing recommendations: {str(e)}"
+        )
 
 if __name__ == "__main__":
     import uvicorn

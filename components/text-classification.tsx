@@ -56,25 +56,47 @@ const TextClassification: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
   const [showComparisonChart, setShowComparisonChart] = useState(false)
-  const [modelImagePath, setModelImagePath] = useState<string | null>(null)
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [isImageLoading, setIsImageLoading] = useState(false)
+  const [imageError, setImageError] = useState<string | null>(null)
   const [isRetraining, setIsRetraining] = useState(false)
   const { toast } = useToast()
 
-  // Load model comparison image path
+  // Load model comparison image
   useEffect(() => {
-    const loadImagePath = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/model-comparison-image")
-        if (response.ok) {
-          const data = await response.json()
-          setModelImagePath(data.imagePath)
-        }
-      } catch (error) {
-        console.error("Error loading model comparison image path:", error)
+    if (showComparisonChart) {
+      setIsImageLoading(true)
+      setImageError(null)
+      fetch("http://localhost:8000/model-comparison-image")
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Failed to load image")
+          }
+          return response.blob()
+        })
+        .then(blob => {
+          const url = URL.createObjectURL(blob)
+          setImageUrl(url)
+        })
+        .catch(error => {
+          console.error("Error loading image:", error)
+          setImageError(error.message)
+          toast({
+            variant: "destructive",
+            description: t("imageLoadError"),
+          })
+        })
+        .finally(() => {
+          setIsImageLoading(false)
+        })
+    }
+
+    return () => {
+      if (imageUrl) {
+        URL.revokeObjectURL(imageUrl)
       }
     }
-    loadImagePath()
-  }, [])
+  }, [showComparisonChart])
 
   // Reset results when dataset or task changes
   useEffect(() => {
@@ -120,7 +142,7 @@ const TextClassification: React.FC = () => {
       })
 
       // Update image path after retraining
-      setModelImagePath(data.imagePath)
+      setImageUrl(data.imagePath)
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
       toast({
@@ -323,6 +345,7 @@ const TextClassification: React.FC = () => {
           variant="outline"
           size="sm"
           onClick={() => setShowComparisonChart(!showComparisonChart)}
+          disabled={isImageLoading}
           className="flex items-center gap-2"
         >
           <BarChart className="h-4 w-4" />
@@ -330,14 +353,24 @@ const TextClassification: React.FC = () => {
         </Button>
       </div>
 
-      {showComparisonChart && modelImagePath && (
+      {showComparisonChart && (
         <div className="w-full h-[400px] relative mb-4">
-          <Image
-            src={`http://localhost:8000${modelImagePath.startsWith('/') ? modelImagePath : `/${modelImagePath}`}`}
-            alt="Model Comparison Chart"
-            fill
-            style={{ objectFit: 'contain' }}
-          />
+          {isImageLoading ? (
+            <div className="flex items-center justify-center h-full">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : imageError ? (
+            <div className="flex items-center justify-center h-full text-destructive">
+              <AlertCircle className="h-8 w-8 mr-2" />
+              <span>{imageError}</span>
+            </div>
+          ) : imageUrl ? (
+            <img
+              src={imageUrl}
+              alt="Model Comparison Chart"
+              className="w-full h-full object-contain"
+            />
+          ) : null}
         </div>
       )}
 
