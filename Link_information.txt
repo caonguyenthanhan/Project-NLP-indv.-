@@ -5,7 +5,7 @@ https://github.com/caonguyenthanhan/Project-NLP-indv.-
 project_nlp_model.ipynb:
 https://colab.research.google.com/drive/1q3WmzoLTQc6dSEmsBGwODxTHCpF8wsih?usp=drive_open#scrollTo=mXTJ00yWzGRv
 
-PhoBERT_nlp.ipynb: sử dụng xlm-roberta-base vì PhoBERT không có Tải tokenizer đượ.
+PhoBERT_nlp.ipynb: sử dụng xlm-roberta-base vì PhoBERT không có Tải tokenizer được
 https://colab.research.google.com/drive/1ICgTAplHjoAuU9P-waQ4DQ6M5kfj9xmh#scrollTo=JHyf-l7c2s-t
 
 data aggregation:
@@ -24,3 +24,15 @@ n8n_ api: Context API
 https://caonguyenthanhan.app.n8n.cloud/workflow/EB90oBFkQtTN6TnW
 test: 
 https://caonguyenthanhan.app.n8n.cloud/webhook-test/chatbot-response?message=toi+can+thong+tin+ve+truong&sessionId=USER123_SESSION_ABC
+__new__:
+https://nlppro.app.n8n.cloud/workflow/x5vDJ0Ym8yk7fTHB
+
+
+update_movies_json.ipynb
+https://colab.research.google.com/drive/1tw-Ar2QAxj2UrV5Ie7TrDJmQEn5ZRORh
+
+collaborative_filtering.ipynb
+https://colab.research.google.com/drive/1D-ugliwDxFIjS1RD5OK36zIW5Sk59PfQ#scrollTo=a9ZrZlJEtUGd
+
+context-aware.ipynb
+https://colab.research.google.com/drive/1Bhz_4_ovbj8igPeNuaA-TahDjO5Py9uw?usp=sharing

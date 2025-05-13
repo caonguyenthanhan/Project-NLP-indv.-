@@ -251,3 +251,20 @@ components/models/
 frontend/
 node_modules/
 venv/
+
+# Memory Bank
+memory-bank/
+**/memory-bank/
+*.memory-bank.md
+
+# Loại trừ file mô hình lớn, dữ liệu có thể tạo lại, notebook thử nghiệm
+server/models/*.pkl
+server/models/*.joblib
+server/models/*.png
+models_backup/
+server/data/RecSys/*.json
+user_item_matrix.joblib
+user_similarity.joblib
+svd_model.joblib
+context-aware.ipynb
+collaborative_filtering.ipynb

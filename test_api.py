@@ -3,7 +3,7 @@ import uuid
 # import json # Không cần thư viện json nữa nếu chỉ xử lý text
 
 # --- Cấu hình ---
-N8N_WEBHOOK_URL = "https://caonguyenthanhan.app.n8n.cloud/webhook/chatbot-response"
+N8N_WEBHOOK_URL = "https://nlppro.app.n8n.cloud/webhook/chatbot-response"
 # --- Kết thúc Cấu hình ---
 
 def call_chatbot_api(message, session_id):

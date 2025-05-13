@@ -152,6 +152,15 @@ export default function DomainBasedAPIChatBox() {
     }
   }
 
+  const removeThinkingParts = (content: string): string => {
+    const parts = content.split(/<br\s*\/?>/i);
+    const filteredParts = parts.filter(part => {
+      const trimmedPart = part.trim();
+      return !trimmedPart.startsWith("**") && !trimmedPart.includes("I've been") && !trimmedPart.includes("I'm focused");
+    });
+    return filteredParts.join("").trim();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!input.trim() || isLoading) return
@@ -200,9 +209,10 @@ export default function DomainBasedAPIChatBox() {
         if (!response.ok) throw new Error("Failed to get response");
 
         const data: APIResponse = await response.json();
+        const cleanedContent = removeThinkingParts(data.message);
         const assistantMessage: Message = { 
           role: "assistant", 
-          content: data.message 
+          content: cleanedContent
         };
         setMessages((prev: Message[]) => [...prev, assistantMessage] as Message[]);
 
@@ -235,9 +245,10 @@ export default function DomainBasedAPIChatBox() {
         if (!response.ok) throw new Error("Failed to get response");
 
         const data: APIResponse = await response.json();
+        const cleanedContent = removeThinkingParts(data.message);
         const assistantMessage: Message = { 
           role: "assistant", 
-          content: data.message 
+          content: cleanedContent
         };
         setMessages((prev: Message[]) => [...prev, assistantMessage] as Message[]);
 

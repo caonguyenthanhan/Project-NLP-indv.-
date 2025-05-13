@@ -40,6 +40,13 @@ import pandas as pd
 from dotenv import load_dotenv
 from openai import OpenAI
 from sklearn.metrics.pairwise import cosine_similarity
+from scipy.sparse import csr_matrix
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field, validator
+import os
+import json
+import joblib
+import traceback
 
 # Load environment variables from .env file
 load_dotenv()
@@ -57,6 +64,11 @@ FINE_TUNED_MODEL_DIR = BASE_DIR / "phobert-finetuned-viquad2"
 KNOWLEDGE_BASE_PATH = BASE_DIR / "knowledge_base.csv"
 SERVER_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_COMPARISON_IMAGE = os.path.join(MODELS_DIR, "model_comparison.png")
+DATA_DIR = Path(__file__).parent.parent / "app" / "[locale]" / "RecSys" / "context-aware"
+MOVIES_FILE = DATA_DIR / "movies.json"
+MUSIC_FILE = DATA_DIR / "music.json"
+TRAVEL_FILE = DATA_DIR / "travel.json"
+FOOD_FILE = DATA_DIR / "food.json"
 
 # Ensure models directory exists
 if not os.path.exists(MODELS_DIR):
@@ -104,7 +116,7 @@ except Exception as e:
     logger.error(f"Failed to initialize Google Cloud Translate client: {str(e)}")
     translate_client = None
 
-app = FastAPI()
+app = FastAPI() 
 
 app.add_middleware(
     CORSMiddleware,
@@ -726,13 +738,13 @@ async def context_chat_endpoint(request: ChatRequest):
             "sessionId": request.chat_name
         }
 
-        logger.info(f"[*] Đang gửi yêu cầu tới: https://caonguyenthanhan.app.n8n.cloud/webhook/chatbot-response")
+        logger.info(f"[*] Đang gửi yêu cầu tới: https://nlppro.app.n8n.cloud/webhook/chatbot-response")
         logger.info(f"[*] Tham số: {params}")
 
         try:
             # Thực hiện yêu cầu GET với timeout 30 giây
             response = requests.get(
-                "https://caonguyenthanhan.app.n8n.cloud/webhook/chatbot-response",
+                "https://nlppro.app.n8n.cloud/webhook/chatbot-response",
                 params=params,
                 timeout=30
             )
@@ -1089,13 +1101,13 @@ async def domain_chat_endpoint(request: DomainChatRequest):
             "sessionId": request.sessionId
         }
 
-        logger.info(f"[*] Đang gửi yêu cầu tới: https://caonguyenthanhan.app.n8n.cloud/webhook/chatbot-response")
+        logger.info(f"[*] Đang gửi yêu cầu tới: https://nlppro.app.n8n.cloud/webhook/chatbot-response")
         logger.info(f"[*] Tham số: {params}")
 
         try:
             # Thực hiện yêu cầu GET với timeout 30 giây
             response = requests.get(
-                "https://caonguyenthanhan.app.n8n.cloud/webhook/chatbot-response",
+                "https://nlppro.app.n8n.cloud/webhook/chatbot-response",
                 params=params,
                 timeout=30
             )
@@ -1234,39 +1246,155 @@ async def general_chat_endpoint(request: AimlChatRequest):
 class MovieRating(BaseModel):
     ratings: Dict[str, float]
 
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+import traceback
+
+def recommend_movies(user_item_matrix, user_similarity, movie_dict, user_ratings, n_recommendations=5):
+    try:
+        print("\n=== Starting recommendation process ===")
+        print(f"Input user_ratings: {user_ratings}")
+        print(f"Number of movies in dictionary: {len(movie_dict)}")
+        print(f"Sample of movie_dict: {dict(list(movie_dict.items())[:3])}")
+
+        rated_movie_ids = []
+        new_user_ratings = np.zeros(len(user_item_matrix.columns))
+        print("\nProcessing user ratings:")
+        for movie_id_str, rating in user_ratings.items():
+            try:
+                movie_id = int(movie_id_str)  # Convert string ID to integer
+                if movie_id in user_item_matrix.columns:
+                    movie_idx = user_item_matrix.columns.get_loc(movie_id)
+                    new_user_ratings[movie_idx] = rating
+                    rated_movie_ids.append(movie_id)
+                    print(f"Found movie: ID: {movie_id}, Rating: {rating}")
+                else:
+                    print(f"Movie ID {movie_id} not in user_item_matrix columns")
+            except ValueError:
+                print(f"Invalid movie ID format: {movie_id_str}")
+
+        print(f"\nProcessed {len(rated_movie_ids)} valid ratings")
+        print(f"Rated movie IDs: {rated_movie_ids}")
+
+        if not rated_movie_ids:
+            print("No valid ratings provided")
+            return []
+
+        new_user_ratings = new_user_ratings.reshape(1, -1)
+        similarity_scores = cosine_similarity(new_user_ratings, user_item_matrix.values)[0]
+        print(f"\nCalculated similarity scores shape: {similarity_scores.shape}")
+        print(f"Sample similarity scores: {similarity_scores[:5]}")
+
+        predicted_scores = np.zeros(len(user_item_matrix.columns))
+        print("\nPredicting scores for movies...")
+        for movie_idx, movie_id in enumerate(user_item_matrix.columns):
+            if movie_id not in rated_movie_ids:
+                movie_ratings = user_item_matrix[movie_id].values
+                sim_sum = np.sum(np.abs(similarity_scores))
+                if sim_sum > 0:
+                    predicted_scores[movie_idx] = np.sum(similarity_scores * movie_ratings) / sim_sum
+
+        movie_indices = np.argsort(predicted_scores)[::-1]
+        recommendations = []
+        print("\nTop predicted movies:")
+        for idx in movie_indices:
+            movie_id = user_item_matrix.columns[idx]
+            if movie_id not in rated_movie_ids and predicted_scores[idx] > 0:
+                title = movie_dict[movie_id]
+                score = float(predicted_scores[idx])
+                print(f"Movie ID: {movie_id}, Title: {title}, Score: {score:.2f}")
+                recommendations.append({
+                    'id': str(movie_id),  # Convert ID to string for JSON
+                    'title': title,
+                    'score': score
+                })
+            if len(recommendations) >= n_recommendations:
+                break
+
+        print(f"\nReturning {len(recommendations)} recommendations")
+        return recommendations
+    except Exception as e:
+        print(f"\nError in recommend_movies: {str(e)}")
+        traceback.print_exc()
+        return []
+
 @app.post("/recommend/collaborative")
 async def collaborative_recommendation(request: MovieRating):
     try:
-        # In ra màn hình để test
-        print("Received ratings:")
-        for movie_id, rating in request.ratings.items():
-            print(f"Movie ID: {movie_id}, Rating: {rating}")
+        print("\n=== Collaborative Recommendation Request ===")
+        print(f"Received ratings: {request.ratings}")
         
-        # Trả về một số phim gợi ý mẫu để test
-        recommendations = [
-            {
-                "id": "1",
-                "title": "Toy Story (1995)",
-                "genres": "Animation|Children|Comedy",
-                "score": 4.5,
-                "posterUrl": "https://example.com/posters/toy_story.jpg",
-                "watchUrl": "https://example.com/watch/toy_story",
-                "description": "Một câu chuyện về những món đồ chơi biết nói, đặc biệt là chàng cao bồi Woody và chàng phi hành gia Buzz Lightyear."
-            },
-            {
-                "id": "2",
-                "title": "Jumanji (1995)",
-                "genres": "Adventure|Children|Fantasy",
-                "score": 4.2,
-                "posterUrl": "https://example.com/posters/jumanji.jpg",
-                "watchUrl": "https://example.com/watch/jumanji",
-                "description": "Một trò chơi bảng ma thuật biến thành hiện thực, đưa hai đứa trẻ vào một cuộc phiêu lưu đầy nguy hiểm."
-            }
-        ]
+        if not request.ratings:
+            print("Error: No ratings provided in request")
+            raise HTTPException(status_code=400, detail="No ratings provided")
+            
+        # Load trained models
+        print("\nLoading trained models...")
+        model_dir = os.path.join(os.path.dirname(__file__), "models")
         
-        return recommendations
+        try:
+            user_item_matrix = joblib.load(os.path.join(model_dir, "user_item_matrix.joblib"))
+            user_similarity = joblib.load(os.path.join(model_dir, "user_similarity.joblib"))
+            movie_dict = joblib.load(os.path.join(model_dir, "movie_dict.joblib"))
+            print(f"Loaded user_item_matrix shape: {user_item_matrix.shape}")
+            print(f"Loaded user_similarity shape: {user_similarity.shape}")
+            print(f"Loaded movie_dict size: {len(movie_dict)}")
+            print("Sample movie_dict entries:", dict(list(movie_dict.items())[:3]))
+        except Exception as e:
+            print(f"Error loading models: {str(e)}")
+            raise HTTPException(status_code=500, detail="Error loading recommendation models")
+            
+        # Get recommendations
+        recommendations = recommend_movies(
+            user_item_matrix=user_item_matrix,
+            user_similarity=user_similarity,
+            movie_dict=movie_dict,
+            user_ratings=request.ratings
+        )
+        
+        if not recommendations:
+            print("No recommendations generated")
+            raise HTTPException(status_code=404, detail="No recommendations found")
+        
+        print("\nLoading movies.json for additional details...")
+        # Load movies.json
+        movies_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'app', '[locale]', 'RecSys', 'movies.json')
+        with open(movies_path, 'r', encoding='utf-8') as f:
+            movies_data = json.load(f)['movies']
+        
+        movies_dict = {movie['id']: movie for movie in movies_data}
+        print(f"Loaded {len(movies_dict)} movies from movies.json")
+        
+        # Add movie details to recommendations
+        detailed_recommendations = []
+        print("\nEnriching recommendations with movie details:")
+        for rec in recommendations:
+            movie_id = rec['id']
+            if movie_id in movies_dict:
+                movie = movies_dict[movie_id]
+                detailed_recommendations.append({
+                    "id": movie_id,
+                    "title": rec['title'],
+                    "genres": movie['genres'],
+                    "score": rec['score'],
+                    "posterUrl": movie['posterUrl'],
+                    "watchUrl": movie['watchUrl'],
+                    "description": movie['description'],
+                    "year": movie.get('year'),
+                    "country": movie.get('country'),
+                    "director": movie.get('director'),
+                    "duration": movie.get('duration'),
+                    "rating": movie.get('rating')
+                })
+                print(f"Added details for movie ID: {movie_id}")
+            else:
+                print(f"Warning: Movie ID {movie_id} not found in movies.json")
+        
+        print(f"\nReturning {len(detailed_recommendations)} detailed recommendations")
+        return detailed_recommendations
     except Exception as e:
-        print(f"Error processing ratings: {str(e)}")
+        print(f"\nError processing recommendations: {str(e)}")
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 # Model cho request data validation
@@ -1297,12 +1425,6 @@ class ContentBasedResponse(BaseModel):
     predicted_rating: float
     suggestions: List[str]
 
-# Load pre-trained model và vectorizer (giả định)
-# model_path = "path/to/your/model.joblib"
-# vectorizer_path = "path/to/your/vectorizer.joblib"
-# model = joblib.load(model_path)
-# vectorizer = joblib.load(vectorizer_path)
-
 @app.post("/recommend/content-based", response_model=ContentBasedResponse)
 async def get_content_based_recommendation(request: ContentBasedRequest):
     try:
@@ -1311,11 +1433,6 @@ async def get_content_based_recommendation(request: ContentBasedRequest):
         combined_text = f"{genres_text} {request.description}"
 
         # 2. Phân tích nội dung và dự đoán (mô phỏng)
-        # Trong thực tế, bạn sẽ sử dụng model đã train
-        # features = vectorizer.transform([combined_text])
-        # predicted_rating = model.predict(features)[0]
-        
-        # Mô phỏng dự đoán (thay bằng model thật của bạn)
         predicted_rating = np.random.uniform(3.0, 5.0)  # Random rating between 3-5
 
         # 3. Tạo gợi ý cải thiện dựa trên các quy tắc
@@ -1429,74 +1546,103 @@ SAMPLE_RECOMMENDATIONS = {
     ]
 }
 
-def filter_recommendations_by_context(context: ContextAwareRequest) -> List[Dict]:
-    """
-    Filter and sort recommendations based on user context
-    """
-    recommendations = SAMPLE_RECOMMENDATIONS.get(context.recommendationType, [])
+def load_recommendation_data() -> dict:
+    data = {}
+    for filename in ["food.json", "music.json", "movies.json", "travel.json"]:
+        file_path = os.path.join(DATA_DIR, filename)
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = json.load(f)
+                category = list(content.keys())[0]
+                data[category] = content[category]
+        except FileNotFoundError:
+            logger.error(f"[Backend] Không tìm thấy file: {file_path}")
+            raise HTTPException(status_code=500, detail=f"File not found: {filename}")
+        except json.JSONDecodeError:
+            logger.error(f"[Backend] Lỗi phân tích JSON từ file: {file_path}")
+            raise HTTPException(status_code=500, detail=f"Invalid JSON in {filename}")
+    return data
+
+def calculate_match_score(item: dict, context: ContextAwareRequest) -> float:
+    score = 0.0
+    max_score = 4.0  # Tổng trọng số của các trường
+    mood_weight = 1.5
+    time_weight = 1.0
+    companionship_weight = 1.0
+    location_weight = 0.5
+
+    if context.mood in item.get("mood", ["any"]) or "any" in item.get("mood", []):
+        score += mood_weight
+    elif any(mood in context.mood for mood in item.get("mood", [])):
+        score += mood_weight * 0.5
+
+    if context.timeOfDay in item.get("time_suitability", ["any"]):
+        score += time_weight
+
+    if context.companionship in item.get("companionship", ["any"]):
+        score += companionship_weight
+
+    if context.location == "any" or item.get("location", "any") == "any" or context.location == item.get("location", "any"):
+        score += location_weight
+
+    # Chuẩn hóa điểm (từ 0 đến 1)
+    normalized_score = min(score / max_score, 1.0)
     
-    # Deep copy to avoid modifying original data
-    filtered_recommendations = recommendations.copy()
+    # Đảm bảo rating không âm và trong khoảng hợp lý (0-10)
+    rating = item.get("rating", 0)
+    if not isinstance(rating, (int, float)) or rating < 0:
+        rating = 0
+    rating = min(rating, 10)  # Giới hạn trên là 10
     
-    # Apply mood-based filtering
-    if context.mood == "relaxing":
-        # Prefer relaxing activities/places
-        filtered_recommendations = [r for r in filtered_recommendations if "thư giãn" in r["description"].lower() 
-                                  or "yên tĩnh" in r["description"].lower()]
-    elif context.mood == "fun":
-        # Prefer fun/exciting activities
-        filtered_recommendations = [r for r in filtered_recommendations if "vui" in r["description"].lower() 
-                                  or "sôi động" in r["description"].lower()]
+    return normalized_score * rating
+
+def filter_recommendations_by_context(context: ContextAwareRequest, data: dict) -> list:
+    category_map = {
+        "movie": "movies",
+        "music": "music",
+        "food": "food",
+        "travel": "travel"
+    }
+    category = category_map.get(context.recommendationType, context.recommendationType)
+    if category not in data:
+        logger.warning(f"[Backend] Danh mục {category} không tồn tại trong dữ liệu")
+        return []
     
-    # Apply time-based filtering
-    if context.timeOfDay == "night":
-        # Filter out places typically closed at night
-        filtered_recommendations = [r for r in filtered_recommendations if "bảo tàng" not in r["type"].lower()]
+    filtered = []
+    for item in data[category]:
+        # Đảm bảo rating hợp lệ trước khi tính điểm
+        if "rating" not in item or not isinstance(item["rating"], (int, float)) or item["rating"] < 0:
+            item["rating"] = 0
+        item["rating"] = min(item["rating"], 10)
+        
+        score = calculate_match_score(item, context)
+        if score > 0:
+            item["match_score"] = score
+            filtered.append(item)
     
-    # Apply companionship-based filtering
-    if context.companionship == "family":
-        # Filter for family-friendly options
-        filtered_recommendations = [r for r in filtered_recommendations if "gia đình" in r["suitability"].lower() 
-                                  or "mọi lứa tuổi" in r["suitability"].lower()]
-    elif context.companionship == "couple":
-        # Filter for date-friendly options
-        filtered_recommendations = [r for r in filtered_recommendations if "hẹn hò" in r["suitability"].lower() 
-                                  or "lãng mạn" in r["description"].lower()]
-    
-    # If no recommendations match the filters, return original recommendations
-    if not filtered_recommendations:
-        filtered_recommendations = recommendations
-    
-    # Sort by rating (highest first)
-    filtered_recommendations.sort(key=lambda x: x.get("rating", 0), reverse=True)
-    
-    return filtered_recommendations
+    filtered.sort(key=lambda x: x.get("match_score", 0) * x.get("rating", 0), reverse=True)
+    return filtered[:5] if filtered else []
 
 @app.post("/recommend/context-aware")
 async def get_context_aware_recommendations(context: ContextAwareRequest):
-    """
-    Get recommendations based on user context
-    """
     try:
-        logger.info(f"Received context: {context}")
-        
-        # Get filtered recommendations
-        recommendations = filter_recommendations_by_context(context)
-        
+        logger.info(f"[Backend] Nhận request context-aware: {context.model_dump()}")
+        data = load_recommendation_data()
+        if not data:
+            logger.error("[Backend] Không load được dữ liệu gợi ý!")
+            raise HTTPException(status_code=500, detail="Failed to load recommendation data")
+        recommendations = filter_recommendations_by_context(context, data)
+        logger.info(f"[Backend] Số lượng gợi ý trả về: {len(recommendations)}")
         if not recommendations:
-            # If no recommendations found, return empty list
-            return []
-            
-        # Return top recommendations (limit to 5)
-        return recommendations[:5]
-        
+            logger.warning(f"[Backend] Không tìm thấy gợi ý phù hợp với context: {context.model_dump()}")
+            return []  # Trả về mảng rỗng thay vì object message
+        return recommendations
+    except HTTPException as http_err:
+        logger.error(f"[Backend] Lỗi HTTP: {str(http_err)}")
+        raise http_err
     except Exception as e:
-        logger.error(f"Error in context-aware recommendations: {str(e)}")
-        logger.error(traceback.format_exc())
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error processing recommendations: {str(e)}"
-        )
+        logger.error(f"[Backend] Lỗi trong context-aware recommendations: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn
