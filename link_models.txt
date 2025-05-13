@@ -1,4 +1,5 @@
-# Danh sách các file model đã xóa khỏi Git
+linkk: https://drive.google.com/drive/folders/1SqEFkWXeFzoJvQHlOaHmRfR9nQGkP9QK?usp=sharing
+# Danh sách các file model
 
 ## 1. Model PhoBERT (server/phobert-finetuned-viquad2/)
 - model.safetensors (1.0GB)
@@ -43,7 +44,7 @@
 - torch_cpu.dll (239MB)
 
 ## Hướng dẫn
-1. Tải các file model từ link bạn cung cấp
+1. Tải các file model từ link cung cấp
 2. Đặt vào thư mục tương ứng:
    - Model PhoBERT: server/phobert-finetuned-viquad2/
    - Model phân loại: components/models/
