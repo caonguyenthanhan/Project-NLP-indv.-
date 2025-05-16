@@ -88,21 +88,55 @@ AIMLAPI_KEY=your_aimlapi_key
 - Gợi ý dựa trên nội dung
 - Đánh giá và phản hồi người dùng
 
-## Chạy Ứng Dụng
+## Hướng dẫn cài đặt và chạy
 
-1. Khởi động máy chủ phát triển:
+### Frontend (Next.js)
 
-Chạy backend (Python):
-```bash
-npm run server
+#### Sử dụng Docker
+1. Build Docker image:
+```powershell
+docker build -t nlp-frontend -f Dockerfile.frontend .
 ```
 
-Chạy frontend (Next.js):
-```bash
+2. Chạy container:
+```powershell
+docker run -p 3000:3000 nlp-frontend
+```
+
+#### Chạy trực tiếp
+1. Cài đặt dependencies:
+```powershell
+npm install
+```
+
+2. Chạy development server:
+```powershell
 npm run dev
 ```
 
-2. Mở [http://localhost:3000](http://localhost:3000) trong trình duyệt của bạn
+### Backend (Python FastAPI)
+
+1. Tạo và kích hoạt môi trường ảo:
+```powershell
+python -m venv venv
+.\venv\Scripts\activate
+```
+
+2. Cài đặt dependencies:
+```powershell
+pip install -r requirements.txt
+```
+
+3. Chạy server:
+```powershell
+cd server
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+### Truy cập ứng dụng
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
+- API Documentation: http://localhost:8000/docs
 
 ## Cấu Trúc Dự Án
 
