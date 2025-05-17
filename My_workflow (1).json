@@ -1,0 +1,506 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query.message}}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Bạn là một trợ lý ảo AI của trường Đại học Sư Phạm Kỹ Thuật. Nhiệm vụ chính của bạn là cung cấp thông tin hỗ trợ cho sinh viên và những người quan tâm đến trường.\nGiới thiệu bản thân: Khi bắt đầu cuộc trò chuyện, hãy giới thiệu ngắn gọn: \"Chào bạn, tôi là trợ lý ảo AI của trường Đại học Sư Phạm Kỹ Thuật, tôi có thể giúp gì cho bạn về thông tin tuyển sinh, học tập và hoạt động tại trường?\"\nQuy tắc trả lời:\nChỉ sử dụng thông tin từ các công cụ (Tools) được cung cấp để trả lời câu hỏi. Tuyệt đối không tự bịa đặt thông tin.\n\nƯu tiên sử dụng các công cụ theo đúng chức năng của chúng:\nSử dụng công cụ KHOA: Để cung cấp thông tin tổng hợp về một Khoa cụ thể hoặc danh sách các Khoa trong trường. Bao gồm vị trí, địa điểm, trưởng khoa, thông tin liên hệ của khoa (email, số điện thoại văn phòng khoa), website khoa, các ngành đào tạo thuộc khoa, và các dịch vụ hoặc hỗ trợ đặc thù mà Khoa đó cung cấp. Ví dụ: \"Khoa Cơ khí ở đâu?\", \"Trưởng khoa Công nghệ Thông tin là ai và email là gì?\", \"Danh sách các khoa của trường?\", \"Khoa Điện tử có những ngành nào?\n\nSử dụng công cụ FAQ: Để trả lời các câu hỏi chung về trường, thủ tục hành chính, cơ sở vật chất (như ký túc xá), thông tin các câu lạc bộ, các câu hỏi thường gặp khác không trực tiếp liên quan đến ngành học/học phí hoặc sự kiện/lịch cụ thể. \nSử dụng công cụ SP : Khi người dùng hỏi về thông tin chi tiết của các môn học (ví dụ: Trí tuệ Nhân tạo), môn học trong chương trình đào tạo, hoặc các vấn đề liên quan đến học phí. \nSử dụng công cụ EVEN: Khi người dùng hỏi về các sự kiện sắp diễn ra của trường, lịch thi, lịch nghỉ lễ, hoặc lịch học tập chung theo năm/học kỳ.\nSử dụng công cụ INF: khi người dùng hỏi về thông tin liên hệ (số điện thoại, email) của giảng viên phụ trách các khoa hoặc ngành học cụ thể.\n\n\nTrả lời câu hỏi một cách rõ ràng, trực tiếp và thân thiện.\n\nNếu câu hỏi của người dùng không thuộc phạm vi thông tin bạn có (tức là không tìm thấy trong FAQ, SP, EVEN), hãy trả lời một cách lịch sự rằng bạn chưa có thông tin về vấn đề đó và có thể gợi ý họ liên hệ văn phòng khoa/phòng ban liên quan của trường."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        440,
+        20
+      ],
+      "id": "a8694dd0-eb9c-4c31-b6b4-6c801efe757b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-preview-04-17",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        220,
+        280
+      ],
+      "id": "9623d11e-7337-4e30-a386-24b99566fee3",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Q3FhWGXtesB0GLZv",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.query.sessionId}}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        360,
+        280
+      ],
+      "id": "5855dec0-3655-4321-9e05-4e667f7792a4",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uSUkePcSsuECugJMdkzxw4RLpD9xAphXa6vVObSP2oA",
+          "mode": "list",
+          "cachedResultName": "data_Project_NLP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uSUkePcSsuECugJMdkzxw4RLpD9xAphXa6vVObSP2oA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "FAQ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uSUkePcSsuECugJMdkzxw4RLpD9xAphXa6vVObSP2oA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        480,
+        280
+      ],
+      "id": "c1d03bbb-d22c-4139-93d0-6c641d8e2682",
+      "name": "FAQ",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kjngakyU5dOBHzoE",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uSUkePcSsuECugJMdkzxw4RLpD9xAphXa6vVObSP2oA",
+          "mode": "list",
+          "cachedResultName": "data_Project_NLP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uSUkePcSsuECugJMdkzxw4RLpD9xAphXa6vVObSP2oA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 188797960,
+          "mode": "list",
+          "cachedResultName": "SP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uSUkePcSsuECugJMdkzxw4RLpD9xAphXa6vVObSP2oA/edit#gid=188797960"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        600,
+        280
+      ],
+      "id": "0e24850b-9692-4ff7-9236-cd5bafbc6f83",
+      "name": "SP",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kjngakyU5dOBHzoE",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uSUkePcSsuECugJMdkzxw4RLpD9xAphXa6vVObSP2oA",
+          "mode": "list",
+          "cachedResultName": "data_Project_NLP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uSUkePcSsuECugJMdkzxw4RLpD9xAphXa6vVObSP2oA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1390166979,
+          "mode": "list",
+          "cachedResultName": "EVEN",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uSUkePcSsuECugJMdkzxw4RLpD9xAphXa6vVObSP2oA/edit#gid=1390166979"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        700,
+        280
+      ],
+      "id": "a91057ab-49a6-4593-ae43-4cbaf7c5a01d",
+      "name": "EVEN",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "yl8n2Xxq9tr2STI0",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "chatbot-response",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        20,
+        20
+      ],
+      "id": "b8fa10ac-1e3b-4b27-bb1c-fef403e75f7a",
+      "name": "Webhook",
+      "webhookId": "5a7035dd-03d4-44b8-bdb8-11f4c5d21944"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        840,
+        20
+      ],
+      "id": "7fea210f-d855-4e7e-a3d3-136f29466368",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        500
+      ],
+      "id": "c58655ce-830d-49fc-a453-7acbe5656741",
+      "name": "When chat message received",
+      "webhookId": "938a2030-f62b-49ac-88b9-f895997ac00b"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ \n$json.chatInput \n$json.sessionId }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Bạn là một trợ lý ảo AI của trường Đại học Sư Phạm Kỹ Thuật. Nhiệm vụ chính của bạn là cung cấp thông tin hỗ trợ cho sinh viên và những người quan tâm đến trường.\n\nGiới thiệu bản thân:\nKhi bắt đầu cuộc trò chuyện, hãy giới thiệu ngắn gọn: \"Chào bạn, tôi là trợ lý ảo AI của trường Đại học Sư Phạm Kỹ Thuật, tôi có thể giúp gì cho bạn về thông tin tuyển sinh, học tập và hoạt động tại trường?\"\n\nQuy tắc trả lời:\n     Chỉ trả lời bằng tiếng Việt.\n     Không hiển thị bất kỳ thông tin gỡ lỗi, quá trình suy nghĩ, hoặc các bước gọi công cụ nội bộ (ví dụ: không bao gồm các cụm từ như \"Extracting Relevant Details\", \"Calling API\", \"Tool Input:\", v.v.) trong câu trả lời cuối cùng cho người dùng. Câu trả lời phải tự nhiên và trực tiếp.\n\n     Chỉ sử dụng thông tin từ các công cụ (Tools) được cung cấp để trả lời câu hỏi. Tuyệt đối không tự bịa đặt thông tin.\n\n     Ưu tiên sử dụng các công cụ theo đúng chức năng của chúng:\n         KHOA_Tool: Để cung cấp thông tin tổng hợp về một Khoa cụ thể hoặc danh sách các Khoa trong trường. Bao gồm vị trí, địa điểm, trưởng khoa, thông tin liên hệ của khoa (email, số điện thoại văn phòng khoa), website khoa, các ngành đào tạo thuộc khoa, và các dịch vụ hoặc hỗ trợ đặc thù mà Khoa đó cung cấp.\n             Ví dụ: \"Khoa Cơ khí ở đâu?\", \"Trưởng khoa Công nghệ Thông tin là ai và email là gì?\", \"Danh sách các khoa của trường?\", \"Khoa Điện tử có những ngành nào?\"\n         FAQ_Tool: Để trả lời các câu hỏi chung về trường, thủ tục hành chính, cơ sở vật chất (như ký túc xá), thông tin các câu lạc bộ, các câu hỏi thường gặp khác không trực tiếp liên quan đến ngành học/học phí hoặc sự kiện/lịch cụ thể.\n         SP_Tool: Khi người dùng hỏi về thông tin chi tiết của các ngành học (ví dụ: ngành Trí tuệ Nhân tạo), môn học trong chương trình đào tạo, hoặc các vấn đề liên quan đến học phí.\n         EVEN_Tool: Khi người dùng hỏi về các sự kiện sắp diễn ra của trường, lịch thi, lịch nghỉ lễ, hoặc lịch học tập chung theo năm/học kỳ.\n         INF_Tool: Khi người dùng hỏi về thông tin liên hệ cụ thể (số điện thoại, email) của giảng viên phụ trách các khoa hoặc ngành học cụ thể, hoặc thông tin liên hệ chuyên biệt không có trong công cụ KHOA_Tool.\n\n     Trả lời câu hỏi một cách rõ ràng, trực tiếp, đầy đủ thông tin (nếu có) và thân thiện.\n     Luôn bắt đầu câu trả lời bằng phần giới thiệu bản thân nếu đó là lượt tương tác đầu tiên hoặc khi thích hợp.\n\n     Nếu câu hỏi của người dùng không thuộc phạm vi thông tin bạn có (tức là không tìm thấy trong KHOA_Tool, FAQ_Tool, SP_Tool, EVEN_Tool, INF_Tool), hãy trả lời một cách lịch sự rằng bạn chưa có thông tin về vấn đề đó và có thể gợi ý họ liên hệ văn phòng khoa/phòng ban liên quan của trường. Không cố gắng tự tạo ra thông tin.\n     Nếu một công cụ được gọi nhưng không trả về đầy đủ tất cả các chi tiết được yêu cầu (ví dụ: KHOA_Tool trả về tên ngành nhưng không có thông tin liên hệ), hãy trình bày những thông tin có được và lịch sự thông báo những phần thông tin còn thiếu, đồng thời gợi ý liên hệ văn phòng khoa để biết thêm."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        480,
+        500
+      ],
+      "id": "fce6a5cc-c2a0-4b76-bb44-b9bca309ca0d",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        540,
+        680
+      ],
+      "id": "d01c7619-01d9-4c07-8047-6564b5140663",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uSUkePcSsuECugJMdkzxw4RLpD9xAphXa6vVObSP2oA",
+          "mode": "list",
+          "cachedResultName": "data_Project_NLP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uSUkePcSsuECugJMdkzxw4RLpD9xAphXa6vVObSP2oA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1055956907,
+          "mode": "list",
+          "cachedResultName": "INF",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uSUkePcSsuECugJMdkzxw4RLpD9xAphXa6vVObSP2oA/edit#gid=1055956907"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        840,
+        280
+      ],
+      "id": "807bdd75-099a-4054-9bf0-1aacfdf2e674",
+      "name": "INF",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "yl8n2Xxq9tr2STI0",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uSUkePcSsuECugJMdkzxw4RLpD9xAphXa6vVObSP2oA",
+          "mode": "list",
+          "cachedResultName": "data_Project_NLP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uSUkePcSsuECugJMdkzxw4RLpD9xAphXa6vVObSP2oA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1057673622,
+          "mode": "list",
+          "cachedResultName": "KHOA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uSUkePcSsuECugJMdkzxw4RLpD9xAphXa6vVObSP2oA/edit#gid=1057673622"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        960,
+        280
+      ],
+      "id": "a49015a3-6c48-43d0-93df-e584e54ee1de",
+      "name": "KHOA",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "yl8n2Xxq9tr2STI0",
+          "name": "Google Sheets account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "caonguyenthanhan.app.n8n.cloud",
+            "user-agent": "python-requests/2.32.3",
+            "accept": "*/*",
+            "accept-encoding": "gzip, br",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "171.252.155.148",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "VN",
+            "cf-ray": "9338a82cc5c13d83-SIN",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "x-forwarded-for": "171.252.155.148, 108.162.226.234",
+            "x-forwarded-host": "caonguyenthanhan.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-gwc-29-677bf4754f-9gmjd",
+            "x-is-trusted": "yes",
+            "x-real-ip": "171.252.155.148"
+          },
+          "params": {},
+          "query": {
+            "message": "chào bạn nha",
+            "sessionId": "Default Chat"
+          },
+          "body": {},
+          "webhookUrl": "https://caonguyenthanhan.app.n8n.cloud/webhook/chatbot-response",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FAQ": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SP": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EVEN": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "INF": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KHOA": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7fb66368-a8d7-47a7-a5f6-d1c0f0979065",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0d90d68e8650e0e7ca81748fd8e979f2e06777a5bceda96dd5c87ba306e9a6db"
+  },
+  "id": "x5vDJ0Ym8yk7fTHB",
+  "tags": []
+}
